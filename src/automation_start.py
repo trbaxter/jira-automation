@@ -72,3 +72,20 @@ def create_sprint(sprint_name, start_date, end_date, config) -> None:
         logging.error("Error: Failed to parse JSON response.")
         logging.error(f"Response Content: {response.text}")
         return None
+
+
+def get_sprint_by_state(config, state):
+    """
+    Retrieves a sprint for the board by state (e.g., 'active', 'future').
+    """
+    url = (
+        f"{config.base_url}/rest/agile/1.0/board/{config.board_id}/sprint?state={state}"
+    )
+    response = session.get(url)
+    if not handle_api_error(response, f"retrieving {state} sprint"):
+        return None
+
+    sprints = response.json().get("values", [])
+    return sprints[0] if sprints else None
+
+
