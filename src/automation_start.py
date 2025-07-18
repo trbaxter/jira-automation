@@ -12,7 +12,7 @@ logging.basicConfig(level = logging.INFO, format = "%(message)s")
 EMAIL = os.getenv("JIRA_EMAIL", "")
 API_TOKEN = os.getenv("JIRA_API_TOKEN", "")
 
-# Validate repository secrets
+# Validate repository secrets.
 if not EMAIL or not API_TOKEN:
     raise EnvironmentError("Error: Repository secret not found.")
 
@@ -30,6 +30,13 @@ session.headers.update(
     }
 )
 
-# Format the start/end dates of generated sprints.
+# Format the start/end dates of generated sprints
 def format_jira_date(date) -> str:
     return date.strftime("%Y-%m-%dT%H:%M:%S.000+0000")
+
+# Dynamically generate sprint name if needed
+def generate_sprint_name(start_date, end_date) -> str:
+    sprint_name = (f"Sprint_Name {start_date.strftime("%y%m%d")} "
+                   f"({start_date.strftime("%m/%d")}-"
+                   f"{end_date.strftime('%m/%d')}")
+    return sprint_name
