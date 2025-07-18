@@ -36,15 +36,6 @@ session.headers.update(
 )
 
 
-# Dynamically generate sprint name if needed
-def generate_sprint_name(start_date, end_date) -> str:
-    sprint_name = (f"""
-      <Sprint_Name> {start_date.strftime("%y%m%d")}
-      ({start_date.strftime("%m/%d")}-{end_date.strftime('%m/%d')})
-    """)
-    return sprint_name
-
-
 # Log errors in workflow during calls to Jira API
 def handle_api_error(response, context) -> bool:
     if response.status_code not in [200, 201, 204]:
