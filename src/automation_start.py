@@ -7,11 +7,6 @@ from datetime import datetime
 from src.utils.datetime_format import format_jira_date
 
 
-
-# Configure logging
-logging.basicConfig(level = logging.INFO, format = "%(message)s")
-
-
 # Load JIRA credentials from repo secrets
 EMAIL = os.getenv("JIRA_EMAIL", "")
 API_TOKEN = os.getenv("JIRA_API_TOKEN", "")
@@ -99,7 +94,12 @@ def get_incomplete_stories(sprint_id, config):
     incomplete_stories = []
     start_at = 0
     max_results = 50
-    done_statuses = {"Done", "Cancelled", "Existing Solution", "Abandoned"}
+    done_statuses = {
+        "Done",
+        "Cancelled",
+        "Existing Solution",
+        "Abandoned"
+    }
 
     while True:
         url = f"{config.base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
