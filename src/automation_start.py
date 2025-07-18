@@ -30,6 +30,7 @@ session.headers.update(
     }
 )
 
+
 # Format the start/end dates of generated sprints
 def format_jira_date(date) -> str:
     return date.strftime("%Y-%m-%dT%H:%M:%S.000+0000")
@@ -40,6 +41,7 @@ def generate_sprint_name(start_date, end_date) -> str:
                    f"({start_date.strftime("%m/%d")}-"
                    f"{end_date.strftime('%m/%d')}")
     return sprint_name
+
 
 # Log errors in workflow during calls to Jira API
 def handle_api_error(response, context) -> bool:
@@ -56,3 +58,25 @@ def handle_api_error(response, context) -> bool:
 
         return False
     return True
+
+
+# Sends JSON payload to create sprint
+def create_sprint(sprint_name, start_date, end_date, config) -> None:
+    url = f"{config.base_url}/rest/agile/1.0/sprint"
+    payload = {
+        "name": sprint_name,
+        "startDate": format_jira_date(start_date),
+        "endDate": format_jira_date(end_date),
+        "originBoardId": config.board_id
+    }
+
+    response = session.post(url, json = payload)
+    if not handle_api_error(response, "creating sprint"):
+        return None
+
+    try:
+        return response.json()
+    except requests.exceptions.JSONDecodeError:
+        logging.error("Error: Failed to parse JSON response.")
+        logging.error(f"Response Content: {response.text}")
+        return None
