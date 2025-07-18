@@ -216,3 +216,7 @@ __marimo__/
 # Miscellaneous junk files
 /shelf/
 /workspace.xml
+
+# Pytest coverage files
+htmlcov/
+.coverage
