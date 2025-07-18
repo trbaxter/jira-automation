@@ -35,6 +35,7 @@ session.headers.update(
 def format_jira_date(date) -> str:
     return date.strftime("%Y-%m-%dT%H:%M:%S.000+0000")
 
+
 # Dynamically generate sprint name if needed
 def generate_sprint_name(start_date, end_date) -> str:
     sprint_name = (f"Sprint_Name {start_date.strftime("%y%m%d")} "
@@ -69,7 +70,6 @@ def create_sprint(sprint_name, start_date, end_date, config) -> None:
         "endDate": format_jira_date(end_date),
         "originBoardId": config.board_id
     }
-
     response = session.post(url, json = payload)
     if not handle_api_error(response, "creating sprint"):
         return None
