@@ -29,3 +29,7 @@ session.headers.update(
         "Content-Type": "application/json"
     }
 )
+
+# Format the start/end dates of generated sprints.
+def format_jira_date(date) -> str:
+    return date.strftime("%Y-%m-%dT%H:%M:%S.000+0000")
