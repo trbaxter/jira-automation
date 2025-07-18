@@ -6,10 +6,7 @@ def get_jira_credentials() -> tuple[str, str]:
     api_token = os.getenv("JIRA_API_TOKEN")
 
     if not email or not api_token:
-        raise EnvironmentError(
-            "Email or API token not found."
-        )
-
+        raise EnvironmentError("Email or API token not found.")
     return email, api_token
 
 
