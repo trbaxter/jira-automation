@@ -1,6 +1,6 @@
 import requests
 import certifi
-from jira_auth import get_auth_header
+from src.auth.jira_auth import get_auth_header
 
 def get_authenticated_session() -> requests.Session:
     """
