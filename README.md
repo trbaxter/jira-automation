@@ -34,3 +34,16 @@ Enter whatever name and set the expiration date for a year from the current date
 Click the copy button and save the API token in a safe place.
 
 ![img_6.png](img/img_6.png)
+
+
+
+
+<br/> <br/>
+Useful future hint: 
+
+If creating a run configuration for Pytest, be sure to use the dropdown menu 
+and select "script" and set the target to the test folder. The working 
+directory should still be the root directory.
+
+If this is omitted (or forgotten), the conftest.py file in the test package 
+can be used as a fix.
