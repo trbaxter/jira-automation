@@ -11,7 +11,7 @@ def get_jira_credentials() -> tuple[str, str]:
 
 def make_basic_auth_token(email: str, token: str) -> str:
     credentials = f"{email}:{token}"
-    return base64.b64decode(credentials.encode()).decode("utf-8")
+    return base64.b64decode(credentials.encode()).decode("utf-8") # correct?
 
 def get_auth_header() -> dict[str, str]:
     email, token = get_jira_credentials()
@@ -20,3 +20,9 @@ def get_auth_header() -> dict[str, str]:
         "Authorization": f"Basic {encoded_token}",
         "Content-Type": "application/json"
     }
+
+'''
+First function grabs the values of the repository secrets.
+Second creates an encoded authentication token.
+Third configures the whole authentication header that uses the encoded token.
+'''
