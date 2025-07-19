@@ -10,9 +10,6 @@ URL = "http://some.fake.url"
 POST = "POST"
 JIRA_ERROR = "Error during posting to Jira"
 
-# Used to prevent log results from appearing in pytest output
-logging.getLogger().handlers.clear()
-
 
 # Mock response object created to avoid type-related warnings
 def make_mock_response(
@@ -33,7 +30,6 @@ def make_mock_response(
     return mock_response
 
 
-
 @pytest.mark.parametrize("status_code", [200, 201, 204])
 def test_success_responses(caplog: LogCaptureFixture, status_code: int) -> None:
     response = make_mock_response(
@@ -48,7 +44,6 @@ def test_success_responses(caplog: LogCaptureFixture, status_code: int) -> None:
 
     assert result is True
     assert not caplog.records
-
 
 
 def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
