@@ -9,4 +9,3 @@ def test_sprint_name_generation():
     result = generate_sprint_name(start_date, end_date)
 
     assert result == "<Sprint Name> 240701 (07/01-07/15)"
-
