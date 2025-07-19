@@ -1,6 +1,7 @@
 import os
 import base64
 
+
 def get_jira_credentials() -> tuple[str, str]:
     email = os.getenv("JIRA_EMAIL")
     token = os.getenv("JIRA_API_TOKEN")
