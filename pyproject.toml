@@ -4,3 +4,15 @@ version = "1.0.0"
 description = "Modular Python tool for automating sprint lifecycle tasks in JIRA."
 requires-python = ">=3.13"
 authors = [{name = "Tyler Baxter", email = "trb7074@gmail.com"}]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/__init__.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = ['if __name__ == "__main__":']
+
+[tool.coverage.html]
+directory = "htmlcov"
