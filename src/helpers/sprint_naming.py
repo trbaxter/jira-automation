@@ -8,9 +8,9 @@ def generate_sprint_name(start_date: datetime, end_date: datetime) -> str:
     Uses the following naming convention:
     <Some sprint name> <start date as YYMMDD> (start MM/DD - ending MM/DD)
 
-    Parameters:
-        start_date (datetime): The sprint's start date.
-        end_date (datetime): The sprint's end date.
+    Args:
+        start_date: The sprint's start date.
+        end_date: The sprint's end date.
 
     Returns:
         str: A formatted sprint name as a string.
