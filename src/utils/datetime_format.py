@@ -1,11 +1,14 @@
 from datetime import datetime
 
 
-# Format the start/end dates of generated sprints
 def format_jira_date(dt: datetime) -> str:
-    return dt.strftime("%Y-%m-%dT%H:%M:%S.000+0000")
+    """
+    Converts dates & times to the required Jira API string format.
 
-'''
-Function used to take the starting and ending dates of a sprint and convert
-them to the format required by the Jira API.
-'''
+    Args:
+        dt: A datetime object.
+
+    Returns:
+        A string in the format 'YYYY-MM-DDTHH:MM:SS.000+0000'.
+    """
+    return dt.strftime("%Y-%m-%dT%H:%M:%S.000+0000")
