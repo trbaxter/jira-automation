@@ -9,7 +9,8 @@ from _pytest.logging import LogCaptureFixture
 from src.services.jira_sprint import (
     build_sprint_payload,
     create_sprint,
-    parse_json_response
+    parse_json_response,
+    post_sprint_payload
 )
 from src.type_defs.payload import SprintPayload
 from src.type_defs.sprint_create_response import SprintCreateResponse
@@ -20,6 +21,7 @@ SPRINT_END = "2025-08-04T00:00:00.000+0000"
 SPRINT_URL = "https://stuff/rest/agile/1.0/sprint/123"
 LOCALHOST = "https://localhost"
 FUTURE = "future"
+POST_URL = "https://localhost/rest/agile/1.0/sprint"
 BOARD_ID = 42
 
 GET_BOARD_CONFIG = "src.services.jira_sprint.get_board_config"
@@ -160,3 +162,15 @@ def test_create_sprint_handles_api_error(
 
     assert result is None
     mock_handle_error.assert_called_once()
+
+
+def test_post_sprint_payload_executes_post_call(
+        sample_payload: SprintPayload
+) -> None:
+    session = MagicMock(spec=requests.Session)
+    fake_response = MagicMock(spec=requests.Response)
+    session.post.return_value = fake_response
+
+    result = post_sprint_payload(session, POST_URL, sample_payload)
+    session.post.assert_called_once_with(POST_URL, json=sample_payload)
+    assert result == fake_response
