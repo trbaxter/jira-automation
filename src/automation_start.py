@@ -1,32 +1,4 @@
-import logging
-import requests
-from datetime import datetime
-from src.utils.datetime_format import format_jira_date
 
-
-# Sends JSON payload to create sprint
-def create_sprint(
-        sprint_name: str,
-        start_date: datetime,
-        end_date: datetime,
-        config) -> None:
-    url = f"{config.base_url}/rest/agile/1.0/sprint"
-    payload = {
-        "name": sprint_name,
-        "startDate": format_jira_date(start_date),
-        "endDate": format_jira_date(end_date),
-        "originBoardId": config.board_id
-    }
-    response = session.post(url, json = payload)
-    if not handle_api_error(response, "creating sprint"):
-        return None
-
-    try:
-        return response.json()
-    except requests.exceptions.JSONDecodeError:
-        logging.error("Error: Failed to parse JSON response.")
-        logging.error(f"Response Content: {response.text}")
-        return None
 
 
 # Retrieves a sprint for the board by state (e.g., 'active', 'future').
