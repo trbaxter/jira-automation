@@ -1,9 +1,9 @@
-from typing import TypedDict, Literal
+from typing import TypedDict
 
 class SprintCreateResponse(TypedDict):
     id: int
     self: str
-    state: Literal["future", "active", "closed"]
+    state: str
     name: str
     startDate: str
     endDate: str
