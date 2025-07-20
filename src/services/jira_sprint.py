@@ -7,12 +7,16 @@ import requests
 from src.helpers.config_accessor import get_board_config
 from src.logging_config.error_handling import handle_api_error
 from src.type_defs.payload import SprintPayload
+from src.type_defs.sprint_create_response import SprintCreateResponse
 from src.type_defs.boardconfig import BoardConfig
 from src.utils.datetime_format import format_jira_date
 
 
+SPRINT_CREATE = "/rest/agile/1.0/sprint"
+
+
 def build_sprint_payload(
-        board_name: str,
+        sprint_name: str,
         sprint_start: datetime,
         sprint_end: datetime,
         board_id: int
@@ -21,7 +25,7 @@ def build_sprint_payload(
     Assembles the JSON payload to send to the JIRA API.
 
     Args:
-        board_name: Name of the sprint.
+        sprint_name: Name of the sprint.
         sprint_start: Datetime of sprint start.
         sprint_end: Datetime of sprint end.
         board_id: ID of the JIRA board to attach the sprint to
@@ -30,7 +34,7 @@ def build_sprint_payload(
         A dictionary conforming to the SprintPayload structure.
     """
     return {
-        "name": board_name,
+        "name": sprint_name,
         "startDate": format_jira_date(sprint_start),
         "endDate": format_jira_date(sprint_end),
         "originBoardId": board_id
@@ -56,7 +60,8 @@ def post_sprint_payload(
     return session.post(url, json=payload)
 
 
-def parse_json_response(response: requests.Response) -> Optional[dict]:
+def parse_json_response(
+        response: requests.Response) -> Optional[SprintCreateResponse]:
     """
     Parses the JSON response, handling decode errors with logging.
 
@@ -81,7 +86,7 @@ def create_sprint(
         end_date: datetime,
         session: requests.Session,
         config_path: str = "board_config.yaml"
-) -> Optional[dict]:
+) -> Optional[SprintCreateResponse]:
     """
     Creates a new sprint in JIRA using the board config in the YAML file.
 
@@ -104,7 +109,7 @@ def create_sprint(
         end_date,
         config["id"]
     )
-    url = f"{config['base_url']}/rest/agile/1.0/sprint"
+    url = f"{config['base_url']}{SPRINT_CREATE}"
 
     response = post_sprint_payload(session, url, payload)
 
