@@ -6,15 +6,11 @@ to load and validate configuration data from a specified YAML path.
 """
 
 from pathlib import Path
-from typing import Dict, TypedDict
+from typing import Dict
 
 import yaml
 
-
-class BoardConfig(TypedDict):
-    id: int
-    base_url: str
-    name: str
+from src.type_defs.boardconfig import BoardConfig
 
 
 def load_config(path: str = "board_config.yaml") -> Dict[str, BoardConfig]:
