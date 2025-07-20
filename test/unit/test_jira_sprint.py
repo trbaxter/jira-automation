@@ -9,11 +9,13 @@ from _pytest.logging import LogCaptureFixture
 from src.services.jira_sprint import (
     build_sprint_payload,
     create_sprint,
+    get_sprint_by_state,
     parse_json_response,
     post_sprint_payload
 )
 from src.type_defs.payload import SprintPayload
 from src.type_defs.sprint_create_response import SprintCreateResponse
+from type_defs.boardconfig import BoardConfig
 
 SPRINT_NAME = "Test Sprint Name"
 SPRINT_START = "2025-07-21T00:00:00.000+0000"
@@ -21,6 +23,7 @@ SPRINT_END = "2025-08-04T00:00:00.000+0000"
 SPRINT_URL = "https://stuff/rest/agile/1.0/sprint/123"
 LOCALHOST = "https://localhost"
 FUTURE = "future"
+ACTIVE = "active"
 POST_URL = "https://localhost/rest/agile/1.0/sprint"
 BOARD_ID = 42
 
@@ -174,3 +177,72 @@ def test_post_sprint_payload_executes_post_call(
     result = post_sprint_payload(session, POST_URL, sample_payload)
     session.post.assert_called_once_with(POST_URL, json=sample_payload)
     assert result == fake_response
+
+
+@patch(HANDLE_API_ERROR, return_value=True)
+def test_get_sprint_by_state_success(mock_handle_error) -> None:
+    session = MagicMock(spec=requests.Session)
+    response = MagicMock(spec=requests.Response)
+
+    response.json.return_value = {
+        "values": [{
+            "id": 123,
+            "name": SPRINT_NAME,
+            "state": ACTIVE,
+            "originBoardId": BOARD_ID,
+            "startDate": SPRINT_START,
+            "endDate": SPRINT_END,
+            "self": "https://example.atlassian.net/rest/agile/1.0/sprint/123"
+        }]
+    }
+    session.get.return_value = response
+
+    config: BoardConfig = {
+        "id": BOARD_ID,
+        "name": "Test Board",
+        "base_url": "https://example.atlassian.net/"
+    }
+
+    result = get_sprint_by_state(session, config, ACTIVE)
+    assert result is not None
+    assert result["id"] == 123
+    assert result["name"] == SPRINT_NAME
+    assert result["state"] == ACTIVE
+    assert result["originBoardId"] == BOARD_ID
+    assert result["startDate"] == SPRINT_START
+    assert result["endDate"] == SPRINT_END
+    mock_handle_error.assert_called_once()
+
+
+@patch(HANDLE_API_ERROR, return_value=False)
+def test_get_sprint_by_state_api_error(mock_handle_error) -> None:
+    session = MagicMock(spec=requests.Session)
+    response = MagicMock(spec=requests.Response)
+    session.get.return_value = response
+
+    config: BoardConfig = {
+        "id": 5,
+        "name": "Test Board",
+        "base_url": "https://example.atlassian.net"
+    }
+
+    result = get_sprint_by_state(session, config, FUTURE)
+    assert result is None
+    mock_handle_error.assert_called_once()
+
+
+@patch(HANDLE_API_ERROR, return_value=True)
+def test_get_sprint_by_state_empty_result(mock_handle_error) -> None:
+    session = MagicMock(spec=requests.Session)
+    response = MagicMock(spec=requests.Response)
+    response.json.return_value = {"values": []}
+    session.get.return_value = response
+
+    config: BoardConfig = {
+        "id": 27,
+        "name": "Test",
+        "base_url": "https://example.atlassian.net"
+    }
+
+    result = get_sprint_by_state(session, config, ACTIVE)
+    assert result is None
