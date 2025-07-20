@@ -1,5 +1,5 @@
 boards:
   test:
-    id: 1
+    board_id: 1
     base_url: "https://trb7074.atlassian.net/"
-    name: "My Test Board"
+    board_name: "My Test Board"
