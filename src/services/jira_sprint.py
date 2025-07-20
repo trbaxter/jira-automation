@@ -8,8 +8,10 @@ from src.helpers.config_accessor import get_board_config
 from src.logging_config.error_handling import handle_api_error
 from src.type_defs.payload import SprintPayload
 from src.type_defs.sprint_create_response import SprintCreateResponse
+from src.type_defs.sprint_summary import SprintSummary
 from src.type_defs.boardconfig import BoardConfig
 from src.utils.datetime_format import format_jira_date
+from src.utils.url_builder import build_sprint_state_query_url
 
 
 SPRINT_CREATE = "/rest/agile/1.0/sprint"
@@ -117,3 +119,18 @@ def create_sprint(
         return None
 
     return parse_json_response(response)
+
+
+def get_sprint_by_state(
+        session: requests.Session,
+        config: BoardConfig,
+        state: str
+) -> Optional[SprintSummary]:
+    url = build_sprint_state_query_url(config["base_url"], config["id"], state)
+    response = session.get(url)
+
+    if not handle_api_error(response, f"retrieving {state} sprint"):
+        return None
+
+    sprints = response.json().get("values", [])
+    return sprints[0] if sprints else None
