@@ -1,20 +1,6 @@
 
 
 
-# Retrieves a sprint for the board by state (e.g., 'active', 'future').
-def get_sprint_by_state(config, state):
-    url = (
-        f"{config.base_url}/rest/agile/1.0/board/"
-        f"{config.board_id}/sprint?state={state}"
-    )
-    response = session.get(url)
-    if not handle_api_error(response, f"retrieving {state} sprint"):
-        return None
-
-    sprints = response.json().get("values", [])
-    return sprints[0] if sprints else None
-
-
 # Get incomplete stories from active sprint
 def get_incomplete_stories(sprint_id, config):
     incomplete_stories = []
