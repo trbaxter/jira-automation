@@ -2,7 +2,8 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from src.utils.config_loader import load_config, BoardConfig
+from src.utils.config_loader import load_config
+from src.type_defs.boardconfig import BoardConfig
 
 VALID_CONFIG_YAML = """
 boards:
