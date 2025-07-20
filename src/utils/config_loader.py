@@ -1,6 +1,14 @@
-import yaml
+"""
+Utilities for loading the JIRA board configurations.
+
+Defines a typed dictionary for board metadata and provides a function
+to load and validate configuration data from a specified YAML path.
+"""
+
 from pathlib import Path
 from typing import Dict, TypedDict
+
+import yaml
 
 
 class BoardConfig(TypedDict):
@@ -10,6 +18,20 @@ class BoardConfig(TypedDict):
 
 
 def load_config(path: str = "board_config.yaml") -> Dict[str, BoardConfig]:
+    """
+    Loads and validates JIRA board configurations.
+
+    Args:
+        path: Optional path to the YAML configuration file. Defaults to
+              'board_config.yaml' in the root directory.
+
+    Returns:
+        A dictionary mapping board aliases to their config details.
+
+    Raises:
+        FileNotFoundError: If the yaml config file is missing.
+        KeyError: If the required 'boards' section is missing in the YAML file.
+    """
     full_path = Path(path)
     if not full_path.exists():
         raise FileNotFoundError(
