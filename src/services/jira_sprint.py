@@ -106,10 +106,10 @@ def create_sprint(
     """
     config: BoardConfig = get_board_config(board_name, config_path)
     payload = build_sprint_payload(
-        sprint_name,
-        start_date,
-        end_date,
-        config["id"]
+        sprint_name=sprint_name,
+        sprint_start=start_date,
+        sprint_end=end_date,
+        board_id=config["board_id"]
     )
     url = f"{config['base_url']}{SPRINT_CREATE}"
 
@@ -126,7 +126,11 @@ def get_sprint_by_state(
         config: BoardConfig,
         state: str
 ) -> Optional[SprintSummary]:
-    url = build_sprint_state_query_url(config["base_url"], config["id"], state)
+    url = build_sprint_state_query_url(
+        base_url=config["base_url"],
+        board_id=config["board_id"],
+        state=state
+    )
     response = session.get(url)
 
     if not handle_api_error(response, f"retrieving {state} sprint"):
