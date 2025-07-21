@@ -1,0 +1,5 @@
+ACTIVE = "active"
+FUTURE = "future"
+ISSUE1 = "ISSUE 1"
+MOCK_BASE_URL = "https://fake.jira.com"
+TEST_BOARD_NAME = "Test JIRA Board"

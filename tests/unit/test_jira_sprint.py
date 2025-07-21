@@ -104,9 +104,9 @@ def test_create_sprint_success(
 ) -> None:
     session = MagicMock()
     mock_get_config.return_value = {
-        "id": 42,
+        "board_id": 42,
         "base_url": LOCALHOST,
-        "name": "Some Board"
+        "board_name": "Some Board"
     }
     mock_post_payload.return_value = MagicMock(spec=requests.Response)
 
@@ -149,9 +149,9 @@ def test_create_sprint_handles_api_error(
 ) -> None:
     session = MagicMock()
     mock_get_config.return_value = {
-        "id": 99,
+        "board_id": 99,
         "base_url": LOCALHOST,
-        "name": "ErrorBoard"
+        "board_name": "ErrorBoard"
     }
     mock_post_payload.return_value = MagicMock(spec=requests.Response)
 
@@ -198,9 +198,9 @@ def test_get_sprint_by_state_success(mock_handle_error) -> None:
     session.get.return_value = response
 
     config: BoardConfig = {
-        "id": BOARD_ID,
-        "name": "Test Board",
-        "base_url": "https://example.atlassian.net/"
+        "board_id": BOARD_ID,
+        "base_url": "https://example.atlassian.net/",
+        "board_name": "Test Board"
     }
 
     result = get_sprint_by_state(session, config, ACTIVE)
@@ -221,9 +221,9 @@ def test_get_sprint_by_state_api_error(mock_handle_error) -> None:
     session.get.return_value = response
 
     config: BoardConfig = {
-        "id": 5,
-        "name": "Test Board",
-        "base_url": "https://example.atlassian.net"
+        "board_id": 5,
+        "base_url": "https://example.atlassian.net",
+        "board_name": "Test Board"
     }
 
     result = get_sprint_by_state(session, config, FUTURE)
@@ -232,16 +232,16 @@ def test_get_sprint_by_state_api_error(mock_handle_error) -> None:
 
 
 @patch(HANDLE_API_ERROR, return_value=True)
-def test_get_sprint_by_state_empty_result(mock_handle_error) -> None:
+def test_get_sprint_by_state_empty_result(_mock_handle_error) -> None:
     session = MagicMock(spec=requests.Session)
     response = MagicMock(spec=requests.Response)
     response.json.return_value = {"values": []}
     session.get.return_value = response
 
     config: BoardConfig = {
-        "id": 27,
-        "name": "Test",
-        "base_url": "https://example.atlassian.net"
+        "board_id": 27,
+        "base_url": "https://example.atlassian.net",
+        "board_name": "Test"
     }
 
     result = get_sprint_by_state(session, config, ACTIVE)
