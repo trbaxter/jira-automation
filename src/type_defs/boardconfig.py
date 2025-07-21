@@ -1,6 +1,6 @@
 from typing import TypedDict
 
 class BoardConfig(TypedDict):
-    id: int
+    board_id: int
     base_url: str
-    name: str
+    board_name: str
