@@ -18,10 +18,10 @@ from type_defs.boardconfig import BoardConfig
 def automate_sprint(board_name: str, session: requests.Session) -> None:
     """
     Orchestrates the full Jira sprint lifecycle:
-    - Creates or fetches the next sprint
-    - Closes the current one (if active)
-    - Transfers incomplete stories
-    - Activates the new sprint
+    • Creates or fetches the next sprint
+    • Closes the current one (if active)
+    • Transfers incomplete stories
+    • Activates the new sprint
     """
     logging.info("\nBeginning sprint automation process...\n")
 
