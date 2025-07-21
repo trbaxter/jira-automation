@@ -63,3 +63,12 @@ def test_get_incomplete_stories_handles_pagination(
         for issue in results
     )
     assert session.get.call_count == 2
+
+
+@patch(f"{JIRA_ISSUES}.handle_api_error", return_value=False)
+def test_get_incomplete_stories_handles_api_error(
+        _mock_handle_error: MagicMock
+) -> None:
+    session = MagicMock(spec=requests.Session)
+    results = get_incomplete_stories(1, MOCK_CONFIG, session)
+    assert results == []

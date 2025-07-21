@@ -39,7 +39,7 @@ def get_incomplete_stories(
         if not handle_api_error(
                 response,
                 f"retrieving issues from sprint {sprint_id}"):
-            return None
+            return []
 
         data = response.json()
         issues = data.get("issues", [])
