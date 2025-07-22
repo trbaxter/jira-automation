@@ -1,12 +1,8 @@
-import re
 import pytest
 from datetime import datetime
 from src.utils.datetime_format import format_jira_date
+from tests.constants.test_objects import JIRA_DATE_REGEX
 
-
-JIRA_DATE_REGEX = re.compile(
-    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}$"
-)
 
 @pytest.mark.parametrize("dt", [
     datetime(2024, 1 ,2 ,3 ,4 ,5),

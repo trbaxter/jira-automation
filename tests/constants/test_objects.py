@@ -1,3 +1,5 @@
+import re
+
 VALID_CONFIG_YAML = """
 boards:
     test:
@@ -10,3 +12,7 @@ MISSING_BOARDS_YAML = """
 not_boards_attribute:
     some_other_thing: true
 """
+
+JIRA_DATE_REGEX = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}$"
+)
