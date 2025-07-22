@@ -2,7 +2,10 @@ import logging
 
 import pytest
 
-from tests.constants.patch_targets import (BOARD_CONFIG, JSPRINT_GET_CONFIG)
+from tests.constants.patch_targets import (
+    ORCH_BOARD_CONFIG,
+    JSPRINT_GET_CONFIG
+)
 from tests.constants.test_constants import (
     MOCK_BASE_URL,
     MOCK_BOARD_NAME,
@@ -32,5 +35,5 @@ def patch_get_board_config(monkeypatch):
             "board_name": MOCK_BOARD_NAME
         }
 
-    monkeypatch.setattr(BOARD_CONFIG, _mock_get_board_config)
+    monkeypatch.setattr(ORCH_BOARD_CONFIG, _mock_get_board_config)
     monkeypatch.setattr(JSPRINT_GET_CONFIG, _mock_get_board_config)
