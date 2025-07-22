@@ -1,24 +1,29 @@
 import pytest
 from unittest.mock import patch
-from src.auth.jira_auth import (get_jira_credentials,
-                                make_basic_auth_token,
-                                get_auth_header)
+from src.auth.jira_auth import (
+    get_jira_credentials,
+    make_basic_auth_token,
+    get_auth_header
+)
+from tests.constants.test_constants import (MOCK_EMAIL, MOCK_API_TOKEN)
 
 def test_get_jira_credentials_returns_mocked_values() -> None:
     with patch("os.getenv") as mock_getenv:
         mock_getenv.side_effect = lambda key: {
-            "JIRA_EMAIL": "mock@example.com",
-            "JIRA_API_TOKEN": "abc123"
+            "JIRA_EMAIL": MOCK_EMAIL,
+            "JIRA_API_TOKEN": MOCK_API_TOKEN
         }[key]
         email, token = get_jira_credentials()
-        assert email == "mock@example.com"
-        assert token == "abc123"
+        assert email == MOCK_EMAIL
+        assert token == MOCK_API_TOKEN
 
 
 def test_get_jira_credentials_raises_exception_if_missing() -> None:
     with patch("os.getenv", return_value=None):
-        with pytest.raises(EnvironmentError,
-                           match="Email or API token not found."):
+        with pytest.raises(
+                EnvironmentError,
+                match="Email or API token not found."
+        ):
             get_jira_credentials()
 
 
