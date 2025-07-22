@@ -4,11 +4,15 @@ from unittest.mock import Mock
 from requests import Response, Request
 from _pytest.logging import LogCaptureFixture
 from logging_config.error_handling import handle_api_error
-
-
-URL = "http://some.fake.url"
-POST = "POST"
-JIRA_ERROR = "Error during posting to Jira"
+from tests.constants.test_constants import (
+    BAD_REQUEST,
+    BAD_REQUEST_ERROR,
+    GATEWAY_TIMEOUT_ERROR,
+    MOCK_BASE_URL,
+    POST,
+    TIMEOUT,
+    TIMEOUT_JIRA_ERROR
+)
 
 
 # Mock response object created to avoid type-related warnings
@@ -35,7 +39,7 @@ def test_success_responses(caplog: LogCaptureFixture, status_code: int) -> None:
     response = make_mock_response(
         status_code=status_code,
         text="",
-        url=URL,
+        url=MOCK_BASE_URL,
         method=POST
     )
 
@@ -49,8 +53,8 @@ def test_success_responses(caplog: LogCaptureFixture, status_code: int) -> None:
 def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
     response = make_mock_response(
         status_code=400,
-        text="Bad Request",
-        url=URL,
+        text=BAD_REQUEST,
+        url=MOCK_BASE_URL,
         method=POST
     )
 
@@ -58,15 +62,15 @@ def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
         result = handle_api_error(response, "posting to Jira")
 
     assert result is False
-    assert "Error during posting to Jira. Status Code: 400" in caplog.text
+    assert BAD_REQUEST_ERROR in caplog.text
     assert "Response content: Bad Request" in caplog.text
 
 
 def test_gateway_timeout_logs(caplog: LogCaptureFixture) -> None:
     response = make_mock_response(
         status_code=504,
-        text="Timeout",
-        url=URL,
+        text=TIMEOUT,
+        url=MOCK_BASE_URL,
         method=POST
     )
 
@@ -74,6 +78,6 @@ def test_gateway_timeout_logs(caplog: LogCaptureFixture) -> None:
         result = handle_api_error(response, "posting to Jira")
 
     assert result is False
-    assert "Error during posting to Jira. Status Code: 504" in caplog.text
-    assert "Gateway timeout occurred." in caplog.text
+    assert TIMEOUT_JIRA_ERROR in caplog.text
+    assert GATEWAY_TIMEOUT_ERROR in caplog.text
     assert "Response content" not in caplog.text
