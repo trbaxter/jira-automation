@@ -14,6 +14,8 @@ from src.services.jira_start_sprint import start_sprint
 from src.helpers.sprint_naming import generate_sprint_name
 from type_defs.boardconfig import BoardConfig
 
+from tests.constants.test_constants import (ACTIVE, FUTURE)
+
 
 def automate_sprint(board_name: str, session: requests.Session) -> None:
     """
@@ -27,12 +29,8 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
 
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
-    config: BoardConfig = get_board_config(board_name=board_name)
-    upcoming_sprint = get_sprint_by_state(
-        session=session,
-        config=config,
-        state="future"
-    )
+    config: BoardConfig = get_board_config(board_name)
+    upcoming_sprint = get_sprint_by_state(session, config, FUTURE)
 
     if upcoming_sprint and upcoming_sprint["name"].startswith("DART "):
         logging.info(
@@ -53,51 +51,47 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
             )
         new_sprint_name = generate_sprint_name(start_date, end_date)
         new_sprint = create_sprint(
-            board_name=board_name,
-            sprint_name=new_sprint_name,
-            start_date=start_date,
-            end_date=end_date,
-            session=session
+            board_name,
+            new_sprint_name,
+            start_date,
+            end_date,
+            session
         )
         if not new_sprint:
             logging.error("Failed to create a new sprint.")
             return
         new_sprint_id = new_sprint.get("id")
 
-    active_sprint = get_sprint_by_state(
-        session=session,
-        config=config,
-        state="active"
-    )
+    active_sprint = get_sprint_by_state(session, config, ACTIVE)
     if active_sprint:
         incomplete_stories = get_incomplete_stories(
-            sprint_id=active_sprint["id"],
-            config=config,
-            session=session
+            active_sprint["id"],
+            config,
+            session
         )
         incomplete_stories = cast(list[JiraIssue], incomplete_stories)
 
         close_sprint(
-            sprint_id = active_sprint["id"],
-            sprint_name = active_sprint["name"],
-            start_date = active_sprint["startDate"],
-            end_date = active_sprint["endDate"],
-            session = session,
-            base_url = config["base_url"]
+            active_sprint["id"],
+            active_sprint["name"],
+            active_sprint["startDate"],
+            active_sprint["endDate"],
+            session,
+            config["base_url"]
         )
 
         move_issues_to_new_sprint(
-            issues=incomplete_stories,
-            session=session,
-            base_url=config["base_url"],
-            new_sprint_id=new_sprint_id
+            incomplete_stories,
+            session,
+            config["base_url"],
+            new_sprint_id
         )
 
     start_sprint(
-        new_sprint_id=new_sprint_id,
-        sprint_name=new_sprint_name,
-        start_date=start_date,
-        end_date=end_date,
-        session=active_sprint["session"],
-        base_url=active_sprint["base_url"]
+        new_sprint_id,
+        new_sprint_name,
+        start_date,
+        end_date,
+        session,
+        config["base_url"]
     )
