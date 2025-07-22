@@ -1,5 +1,6 @@
 # Config Accessor
-GET_HELPERS_BOARD_CONFIG = "src.helpers.config_accessor.get_board_config"
+CONFIG_ACCESS_GET_CONFIG = "src.helpers.config_accessor.get_board_config"
+CONFIG_ACCESS_LOAD_CONFIG = "src.helpers.config_accessor.load_config"
 
 
 # Jira Issues Service
@@ -13,7 +14,6 @@ JCLOSE_BUILD_PAYLOAD = (
 )
 JCLOSE_CLOSE_SPRINT = "src.services.jira_sprint_closure.close_sprint"
 JCLOSE_HANDLE_ERROR = "src.services.jira_sprint_closure.handle_api_error"
-
 
 
 # Jira Sprint Service
