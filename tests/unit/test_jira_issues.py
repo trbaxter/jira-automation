@@ -5,16 +5,17 @@ import requests
 from src.constants.jira_statuses import DONE_STATUSES
 from src.services.jira_issues import get_incomplete_stories
 from type_defs.boardconfig import BoardConfig
+from tests.constants.patch_targets import JIRA_ISSUES_HANDLE_API_ERROR
 
-JIRA_ISSUES = "src.services.jira_issues"
+
 MOCK_CONFIG: BoardConfig = {
-    "id": 1,
-    "name": "Mock Board",
-    "base_url": "https://mocked-jira"
+    "board_id": 1,
+    "base_url": "https://mocked-jira",
+    "board_name": "Mock Board"
 }
 
 
-@patch(f"{JIRA_ISSUES}.handle_api_error", return_value=True)
+@patch(JIRA_ISSUES_HANDLE_API_ERROR, return_value=True)
 def test_get_incomplete_stories_filters_done_statuses(
         _mock_handle_error: MagicMock
 ) -> None:
@@ -35,7 +36,7 @@ def test_get_incomplete_stories_filters_done_statuses(
         assert issue["fields"]["status"]["name"] not in DONE_STATUSES
 
 
-@patch(f"{JIRA_ISSUES}.handle_api_error", return_value=True)
+@patch(JIRA_ISSUES_HANDLE_API_ERROR, return_value=True)
 def test_get_incomplete_stories_handles_pagination(
         _mock_handle_error: MagicMock
 ) -> None:
@@ -65,7 +66,7 @@ def test_get_incomplete_stories_handles_pagination(
     assert session.get.call_count == 2
 
 
-@patch(f"{JIRA_ISSUES}.handle_api_error", return_value=False)
+@patch(JIRA_ISSUES_HANDLE_API_ERROR, return_value=False)
 def test_get_incomplete_stories_handles_api_error(
         _mock_handle_error: MagicMock
 ) -> None:
