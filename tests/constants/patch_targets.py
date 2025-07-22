@@ -48,4 +48,9 @@ BOARD_CONFIG = "src.orchestration.sprint_orchestration.get_board_config"
 
 
 # Sprint Transfer
-MOVE_ISSUES = "src.services.sprint_transfer.move_issues_to_new_sprint"
+XFER_BATCH_ALL = "src.services.sprint_transfer.transfer_all_issue_batches"
+XFER_EXTRACT_KEYS = "src.services.sprint_transfer.extract_issue_keys"
+XFER_HANDLE_ERROR = "src.services.sprint_transfer.handle_api_error"
+XFER_LOGGING = "src.services.sprint_transfer.logging"
+XFER_MOVE_ISSUES = "src.services.sprint_transfer.move_issues_to_new_sprint"
+XFER_RETRY = "src.services.sprint_transfer.transfer_issue_batch_with_retry"
