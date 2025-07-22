@@ -5,7 +5,7 @@ from tests.constants.patch_targets import (
 )
 from tests.constants.test_constants import (
     MOCK_BASE_URL,
-    TEST_BOARD_NAME
+    MOCK_BOARD_NAME
 )
 
 @pytest.fixture(autouse=True)
@@ -27,7 +27,7 @@ def patch_get_board_config(monkeypatch):
         return {
             "board_id": 1,
             "base_url": MOCK_BASE_URL,
-            "board_name": TEST_BOARD_NAME
+            "board_name": MOCK_BOARD_NAME
         }
 
     monkeypatch.setattr(BOARD_CONFIG, _mock_get_board_config)
