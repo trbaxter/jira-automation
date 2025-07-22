@@ -1,8 +1,10 @@
 import logging
-import pytest
 from unittest.mock import Mock
-from requests import Response, Request
+
+import pytest
 from _pytest.logging import LogCaptureFixture
+from requests import Response, Request
+
 from logging_config.error_handling import handle_api_error
 from tests.constants.test_constants import (
     BAD_REQUEST,
