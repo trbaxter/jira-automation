@@ -44,7 +44,7 @@ CREATE_SPRINT_NAME = "src.helpers.sprint_naming.generate_sprint_name"
 
 
 # Sprint Orchestration
-BOARD_CONFIG = "src.orchestration.sprint_orchestration.get_board_config"
+ORCH_BOARD_CONFIG = "src.orchestration.sprint_orchestration.get_board_config"
 ORCH_CLOSE_SPRINT = "src.orchestration.sprint_orchestration.close_sprint"
 ORCH_CREATE_NAME = "src.orchestration.sprint_orchestration.generate_sprint_name"
 ORCH_CREATE_SPRINT = "src.orchestration.sprint_orchestration.create_sprint"
