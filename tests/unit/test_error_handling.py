@@ -37,10 +37,10 @@ def make_mock_response(
 @pytest.mark.parametrize("status_code", [200, 201, 204])
 def test_success_responses(caplog: LogCaptureFixture, status_code: int) -> None:
     response = make_mock_response(
-        status_code=status_code,
-        text="",
-        url=MOCK_BASE_URL,
-        method=POST
+        status_code,
+        "",
+        MOCK_BASE_URL,
+        POST
     )
 
     with caplog.at_level(logging.ERROR):
@@ -52,10 +52,10 @@ def test_success_responses(caplog: LogCaptureFixture, status_code: int) -> None:
 
 def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
     response = make_mock_response(
-        status_code=400,
-        text=BAD_REQUEST,
-        url=MOCK_BASE_URL,
-        method=POST
+        400,
+        BAD_REQUEST,
+        MOCK_BASE_URL,
+        POST
     )
 
     with caplog.at_level(logging.ERROR):
@@ -68,10 +68,10 @@ def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
 
 def test_gateway_timeout_logs(caplog: LogCaptureFixture) -> None:
     response = make_mock_response(
-        status_code=504,
-        text=TIMEOUT,
-        url=MOCK_BASE_URL,
-        method=POST
+        504,
+        TIMEOUT,
+        MOCK_BASE_URL,
+        POST
     )
 
     with caplog.at_level(logging.ERROR):
