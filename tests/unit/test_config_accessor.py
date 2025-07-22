@@ -11,14 +11,14 @@ LOAD_CONFIG_PATH = "src.helpers.config_accessor.load_config"
 
 MOCKED_CONFIG = {
     "dev": {
-        "id": 123,
+        "board_id": 123,
         "base_url": DEV_URL,
-        "name": DEV_NAME
+        "board_name": DEV_NAME
     },
     "qa": {
-        "id": 456,
+        "board_id": 456,
         "base_url": QA_URL,
-        "name": QA_NAME
+        "board_name": QA_NAME
     }
 }
 
@@ -28,9 +28,9 @@ class TestGetBoardConfig:
     @patch(LOAD_CONFIG_PATH, return_value=MOCKED_CONFIG)
     def test_returns_correct_board_config(self, mock_loader) -> None:
         board: BoardConfig = get_board_config("dev")
-        assert board["id"] == 123
+        assert board["board_id"] == 123
         assert board["base_url"] == DEV_URL
-        assert board["name"] ==  DEV_NAME
+        assert board["board_name"] ==  DEV_NAME
 
         mock_loader.assert_called_once()
 
