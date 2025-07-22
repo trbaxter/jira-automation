@@ -6,7 +6,7 @@ from tests.constants.test_constants import (
     FUTURE,
     ISSUE1,
     MOCK_BASE_URL,
-    TEST_BOARD_NAME
+    MOCK_BOARD_NAME
 )
 from unittest.mock import ANY
 
@@ -56,7 +56,7 @@ def test_reuse_valid_dart_sprint(
     mock_get_issues.return_value = [{"key": ISSUE1}]
 
     automate_sprint(
-        board_name=TEST_BOARD_NAME,
+        board_name=MOCK_BOARD_NAME,
         session=mock_session
     )
 

@@ -1,17 +1,23 @@
 from src.helpers.payload_builder import build_close_sprint_payload
+from tests.constants.test_constants import (
+    CLOSED,
+    MOCK_SPRINT_END,
+    MOCK_SPRINT_NAME,
+    MOCK_SPRINT_START
+)
 
 def test_build_close_sprint_payload_returns_expected_dict() -> None:
-    name = "Sprint X"
-    start = "2025-08-01T00:00:00.000Z"
-    end = "2025-08-15T00:00:00.000Z"
-
-    result = build_close_sprint_payload(name, start, end)
+    result = build_close_sprint_payload(
+        MOCK_SPRINT_NAME,
+        MOCK_SPRINT_START,
+        MOCK_SPRINT_END
+    )
 
     expected = {
-        "state": "closed",
-        "name": name,
-        "startDate": start,
-        "endDate": end
+        "state": CLOSED,
+        "name": MOCK_SPRINT_NAME,
+        "startDate": MOCK_SPRINT_START,
+        "endDate": MOCK_SPRINT_END
     }
 
     assert result == expected
