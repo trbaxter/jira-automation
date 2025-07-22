@@ -3,6 +3,11 @@ CONFIG_ACCESS_GET_CONFIG = "src.helpers.config_accessor.get_board_config"
 CONFIG_ACCESS_LOAD_CONFIG = "src.helpers.config_accessor.load_config"
 
 
+# Jira Auth
+JAUTH_GET_CREDS = "src.auth.jira_auth.get_jira_credentials"
+JAUTH_MAKE_TOKEN = "src.auth.jira_auth.make_basic_auth_token"
+
+
 # Jira Issues Service
 GET_INCOMPLETE_STORIES = "src.services.jira_issues.get_incomplete_stories"
 JIRA_ISSUES_HANDLE_API_ERROR = "src.services.jira_issues.handle_api_error"
