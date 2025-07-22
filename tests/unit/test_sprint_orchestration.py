@@ -1,6 +1,18 @@
-import pytest
+from unittest.mock import ANY
 from unittest.mock import patch, MagicMock
+
+import pytest
+
 from src.orchestration.sprint_orchestration import automate_sprint
+from tests.constants.patch_targets import (
+    ORCH_CLOSE_SPRINT,
+    ORCH_CREATE_NAME,
+    ORCH_CREATE_SPRINT,
+    ORCH_GET_SPRINT,
+    ORCH_GET_STORIES,
+    ORCH_MOVE_ISSUES,
+    ORCH_START_SPRINT,
+)
 from tests.constants.test_constants import (
     ACTIVE,
     FUTURE,
@@ -8,21 +20,21 @@ from tests.constants.test_constants import (
     MOCK_BASE_URL,
     MOCK_BOARD_NAME
 )
-from unittest.mock import ANY
 
 
 @pytest.fixture
 def mock_session():
     return MagicMock()
 
-@patch("src.orchestration.sprint_orchestration.start_sprint")
-@patch("src.orchestration.sprint_orchestration.move_issues_to_new_sprint")
-@patch("src.orchestration.sprint_orchestration.close_sprint")
-@patch("src.orchestration.sprint_orchestration.get_incomplete_stories")
-@patch("src.orchestration.sprint_orchestration.create_sprint")
-@patch("src.orchestration.sprint_orchestration.get_sprint_by_state")
-@patch("src.orchestration.sprint_orchestration.generate_sprint_name")
-def test_reuse_valid_dart_sprint(
+
+@patch(ORCH_START_SPRINT)
+@patch(ORCH_MOVE_ISSUES)
+@patch(ORCH_CLOSE_SPRINT)
+@patch(ORCH_GET_STORIES)
+@patch(ORCH_CREATE_SPRINT)
+@patch(ORCH_GET_SPRINT)
+@patch(ORCH_CREATE_NAME)
+def test_use_future_backlog_sprint(
         _mock_generate_name,
         mock_get_state,
         mock_create,
@@ -33,13 +45,15 @@ def test_reuse_valid_dart_sprint(
         mock_session,
 ):
     def fake_get_sprint_by_state(session, config, state):
-        _ = session, config
-
         if state == FUTURE:
+            _ = session, config  # Unused, but required for function
+
+            # Future backlog sprint
             return {
                 "id": 100,
                 "name": "DART 250721 (07/21-08/04)"
             }
+
         elif state == ACTIVE:
             return {
                 "id": 99,
@@ -56,8 +70,8 @@ def test_reuse_valid_dart_sprint(
     mock_get_issues.return_value = [{"key": ISSUE1}]
 
     automate_sprint(
-        board_name=MOCK_BOARD_NAME,
-        session=mock_session
+        MOCK_BOARD_NAME,
+        mock_session
     )
 
     mock_create.assert_not_called()
@@ -66,16 +80,11 @@ def test_reuse_valid_dart_sprint(
     mock_start_sprint.assert_called_once_with(
         new_sprint_id=100,
         sprint_name="DART 250721 (07/21-08/04)",
-        start_date=ANY,
-        end_date=ANY,
+        start_date=ANY, # datetime.now()
+        end_date=ANY,   # datetime.now() + 2 weeks
         session=mock_session,
         base_url=MOCK_BASE_URL
     )
-
-
-
-
-
 
 # @patch("src.orchestration.sprint_lifecycle.get_board_config")
 # @patch("src.orchestration.sprint_lifecycle.get_sprint_by_state")

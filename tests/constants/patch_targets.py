@@ -45,6 +45,17 @@ CREATE_SPRINT_NAME = "src.helpers.sprint_naming.generate_sprint_name"
 
 # Sprint Orchestration
 BOARD_CONFIG = "src.orchestration.sprint_orchestration.get_board_config"
+ORCH_CLOSE_SPRINT = "src.orchestration.sprint_orchestration.close_sprint"
+ORCH_CREATE_NAME = "src.orchestration.sprint_orchestration.generate_sprint_name"
+ORCH_CREATE_SPRINT = "src.orchestration.sprint_orchestration.create_sprint"
+ORCH_GET_SPRINT = "src.orchestration.sprint_orchestration.get_sprint_by_state"
+ORCH_GET_STORIES = (
+    "src.orchestration.sprint_orchestration.get_incomplete_stories"
+)
+ORCH_MOVE_ISSUES = (
+    "src.orchestration.sprint_orchestration.move_issues_to_new_sprint"
+)
+ORCH_START_SPRINT = "src.orchestration.sprint_orchestration.start_sprint"
 
 
 # Sprint Transfer
