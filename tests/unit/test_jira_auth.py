@@ -1,17 +1,20 @@
-import pytest
 from unittest.mock import patch
+
+import pytest
+
 from src.auth.jira_auth import (
     get_jira_credentials,
     make_basic_auth_token,
     get_auth_header
 )
+from tests.constants.patch_targets import (JAUTH_GET_CREDS, JAUTH_MAKE_TOKEN)
 from tests.constants.test_constants import (
     GET_ENV,
     MOCK_EMAIL,
     MOCK_API_TOKEN,
     SECRETS_MISSING
 )
-from tests.constants.patch_targets import (JAUTH_GET_CREDS, JAUTH_MAKE_TOKEN)
+
 
 def test_get_jira_credentials_returns_mocked_values() -> None:
     with patch(GET_ENV) as mock_getenv:
