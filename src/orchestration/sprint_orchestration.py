@@ -12,8 +12,7 @@ from src.services.jira_sprint_closure import close_sprint
 from src.services.jira_start_sprint import start_sprint
 from src.services.sprint_transfer import move_issues_to_new_sprint
 from src.type_defs.jira_issue import JiraIssue
-from tests.constants.test_constants import (ACTIVE, FUTURE)
-from type_defs.boardconfig import BoardConfig
+from src.type_defs.boardconfig import BoardConfig
 
 
 def automate_sprint(board_name: str, session: requests.Session) -> None:
@@ -29,7 +28,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
     config: BoardConfig = get_board_config(board_name)
-    upcoming_sprint = get_sprint_by_state(session, config, FUTURE)
+    upcoming_sprint = get_sprint_by_state(session, config, "future")
 
     if upcoming_sprint and upcoming_sprint["name"].startswith("DART "):
         logging.info(
@@ -61,7 +60,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
             return
         new_sprint_id = new_sprint.get("id")
 
-    active_sprint = get_sprint_by_state(session, config, ACTIVE)
+    active_sprint = get_sprint_by_state(session, config, "active")
     if active_sprint:
         incomplete_stories = get_incomplete_stories(
             active_sprint["id"],
