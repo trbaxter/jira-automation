@@ -4,8 +4,11 @@ CONFIG_ACCESS_LOAD_CONFIG = "src.helpers.config_accessor.load_config"
 
 
 # Jira Auth
+JAUTH_CERT_WHERE = "src.auth.session.certifi.where"
 JAUTH_GET_CREDS = "src.auth.jira_auth.get_jira_credentials"
+JAUTH_GET_HEADER = "src.auth.session.get_auth_header"
 JAUTH_MAKE_TOKEN = "src.auth.jira_auth.make_basic_auth_token"
+JAUTH_REQ_SESSION = "src.auth.session.requests.Session"
 
 
 # Jira Issues Service
