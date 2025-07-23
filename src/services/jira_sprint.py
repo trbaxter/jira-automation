@@ -6,13 +6,12 @@ import requests
 
 from src.helpers.config_accessor import get_board_config
 from src.logging_config.error_handling import handle_api_error
+from src.type_defs.boardconfig import BoardConfig
 from src.type_defs.payload import SprintPayload
 from src.type_defs.sprint_create_response import SprintCreateResponse
 from src.type_defs.sprint_summary import SprintSummary
-from src.type_defs.boardconfig import BoardConfig
 from src.utils.datetime_format import format_jira_date
 from src.utils.url_builder import build_sprint_state_query_url
-
 
 SPRINT_CREATE = "/rest/agile/1.0/sprint"
 

@@ -1,4 +1,5 @@
 import logging
+
 import requests
 
 from src.helpers.payload_builder import build_close_sprint_payload

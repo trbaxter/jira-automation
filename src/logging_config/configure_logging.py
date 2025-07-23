@@ -1,5 +1,6 @@
 import logging
 
+
 def log_config(level: int = logging.INFO) -> None:
     """
     Sets up the root logger using a message-only format.

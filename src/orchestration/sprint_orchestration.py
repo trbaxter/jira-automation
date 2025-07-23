@@ -1,20 +1,19 @@
 import logging
 from datetime import datetime, timedelta
 from typing import cast
-from src.type_defs.jira_issue import JiraIssue
 
 import requests
 
 from src.helpers.config_accessor import get_board_config
+from src.helpers.sprint_naming import generate_sprint_name
+from src.services.jira_issues import get_incomplete_stories
 from src.services.jira_sprint import create_sprint, get_sprint_by_state
 from src.services.jira_sprint_closure import close_sprint
-from src.services.sprint_transfer import move_issues_to_new_sprint
-from src.services.jira_issues import get_incomplete_stories
 from src.services.jira_start_sprint import start_sprint
-from src.helpers.sprint_naming import generate_sprint_name
-from type_defs.boardconfig import BoardConfig
-
+from src.services.sprint_transfer import move_issues_to_new_sprint
+from src.type_defs.jira_issue import JiraIssue
 from tests.constants.test_constants import (ACTIVE, FUTURE)
+from type_defs.boardconfig import BoardConfig
 
 
 def automate_sprint(board_name: str, session: requests.Session) -> None:

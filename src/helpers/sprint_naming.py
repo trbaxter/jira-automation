@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def generate_sprint_name(start_date: datetime, end_date: datetime) -> str:
     """
     Dynamically generates sprint names.

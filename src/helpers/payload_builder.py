@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from src.type_defs.sprint_close_payload import CloseSprintPayload
 from src.type_defs.sprint_start_payload import StartSprintPayload
 from src.utils.datetime_format import format_jira_date
-from datetime import datetime
 
 
 def build_close_sprint_payload(
@@ -28,4 +29,3 @@ def build_start_sprint_payload(
         "startDate": format_jira_date(start_date),
         "endDate": format_jira_date(end_date)
     }
-

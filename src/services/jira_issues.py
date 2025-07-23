@@ -63,4 +63,3 @@ def get_incomplete_stories(
         f"found in sprint {sprint_id}."
     )
     return incomplete_stories
-

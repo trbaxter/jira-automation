@@ -1,5 +1,6 @@
 from src.type_defs.jira_issue import JiraIssue
 
+
 def extract_issue_keys(issues: list[JiraIssue]) -> list[str]:
     """
     Extracts the issue keys from a list of JIRA issue dictionaries.

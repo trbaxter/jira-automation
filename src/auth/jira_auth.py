@@ -1,5 +1,5 @@
-import os
 import base64
+import os
 
 
 def get_jira_credentials() -> tuple[str, str]:
@@ -34,7 +34,7 @@ def make_basic_auth_token(email: str, token: str) -> str:
         String containing the base-64 encoded token.
     """
     credentials = f"{email}:{token}"
-    return base64.b64encode(credentials.encode()).decode("utf-8") # correct?
+    return base64.b64encode(credentials.encode()).decode("utf-8")  # correct?
 
 
 def get_auth_header() -> dict[str, str]:

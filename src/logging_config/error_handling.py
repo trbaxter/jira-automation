@@ -1,6 +1,6 @@
 import logging
-import requests
 
+import requests
 
 SUCCESS_CODES = {200, 201, 204}
 

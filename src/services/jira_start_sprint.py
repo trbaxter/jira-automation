@@ -1,9 +1,10 @@
 import logging
+from datetime import datetime
+
 import requests
 
 from src.helpers.payload_builder import build_start_sprint_payload
 from src.logging_config.error_handling import handle_api_error
-from datetime import datetime
 
 
 def start_sprint(
