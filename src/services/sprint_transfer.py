@@ -43,7 +43,7 @@ def transfer_issue_batch_with_retry(
             f"to sprint {sprint_id}. Attempt {attempt} of {max_attempts}."
         )
 
-        response = session.post(url, json=payload)
+        response = session.post(url, payload)
 
         if handle_api_error(
                 response,
