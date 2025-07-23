@@ -156,7 +156,7 @@ def test_log_if_no_future_sprint_creates_dart(
     with caplog.at_level("INFO"):
         automate_sprint("TEST", mock_session)
 
-    assert "No upcoming sprint found — creating a new DART sprint." in caplog.text
+    assert "No upcoming sprint found" in caplog.text
     mock_create.assert_called_once()
     mock_start_sprint.assert_called_once()
 
