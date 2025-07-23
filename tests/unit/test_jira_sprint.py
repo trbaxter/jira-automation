@@ -15,7 +15,12 @@ from src.services.jira_sprint import (
 )
 from src.type_defs.payload import SprintPayload
 from src.type_defs.sprint_create_response import SprintCreateResponse
-from type_defs.boardconfig import BoardConfig
+from tests.constants.patch_targets import (
+    JSPRINT_GET_CONFIG,
+    JSPRINT_HANDLE_ERROR,
+    JSPRINT_PARSE_RESPONSE,
+    JSPRINT_POST_PAYLOAD
+)
 from tests.constants.test_constants import (
     ACTIVE,
     FUTURE,
@@ -25,12 +30,7 @@ from tests.constants.test_constants import (
     MOCK_SPRINT_NAME,
     MOCK_SPRINT_START
 )
-from tests.constants.patch_targets import (
-    JSPRINT_GET_CONFIG,
-    JSPRINT_HANDLE_ERROR,
-    JSPRINT_PARSE_RESPONSE,
-    JSPRINT_POST_PAYLOAD
-)
+from type_defs.boardconfig import BoardConfig
 
 SPRINT_URL = "https://stuff/rest/agile/1.0/sprint/123"
 POST_URL = "https://localhost/rest/agile/1.0/sprint"
