@@ -46,19 +46,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests certifi pyyaml
-          
-
-      - name: Debug path and Python environment
-        run: |
-          echo "Working directory: $(pwd)"
-          echo "Listing files:"
-          ls -R
-          echo "Python sys.path:"
-          python -c "import sys; from pprint import pprint; pprint(sys.path)"
-        env:
-          PYTHONPATH: ${{ github.workspace }}
-
-
 
       # Run the script with stored secrets
       - name: Begin Automation
