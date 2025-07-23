@@ -1,5 +1,4 @@
-from unittest.mock import ANY
-from unittest.mock import patch, MagicMock
+from unittest.mock import ANY, MagicMock, patch
 
 import pytest
 
@@ -11,7 +10,7 @@ from tests.constants.patch_targets import (
     ORCH_GET_SPRINT,
     ORCH_GET_STORIES,
     ORCH_MOVE_ISSUES,
-    ORCH_START_SPRINT,
+    ORCH_START_SPRINT
 )
 from tests.constants.test_constants import (
     ACTIVE,
