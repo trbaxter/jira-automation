@@ -1,18 +1,19 @@
-from unittest.mock import patch, MagicMock
 from datetime import datetime
+from unittest.mock import patch, MagicMock
+
 import requests
 
 from src.services.jira_start_sprint import start_sprint
+from tests.constants.patch_targets import (
+    JSTART_HANDLE_ERROR,
+    PAYLOAD_BUILDER_FORMAT_DATE
+)
 from tests.constants.test_constants import (
     ACTIVE,
     JIRA_DATE_FORMAT,
     MOCK_BASE_URL,
     MOCK_SPRINT_END,
     MOCK_SPRINT_START
-)
-from tests.constants.patch_targets import (
-    JSTART_HANDLE_ERROR,
-    PAYLOAD_BUILDER_FORMAT_DATE
 )
 
 
