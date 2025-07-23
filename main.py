@@ -7,9 +7,9 @@ from src.orchestration.sprint_orchestration import automate_sprint
 
 if __name__ == "__main__":
     try:
-        board_name = os.environ.get("board_name")
+        board_name = os.environ.get("test")
         if not board_name:
-            raise ValueError("BOARD environment variable is not set.")
+            raise ValueError("YAML board environment variable is not set.")
 
         config = get_board_config(board_name)
         session = get_authenticated_session()
