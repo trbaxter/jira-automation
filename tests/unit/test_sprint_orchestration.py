@@ -15,7 +15,6 @@ from tests.constants.patch_targets import (
 from tests.constants.test_constants import (
     ACTIVE,
     FUTURE,
-    ISSUE1,
     MOCK_BASE_URL,
     MOCK_BOARD_NAME
 )
@@ -67,7 +66,7 @@ class TestAutomateSprint:
                 return None
 
         mock_get_sprint.side_effect = fake_get_sprint_by_state
-        mock_get_stories.return_value = [{"key": ISSUE1}]
+        mock_get_stories.return_value = [{"key": "Issue_1"}]
 
         automate_sprint(MOCK_BOARD_NAME, self.mock_session)
 
