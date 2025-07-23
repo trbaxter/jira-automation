@@ -30,7 +30,7 @@ from tests.constants.test_constants import (
 class TestAutomateSprint:
 
     @pytest.fixture(autouse=True)
-    def setup(self):
+    def setup(self) -> None:
         self.mock_session = MagicMock()
 
     def test_use_future_backlog_sprint(
@@ -43,7 +43,11 @@ class TestAutomateSprint:
             _mock_create_name,
             mock_close_sprint,
     ):
-        def fake_get_sprint_by_state(session, config, state):
+        def fake_get_sprint_by_state(
+                session: MagicMock,
+                config: dict,
+                state: str
+        ) -> dict | None:
             if state == FUTURE:
                 _ = session, config  # Unused, but required for function
 
@@ -92,7 +96,11 @@ class TestAutomateSprint:
             mock_create_name,
             mock_close_sprint,
     ):
-        def fake_get_sprint(session, config, state):
+        def fake_get_sprint(
+                session: MagicMock,
+                config: dict,
+                state: str
+        ) -> dict | None:
             _ = session, config  # Unused, but required for function
 
             if state == FUTURE:
@@ -123,7 +131,11 @@ class TestAutomateSprint:
             _mock_close_sprint,
             caplog
     ):
-        def fake_get_sprint(session, config, state):
+        def fake_get_sprint(
+                session: MagicMock,
+                config: dict,
+                state: str
+        ) -> None:
             _ = session, config  # Unused, but required for function
 
             if state == FUTURE:
@@ -154,7 +166,11 @@ class TestAutomateSprint:
             _mock_close_sprint,
             caplog
     ):
-        def fake_get_sprint(session, config, state):
+        def fake_get_sprint(
+                session: MagicMock,
+                config: dict,
+                state: str
+        ) -> None:
             _ = session, config  # Unused, but required for function
 
             if state == FUTURE:
