@@ -1,5 +1,5 @@
 from src.utils.url_builder import build_sprint_state_query_url
-from tests.constants.test_constants import (ACTIVE, MOCK_BASE_URL)
+from tests.constants.test_constants import ACTIVE, MOCK_BASE_URL
 
 
 def test_build_sprint_state_query_url() -> None:
