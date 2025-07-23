@@ -1,5 +1,7 @@
 import logging
+
 from _pytest.logging import LogCaptureFixture
+
 from src.logging_config.configure_logging import log_config
 
 
