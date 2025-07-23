@@ -77,8 +77,8 @@ def test_use_future_backlog_sprint(
     mock_start_sprint.assert_called_once_with(
         100,
         "DART 250721 (07/21-08/04)",
-        ANY, # datetime.now()
-        ANY, # datetime.now() + 2 weeks
+        ANY,  # datetime.now()
+        ANY,  # datetime.now() + 2 weeks
         mock_session,
         MOCK_BASE_URL
     )
@@ -102,7 +102,7 @@ def test_automate_sprint_create_new_sprint(
         mock_session
 ):
     def fake_get_sprint(session, config, state):
-        _ = session, config # Unused, but required for function
+        _ = session, config  # Unused, but required for function
 
         if state == FUTURE:
             return {"id": 1, "name": "Non-DART Sprint"}
