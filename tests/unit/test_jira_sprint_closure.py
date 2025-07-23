@@ -1,17 +1,18 @@
 from unittest.mock import MagicMock, patch
+
 import requests
 
 from src.services.jira_sprint_closure import close_sprint
+from tests.constants.patch_targets import (
+    JCLOSE_BUILD_PAYLOAD,
+    JCLOSE_HANDLE_ERROR
+)
 from tests.constants.test_constants import (
     CLOSED,
     MOCK_BASE_URL,
     MOCK_SPRINT_END,
     MOCK_SPRINT_NAME,
     MOCK_SPRINT_START,
-)
-from tests.constants.patch_targets import (
-    JCLOSE_BUILD_PAYLOAD,
-    JCLOSE_HANDLE_ERROR
 )
 
 
