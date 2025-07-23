@@ -1,5 +1,6 @@
 from typing import TypedDict
 
+
 class SprintCreateResponse(TypedDict):
     id: int
     self: str
