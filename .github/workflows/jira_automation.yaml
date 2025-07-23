@@ -67,7 +67,7 @@ jobs:
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
         run: |
-          PYTHONPATH=${{ github.workspace }} python main.py
+          python main.py
 
       # Displays notification if workflow runs on non-start week
 #      - name: Notify Skip
