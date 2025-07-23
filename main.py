@@ -1,11 +1,14 @@
 import logging
 import os
 
+from logging_config.configure_logging import log_config
 from src.auth.session import get_authenticated_session
 from src.helpers.config_accessor import get_board_config
 from src.orchestration.sprint_orchestration import automate_sprint
 
 if __name__ == "__main__":
+    log_config()
+
     try:
         board_key = os.environ.get("BOARD")
         if not board_key:
