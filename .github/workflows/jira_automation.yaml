@@ -1,0 +1,63 @@
+name: Test Board
+
+# Controls when the workflow will run
+on:
+#  schedule:
+    # 6AM UTC (midnight CST) every week on Wednesday
+#    - cron: '0 6 * * 3'
+
+  # Allow manual triggering if needed
+  workflow_dispatch:
+
+jobs:
+  job-name:
+    name: Jira Automation
+    runs-on: ubuntu-latest
+
+    steps:
+#      - name: Verify Sprint Week
+#        id: week_check
+#        run: |
+#          START_DATE="2024-10-23"
+#          TODAY=$(date -u +"%Y-%m-%d")
+#          WEEKS_DIFF=$(( ($(date -d "$TODAY" + %s) - $(date -d "$START_DATE"
+#          +%s)) / (60*60*24-7) ))
+#          if [ $(( WEEKS_DIFF % 2 )) -ne 0 ]; then
+#            echo "proceed=false" >> $GITHUB_OUTPUT
+#          else
+#            echo "proceed=true" >> $GITHUB_OUTPUT
+#          fi
+
+      # Checkout repository to the runner
+      - name: Repository Checkout
+#        if: steps.week_check.outputs.proceed == 'true'
+        uses: actions/checkout@v4
+
+      # Set up the Python environment
+      - name: Python Setup
+#        if: steps.week_check.outputs.proceed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.0'
+
+      # Install Dependencies
+      - name: Install Dependencies
+#        if: steps.week_check.outputs.proceed == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests certifi
+
+      # Run the script with stored secrets
+      - name: Begin Automation
+#        if: steps.week_check.outputs.proceed == 'true'
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        run: |
+          python "main.py"
+
+      # Displays notification if workflow runs on non-start week
+#      - name: Notify Skip
+#        if: steps.week_check.outputs.proceed == 'false'
+#        run: |
+#          echo "Sprint week not detected. Exiting workflow."
