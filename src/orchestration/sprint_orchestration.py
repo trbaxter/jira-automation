@@ -23,7 +23,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     • Transfers incomplete stories
     • Activates the new sprint
     """
-    logging.info("\nBeginning sprint automation process...\n")
+    logging.info("\n\nBeginning sprint automation process...\n\n")
 
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
