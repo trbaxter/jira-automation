@@ -2,38 +2,55 @@ from unittest.mock import patch
 
 import pytest
 
+from errors.missing_credentials_error import MissingCredentialsError
 from src.auth.jira_auth import (
+    Credentials,
     get_jira_credentials,
     make_basic_auth_token,
     get_auth_header
 )
 from tests.constants.patch_targets import (JAUTH_GET_CREDS, JAUTH_MAKE_TOKEN)
-from tests.constants.test_constants import (
-    GET_ENV,
-    MOCK_EMAIL,
-    MOCK_API_TOKEN,
-    SECRETS_MISSING
-)
+
+EMAIL = "JIRA_EMAIL"
+TOKEN = "JIRA_API_TOKEN"
 
 
-def test_get_jira_credentials_returns_mocked_values() -> None:
-    with patch(GET_ENV) as mock_getenv:
-        mock_getenv.side_effect = lambda key: {
-            "JIRA_EMAIL": MOCK_EMAIL,
-            "JIRA_API_TOKEN": MOCK_API_TOKEN
-        }[key]
-        email, token = get_jira_credentials()
-        assert email == MOCK_EMAIL
-        assert token == MOCK_API_TOKEN
+def test_get_jira_credentials_success() -> None:
+    fake_env = {EMAIL: "abc123", TOKEN: "def456"}.get
+    creds = get_jira_credentials(fake_env)
+    assert creds == Credentials("abc123", "def456")
 
 
-def test_get_jira_credentials_raises_exception_if_missing() -> None:
-    with patch(GET_ENV, return_value=None):
-        with pytest.raises(EnvironmentError, match=SECRETS_MISSING):
-            get_jira_credentials()
+def test_get_jira_credentials_both_missing() -> None:
+    fake_env = {EMAIL: None, TOKEN: None}.get
+    with pytest.raises(MissingCredentialsError) as error:
+        get_jira_credentials(fake_env)
+
+    error_msg = str(error.value)
+    assert EMAIL in error_msg
+    assert TOKEN in error_msg
 
 
-# noinspection SpellCheckingInspection
+def test_get_jira_credentials_email_missing() -> None:
+    fake_env = {EMAIL: None, TOKEN: "abc123"}.get
+    with pytest.raises(MissingCredentialsError) as error:
+        get_jira_credentials(fake_env)
+
+    error_msg = str(error.value)
+    assert EMAIL in error_msg
+    assert TOKEN not in error_msg
+
+
+def test_get_jira_credentials_token_missing() -> None:
+    fake_env = {EMAIL: "abc123", TOKEN: None}.get
+    with pytest.raises(MissingCredentialsError) as error:
+        get_jira_credentials(fake_env)
+
+    error_msg = str(error.value)
+    assert TOKEN in error_msg
+    assert EMAIL not in error_msg
+
+
 def test_make_basic_auth_token_encodes_correctly() -> None:
     email = "fred"
     token = "fred"
