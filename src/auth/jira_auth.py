@@ -20,6 +20,7 @@ class EnvReader(Protocol):
     than relying on hard-coded usages of 'os.getenv'. Uses '...' to indicate
     that no class body is required to function.
     """
+
     def __call__(self, key: str) -> Optional[str]: ...
 
 
