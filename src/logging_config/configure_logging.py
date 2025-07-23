@@ -17,7 +17,7 @@ def log_config(level: int = logging.INFO) -> None:
         None
     """
     logging.basicConfig(
-        format="%(message)s",
         level=level,
+        format="%(message)s",
         force=True
     )
