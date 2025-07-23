@@ -7,7 +7,7 @@ from src.orchestration.sprint_orchestration import automate_sprint
 
 if __name__ == "__main__":
     try:
-        board_name = os.environ.get("BOARD")
+        board_name = os.environ.get("board_name")
         if not board_name:
             raise ValueError("BOARD environment variable is not set.")
 
