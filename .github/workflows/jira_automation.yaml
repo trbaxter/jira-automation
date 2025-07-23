@@ -28,10 +28,12 @@ jobs:
 #            echo "proceed=true" >> $GITHUB_OUTPUT
 #          fi
 
+
       # Checkout repository to the runner
       - name: Repository Checkout
 #        if: steps.week_check.outputs.proceed == 'true'
         uses: actions/checkout@v4
+
 
       # Set up the Python environment
       - name: Python Setup
@@ -40,6 +42,7 @@ jobs:
         with:
           python-version: '3.13.0'
 
+
       # Install Dependencies
       - name: Install Dependencies
 #        if: steps.week_check.outputs.proceed == 'true'
@@ -47,14 +50,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests certifi pyyaml
 
+
       # Run the script with stored secrets
       - name: Begin Automation
 #        if: steps.week_check.outputs.proceed == 'true'
         env:
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          BOARD: test
         run: |
           python main.py
+
 
       # Displays notification if workflow runs on non-start week
 #      - name: Notify Skip
