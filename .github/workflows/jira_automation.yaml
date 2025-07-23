@@ -53,6 +53,7 @@ jobs:
         env:
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           python "main.py"
 
