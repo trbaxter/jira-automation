@@ -40,7 +40,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     else:
         if upcoming_sprint:
             logging.warning(
-                f"Ignoring non-DART sprint: {upcoming_sprint['name']}.\n"
+                f"Ignoring non-DART sprint: {upcoming_sprint['name']}\n"
                 f"Creating a new department-standard sprint instead."
             )
         else:
