@@ -6,6 +6,7 @@ from tests.constants.test_constants import (
     MOCK_SPRINT_START
 )
 
+
 def test_build_close_sprint_payload_returns_expected_dict() -> None:
     result = build_close_sprint_payload(
         MOCK_SPRINT_NAME,
