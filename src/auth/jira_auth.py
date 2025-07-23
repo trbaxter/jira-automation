@@ -2,7 +2,7 @@ import base64
 import os
 from typing import NamedTuple, runtime_checkable, Protocol, Optional
 
-from errors.missing_credentials_error import MissingCredentialsError
+from src.errors.missing_credentials_error import MissingCredentialsError
 
 
 # ──────────────────────────────────────────────────────────────────────────────
