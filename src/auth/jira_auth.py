@@ -81,7 +81,7 @@ def get_auth_header() -> dict[str, str]:
         include in an HTTP request.
     """
     email, token = get_jira_credentials()
-    encoded_token = make_basic_auth_token(email=email, token=token)
+    encoded_token = make_basic_auth_token(email, token)
     return {
         "Authorization": f"Basic {encoded_token}",
         "Content-Type": "application/json"
