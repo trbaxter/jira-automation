@@ -5,7 +5,7 @@ import requests
 
 from src.helpers.key_extraction import extract_issue_keys
 from src.logging_config.error_handling import handle_api_error
-from type_defs.jira_issue import JiraIssue
+from src.type_defs.jira_issue import JiraIssue
 
 
 def transfer_issue_batch_with_retry(
