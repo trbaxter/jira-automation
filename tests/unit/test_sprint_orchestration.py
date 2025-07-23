@@ -121,3 +121,79 @@ def test_automate_sprint_create_new_sprint(
     mock_close.assert_not_called()
     mock_move_issues.assert_not_called()
 
+
+@patch(ORCH_CREATE_NAME)
+@patch(ORCH_START_SPRINT)
+@patch(ORCH_MOVE_ISSUES)
+@patch(ORCH_CLOSE_SPRINT)
+@patch(ORCH_GET_STORIES)
+@patch(ORCH_CREATE_SPRINT)
+@patch(ORCH_GET_SPRINT)
+def test_log_if_no_future_sprint_creates_dart(
+        mock_get_sprint,
+        mock_create,
+        _mock_get_issues,
+        _mock_close,
+        _mock_move_issues,
+        mock_start_sprint,
+        mock_generate_name,
+        mock_session,
+        caplog
+):
+    def fake_get_sprint(session, config, state):
+        _ = session, config  # Unused, but required for function
+
+        if state == FUTURE:
+            return None
+        if state == ACTIVE:
+            return None
+        return None
+
+    mock_get_sprint.side_effect = fake_get_sprint
+    mock_generate_name.return_value = "DART 250721 (07/21-08/04)"
+    mock_create.return_value = {"id": 123}
+
+    with caplog.at_level("INFO"):
+        automate_sprint("TEST", mock_session)
+
+    assert "No upcoming sprint found — creating a new DART sprint." in caplog.text
+    mock_create.assert_called_once()
+    mock_start_sprint.assert_called_once()
+
+
+@patch(ORCH_CREATE_NAME)
+@patch(ORCH_START_SPRINT)
+@patch(ORCH_MOVE_ISSUES)
+@patch(ORCH_CLOSE_SPRINT)
+@patch(ORCH_GET_STORIES)
+@patch(ORCH_CREATE_SPRINT)
+@patch(ORCH_GET_SPRINT)
+def test_log_if_create_sprint_returns_none(
+        mock_get_sprint,
+        mock_create,
+        _mock_get_issues,
+        _mock_close,
+        _mock_move_issues,
+        mock_start_sprint,
+        mock_generate_name,
+        mock_session,
+        caplog
+):
+    def fake_get_sprint(session, config, state):
+        _ = session, config  # Unused, but required for function
+
+        if state == FUTURE:
+            return None
+        if state == ACTIVE:
+            return None
+        return None
+
+    mock_get_sprint.side_effect = fake_get_sprint
+    mock_generate_name.return_value = "DART 250721 (07/21-08/04)"
+    mock_create.return_value = None
+
+    with caplog.at_level("ERROR"):
+        automate_sprint("TEST", mock_session)
+
+    assert "Failed to create a new sprint." in caplog.text
+    mock_start_sprint.assert_not_called()
