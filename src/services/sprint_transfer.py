@@ -82,11 +82,11 @@ def transfer_all_issue_batches(
     for i in range(0, len(issue_keys), batch_size):
         batch = issue_keys[i:i + batch_size]
         success = transfer_issue_batch_with_retry(
-            session=session,
-            base_url=base_url,
-            sprint_id=new_sprint_id,
-            issue_keys=batch,
-            batch_start_index=i
+            session,
+            base_url,
+            new_sprint_id,
+            batch,
+            i
         )
 
         if not success:
