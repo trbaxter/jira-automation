@@ -40,12 +40,12 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     else:
         if upcoming_sprint:
             logging.warning(
-                f"Ignoring non-DART sprint: {upcoming_sprint['name']}\n"
-                f"Creating a new department-standard sprint instead.\n"
+                "No future sprints found starting with DART. "
+                "Creating new DART sprint."
             )
         else:
             logging.info(
-                "No upcoming sprint found — creating a new DART sprint."
+                "No upcoming sprint found. Initializing sprint creation."
             )
         new_sprint_name = generate_sprint_name(start_date, end_date)
         new_sprint = create_sprint(
