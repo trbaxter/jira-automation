@@ -19,6 +19,7 @@ from tests.constants.test_constants import (
     MOCK_BOARD_NAME
 )
 
+
 # Note: @patch listing in alphabetical order
 @patch(ORCH_CLOSE_SPRINT)
 @patch(ORCH_CREATE_NAME)
