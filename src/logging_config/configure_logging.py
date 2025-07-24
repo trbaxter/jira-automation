@@ -10,11 +10,7 @@ def log_config(level: int = logging.INFO) -> None:
     workflow action that the logs will display in already contain timestamps.
 
     Args:
-        level: Logging level to set. Can use 'logging.INFO', 'logging.DEBUG',
-               or 'logging.ERROR'. Defaults to 'logging.INFO'.
-
-    Returns:
-        None
+        level: Logging level to set.
     """
     logging.basicConfig(
         level=level,
