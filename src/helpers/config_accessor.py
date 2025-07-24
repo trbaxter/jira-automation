@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from errors.jira_board_not_found import JiraBoardNotFound
+from src.errors.jira_board_not_found import JiraBoardNotFound
 from src.utils.config_loader import BoardConfig, load_config
 
 _DEFAULT_CONFIG = (
