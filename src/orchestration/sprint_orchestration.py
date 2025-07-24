@@ -5,14 +5,18 @@ from typing import cast
 import requests
 
 from src.helpers.config_accessor import get_board_config
+from src.helpers.is_valid_dart_sprint import is_valid_dart_sprint
 from src.helpers.sprint_naming import generate_sprint_name
 from src.services.jira_issues import get_incomplete_stories
-from src.services.jira_sprint import create_sprint, get_sprint_by_state
+from src.services.jira_sprint import (
+    create_sprint,
+    get_sprint_by_state,
+    get_all_future_sprints
+)
 from src.services.jira_sprint_closure import close_sprint
 from src.services.jira_start_sprint import start_sprint
 from src.services.sprint_transfer import move_issues_to_new_sprint
 from src.type_defs.jira_issue import JiraIssue
-from src.type_defs.boardconfig import BoardConfig
 
 
 def automate_sprint(board_name: str, session: requests.Session) -> None:
@@ -27,26 +31,27 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
 
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
-    config: BoardConfig = get_board_config(board_name)
-    upcoming_sprint = get_sprint_by_state(session, config, "future")
+    config = get_board_config(board_name)
+    future_sprints = get_all_future_sprints(session, config)
 
-    if upcoming_sprint and upcoming_sprint["name"].startswith("DART "):
+    dart_sprint = next(
+        (s for s in sorted(future_sprints, key=lambda x: x.get("startDate", ""))
+         if is_valid_dart_sprint(s["name"], start_date)),
+        None
+    )
+
+    if dart_sprint:
         logging.info(
-            f"Upcoming sprint found: {upcoming_sprint['name']}. "
-            f"Proceeding with this sprint."
+            f"\nUpcoming DART sprint found: {dart_sprint['name']}"
+            "\nProceeding with automation process."
         )
-        new_sprint_id = upcoming_sprint["id"]
-        new_sprint_name = upcoming_sprint["name"]
+        new_sprint_id = dart_sprint["id"]
+        new_sprint_name = dart_sprint["name"]
     else:
-        if upcoming_sprint:
-            logging.warning(
-                "No future sprints found starting with DART. "
-                "Creating new DART sprint."
-            )
-        else:
-            logging.info(
-                "No upcoming sprint found. Initializing sprint creation."
-            )
+        logging.warning(
+            "\nNo future sprint found in the backlog starting with 'DART '."
+            "\nInitializing sprint generation."
+        )
         new_sprint_name = generate_sprint_name(start_date, end_date)
         new_sprint = create_sprint(
             board_name,
@@ -56,7 +61,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
             session
         )
         if not new_sprint:
-            logging.error("Failed to create a new sprint.")
+            logging.error("\nFailed to create new sprint.")
             return
         new_sprint_id = new_sprint.get("id")
 

@@ -137,3 +137,37 @@ def get_sprint_by_state(
 
     sprints = response.json().get("values", [])
     return sprints[0] if sprints else None
+
+
+def get_all_future_sprints(
+        session: requests.Session,
+        config: BoardConfig
+) -> list[SprintSummary]:
+    board_id = config["board_id"]
+    start_at = 0
+    max_results = 50
+    all_sprints = []
+    url = f"{config['base_url']}/rest/agile/1.0/board/{board_id}/sprint"
+
+    while True:
+        params = {
+            "state": "future",
+            "startAt": start_at,
+            "maxResults": max_results
+        }
+        response = session.get(url, params=params)
+        if response.status_code != 200:
+            raise RuntimeError(
+                f"\nError while fetching future sprints: {response.text}"
+            )
+
+        data = response.json()
+        sprints = data.get("values", [])
+        all_sprints.extend(sprints)
+
+        if data.get("isLast", True):
+            break
+
+        start_at += max_results
+
+    return all_sprints
