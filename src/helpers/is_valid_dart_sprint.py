@@ -8,7 +8,7 @@ def is_valid_dart_sprint(name: str, today: datetime) -> bool:
 
     Args:
         name: Name of a sprint.
-        today: The current date.
+        today: The sprint creation date.
 
     Returns:
         True if name matches "DART YYMMDD (MM/DD-MM/DD)", False otherwise.
@@ -16,7 +16,7 @@ def is_valid_dart_sprint(name: str, today: datetime) -> bool:
     yy = today.strftime("%y")
     mm = today.strftime("%m")
     dd = today.strftime("%d")
-    end_date = today + timedelta(days=14)
+    end_date = today + timedelta(days=13)
     mmdd_today = today.strftime("%m/%d")
     mmdd_end = end_date.strftime("%m/%d")
 
