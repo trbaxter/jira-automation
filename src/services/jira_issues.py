@@ -45,7 +45,7 @@ def get_incomplete_stories(
         issues = data.get("issues", [])
 
         logging.info(
-            f"Fetched {len(issues)} issues from page starting at {start_at}."
+            f"\nFetched {len(issues)} issues from page starting at {start_at}."
         )
 
         incomplete_stories.extend(
