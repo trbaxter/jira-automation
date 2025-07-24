@@ -20,7 +20,7 @@ def handle_api_error(response: requests.Response, context: str) -> bool:
                  performed (e.g. "closing sprint").
 
     Returns:
-        bool: 'True' if successful (200/201/204), 'False' otherwise.
+        True if successful, False otherwise.
     """
     if response.status_code not in SUCCESS_CODES:
         logging.error(
