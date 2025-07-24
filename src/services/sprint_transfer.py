@@ -3,7 +3,6 @@ import time
 
 import requests
 
-from src.helpers.key_extraction import extract_issue_keys
 from src.logging_config.error_handling import handle_api_error
 from src.type_defs.jira_issue import JiraIssue
 
@@ -121,15 +120,18 @@ def move_issues_to_new_sprint(
         logging.info("No incomplete stories to transfer.")
         return
 
-    issue_list = extract_issue_keys(issues)
-
     logging.info(
-        f"\nMoving the following {len(issue_list)} stories to the new sprint:"
+        f"\nMoving the following {len(issues)} stories to the new sprint:"
     )
-    for issue in issue_list:
+
+    for issue in issues:
         logging.info(
-            f"\nIssue ID: {issue}"
-            f"\nIssue Type: "
+            f"\nIssue ID: {issue['key']}"
+            f"\nType: {issue.get('type', 'Unknown')}"
+            f"\nStatus: {issue.get('status', 'Unknown')}"
+            f"\nSummary: {issue.get('summary', '').strip()}"
         )
 
-    transfer_all_issue_batches(issue_list, session, base_url, new_sprint_id)
+    issue_keys = [issue["key"] for issue in issues]
+
+    transfer_all_issue_batches(issue_keys, session, base_url, new_sprint_id)
