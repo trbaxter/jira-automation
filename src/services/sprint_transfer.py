@@ -121,12 +121,12 @@ def move_issues_to_new_sprint(
         logging.info("No incomplete stories to transfer.")
         return
 
-    issue_keys = extract_issue_keys(issues)
+    issue_list = extract_issue_keys(issues)
 
     logging.info(
-        f"\nMoving the following {len(issue_keys)} stories to the new sprint:"
+        f"\nMoving the following {len(issue_list)} stories to the new sprint:"
     )
-    for key in issue_keys:
-        logging.info(f"\nIssue ID: {key}")
+    for issue in issue_list:
+        logging.info(f"\nIssue ID: {issue}")
 
-    transfer_all_issue_batches(issue_keys, session, base_url, new_sprint_id)
+    transfer_all_issue_batches(issue_list, session, base_url, new_sprint_id)
