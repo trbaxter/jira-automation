@@ -5,9 +5,6 @@ from typing import NamedTuple, runtime_checkable, Protocol, Optional
 from src.errors.missing_credentials_error import MissingCredentialsError
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Types
-# ──────────────────────────────────────────────────────────────────────────────
 class Credentials(NamedTuple):
     email: str
     token: str
@@ -24,9 +21,6 @@ class EnvReader(Protocol):
     def __call__(self, key: str) -> Optional[str]: ...
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Public API
-# ──────────────────────────────────────────────────────────────────────────────
 def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
     """
     Retrieves Jira credentials (email and API token) from repository secrets.
