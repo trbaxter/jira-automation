@@ -3,9 +3,15 @@ from typing import List, Optional
 
 import requests
 
-from src.constants.jira_statuses import DONE_STATUSES
 from src.logging_config.error_handling import handle_api_error
 from src.type_defs.boardconfig import BoardConfig
+
+DONE_STATUSES = {
+    "Done",
+    "Cancelled",
+    "Existing Solution",
+    "Abandoned"
+}
 
 
 def get_incomplete_stories(
