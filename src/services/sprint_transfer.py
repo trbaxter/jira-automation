@@ -115,7 +115,7 @@ def move_issues_to_new_sprint(
         new_sprint_id: ID of the sprint to move issues to.
 
     Returns:
-        None
+        None.
     """
     if not issues:
         logging.info("No incomplete stories to transfer.")
