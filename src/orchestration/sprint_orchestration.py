@@ -35,16 +35,16 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     future_sprints = get_all_future_sprints(session, config)
 
     dart_sprint = next(
-        (
-            s for s in sorted(
-            future_sprints,
-            key=lambda x: x.get("startDate") or x["name"]
+        (s for s in sorted(future_sprints, key=lambda x: x.get("startDate", ""))
+         if is_valid_dart_sprint(
+            s["name"],
+            datetime.fromisoformat(s["startDate"][:-1])
+            if "startDate" in s and s["startDate"]
+            else datetime.now()
         )
-            if "name" in s and is_valid_dart_sprint(s["name"], start_date)
-        ),
+         ),
         None
     )
-
 
     if dart_sprint:
         logging.info(
