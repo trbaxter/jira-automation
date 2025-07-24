@@ -5,8 +5,8 @@ from typing import cast
 import requests
 
 from src.helpers.config_accessor import get_board_config
-from src.helpers.is_valid_dart_sprint import is_valid_dart_sprint
 from src.helpers.sprint_naming import generate_sprint_name
+from src.helpers.sprint_parser import parse_dart_sprint
 from src.services.jira_issues import get_incomplete_stories
 from src.services.jira_sprint import (
     create_sprint,
@@ -30,20 +30,24 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     logging.info("\nBeginning sprint automation process...")
 
     start_date = datetime.now()
-    end_date = start_date + timedelta(days=14)
+    end_date = start_date + timedelta(days=13)
     config = get_board_config(board_name)
     future_sprints = get_all_future_sprints(session, config)
 
     dart_sprint = next(
-        (s for s in sorted(future_sprints, key=lambda x: x.get("startDate", ""))
-         if is_valid_dart_sprint(
-            s["name"],
-            datetime.fromisoformat(s["startDate"][:-1])
-            if "startDate" in s and s["startDate"]
-            else datetime.now()
+        (
+            sprint for sprint in future_sprints
+            if (
+                (parsed := parse_dart_sprint(sprint["name"]))
+                and parsed.start == start_date
+                and (
+                        not sprint.get("startDate")  # Jira field blank
+                        or datetime.fromisoformat(
+                    sprint["startDate"][:-1]).date() == start_date
+                )
         )
-         ),
-        None
+        ),
+        None,
     )
 
     if dart_sprint:
