@@ -33,6 +33,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     logging.info("\nBeginning sprint automation process...")
 
     start_date = datetime.now(tz=BOARD_TZ)
+    logging.info("DEBUG - Board-start_date = %s (tz=%s)", start_date), BOARD_TZ
     end_date = start_date + timedelta(days=13)
     config = get_board_config(board_name)
     future_sprints = get_all_future_sprints(session, config)
