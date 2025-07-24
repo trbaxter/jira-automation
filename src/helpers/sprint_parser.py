@@ -11,12 +11,12 @@ class DartSprint(NamedTuple):
 
 _DART_RE = re.compile(
     r"""
-    ^DART\                     # literal 'DART '
-    (?P<yymmdd>\d{6})\         # YYMMDD then exactly one space
+    ^DART\                           # 'DART '
+    (?P<yymmdd>\d{6})\               # YYMMDD then exactly one space
     \(
-        (?P<start_mmdd>\d{2}/\d{2})  # 07/24
+        (?P<start_mmdd>\d{2}/\d{2})  # start date MM/DD
         -
-        (?P<end_mmdd>\d{2}/\d{2})    # 08/06
+        (?P<end_mmdd>\d{2}/\d{2})    # end date MM/DD
     \)$
     """,
     re.VERBOSE,
