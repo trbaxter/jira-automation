@@ -92,7 +92,8 @@ def transfer_all_issue_batches(
         if not success:
             raise SystemExit(
                 f"Transfer process aborted. "
-                f"Failed to move issues from index {i} to {i + len(batch) - 1}."
+                f"\nFailed to move issues from index {i} to "
+                f"{i + len(batch) - 1}."
             )
 
     logging.info("Migration of unfinished stories complete.")
