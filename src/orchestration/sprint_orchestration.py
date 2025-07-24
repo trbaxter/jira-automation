@@ -39,15 +39,6 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     config = get_board_config(board_name)
     future_sprints = get_all_future_sprints(session, config)
 
-    for sprint in future_sprints:
-        print(
-            "→", sprint["name"],
-            "| parsed:", bool(parse_dart_sprint(sprint["name"])),
-            "| parsed.start:", getattr(parse_dart_sprint(sprint["name"]), "start", None),
-            "| apiStart:", sprint.get("startDate"),
-        )
-
-
     dart_sprint = next(
         (
             s for s in future_sprints
