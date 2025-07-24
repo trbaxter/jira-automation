@@ -17,6 +17,9 @@ from src.services.jira_sprint_closure import close_sprint
 from src.services.jira_start_sprint import start_sprint
 from src.services.sprint_transfer import move_issues_to_new_sprint
 from src.type_defs.jira_issue import JiraIssue
+from zoneinfo import ZoneInfo
+
+BOARD_TZ = ZoneInfo("America/Chicago")
 
 
 def automate_sprint(board_name: str, session: requests.Session) -> None:
@@ -29,7 +32,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     """
     logging.info("\nBeginning sprint automation process...")
 
-    start_date = datetime.now()
+    start_date = datetime.now(tz=BOARD_TZ)
     end_date = start_date + timedelta(days=13)
     config = get_board_config(board_name)
     future_sprints = get_all_future_sprints(session, config)
