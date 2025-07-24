@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime, timedelta
-from typing import cast
 
 import requests
 
@@ -15,8 +14,7 @@ from src.services.jira_sprint import (
 )
 from src.services.jira_sprint_closure import close_sprint
 from src.services.jira_start_sprint import start_sprint
-from src.services.sprint_transfer import move_issues_to_new_sprint
-from src.type_defs.jira_issue import JiraIssue
+from src.services.sprint_transfer import move_issues_to_new_sprint, parse_issue
 from zoneinfo import ZoneInfo
 
 BOARD_TZ = ZoneInfo("America/Chicago")
@@ -79,7 +77,9 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
             config,
             session
         )
-        incomplete_stories = cast(list[JiraIssue], incomplete_stories)
+        incomplete_stories = [
+            parse_issue(issue) for issue in incomplete_stories
+        ]
 
         close_sprint(
             active_sprint["id"],

@@ -135,3 +135,16 @@ def move_issues_to_new_sprint(
     issue_keys = [issue["key"] for issue in issues]
 
     transfer_all_issue_batches(issue_keys, session, base_url, new_sprint_id)
+
+
+def parse_issue(raw: dict) -> JiraIssue:
+    return {
+        "key":
+            raw["key"],
+        "type":
+            raw.get("fields", {}).get("issuetype", {}).get("name", "Unknown"),
+        "status":
+            raw.get("fields", {}).get("status", {}).get("name", "Unknown"),
+        "summary":
+            raw.get("fields", {}).get("summary", "").strip()
+    }
