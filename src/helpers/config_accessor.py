@@ -1,25 +1,25 @@
-from src.utils.config_loader import BoardConfig
-from src.utils.config_loader import load_config
+from pathlib import Path
 
+from errors.jira_board_not_found import JiraBoardNotFound
+from src.utils.config_loader import BoardConfig, load_config
 
-def get_board_config(
-        board_name: str,
-        path: str = "board_config.yaml"
-) -> BoardConfig:
+_DEFAULT_CONFIG = (
+        Path(__file__).resolve().parent.parent.parent / "board_config.yaml"
+)
+
+def get_board_config(board_name: str) -> BoardConfig:
     """
-    Retrieves the configuration for a specified JIRA board.
+    Obtains a Jira board configuration based on board name.
 
     Args:
-        board_name: The alias of the board to retrieve.
-        path: Optional path to the YAML configuration file.
+        board_name: Alias of the Jira board.
 
     Returns:
-        The configuration dictionary for the specified board.
-
-    Raises:
-        KeyError: If the specified board alias does not exist.
+        Object containing 'board_id', 'base_url', and 'board_name'
+        attributes from board_config.yaml.
     """
-    config = load_config(path)
-    if board_name not in config:
-        raise KeyError(f"Board name '{board_name}' not found in {path}.")
-    return config[board_name]
+    config = load_config(str(_DEFAULT_CONFIG))
+    try:
+        return config[board_name]
+    except KeyError:
+        raise JiraBoardNotFound(board_name)
