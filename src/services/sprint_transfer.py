@@ -126,6 +126,6 @@ def move_issues_to_new_sprint(
         f"\nMoving the following {len(issue_keys)} stories to the new sprint:"
     )
     for key in issue_keys:
-        logging.info(f"Issue ID: {key}")
+        logging.info(f"\nIssue ID: {key}")
 
     transfer_all_issue_batches(issue_keys, session, base_url, new_sprint_id)
