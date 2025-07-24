@@ -32,7 +32,8 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     """
     logging.info("\nBeginning sprint automation process...")
 
-    start_date = datetime.now(tz=BOARD_TZ)
+    today = datetime.now(tz=BOARD_TZ).date()
+    start_date = datetime.combine(today, datetime.min.time(), tzinfo=BOARD_TZ)
     logging.info("DEBUG - Board-start_date = %s (tz=%s)", start_date), BOARD_TZ
     end_date = start_date + timedelta(days=13)
     config = get_board_config(board_name)
@@ -49,19 +50,12 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
 
     dart_sprint = next(
         (
-            sprint for sprint in future_sprints
-            if (
-                (parsed := parse_dart_sprint(sprint["name"]))
-                and parsed.start == start_date
-                and (
-                        not sprint.get("startDate")  # Jira field blank
-                        or datetime.fromisoformat(
-                    sprint["startDate"][:-1]).date() == start_date
-                )
-        )
+            s for s in future_sprints
+            if (parsed := parse_dart_sprint(s["name"])) and parsed.start == today
         ),
         None,
     )
+
 
     if dart_sprint:
         logging.info(
