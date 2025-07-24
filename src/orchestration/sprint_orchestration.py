@@ -59,15 +59,15 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
 
     if dart_sprint:
         logging.info(
-            f"\nUpcoming DART sprint found: {dart_sprint['name']}"
-            "Proceeding with automation process."
+            f"\nUpcoming DART sprint found: {dart_sprint['name']}."
+            "\nProceeding with automation process."
         )
         new_sprint_id = dart_sprint["id"]
         new_sprint_name = dart_sprint["name"]
     else:
         logging.warning(
-            "\nNo future sprint found in the backlog starting with 'DART '. "
-            "Initializing sprint generation."
+            "\nNo future sprint found in the backlog starting with 'DART '."
+            "\nInitializing sprint generation."
         )
         new_sprint_name = generate_sprint_name(start_date, end_date)
         new_sprint = create_sprint(
