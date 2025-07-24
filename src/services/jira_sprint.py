@@ -62,12 +62,13 @@ def post_sprint_payload(
 
 
 def parse_json_response(
-        response: requests.Response) -> Optional[SprintCreateResponse]:
+        response: requests.Response
+) -> Optional[SprintCreateResponse]:
     """
     Parses the JSON response, handling decode errors with logging.
 
     Args:
-        response: The HTTP response object.
+        The HTTP response object.
 
     Returns:
         Parsed JSON as a dict if valid, otherwise None.
@@ -103,12 +104,12 @@ def create_sprint(
     Returns:
         Parsed JSON response if successful, otherwise None.
     """
-    config: BoardConfig = get_board_config(board_name, config_path)
+    config = get_board_config(board_name, config_path)
     payload = build_sprint_payload(
-        sprint_name=sprint_name,
-        sprint_start=start_date,
-        sprint_end=end_date,
-        board_id=config["board_id"]
+        sprint_name,
+        start_date,
+        end_date,
+        config["board_id"]
     )
     url = f"{config['base_url']}{SPRINT_CREATE}"
 
@@ -126,9 +127,9 @@ def get_sprint_by_state(
         state: str
 ) -> Optional[SprintSummary]:
     url = build_sprint_state_query_url(
-        base_url=config["base_url"],
-        board_id=config["board_id"],
-        state=state
+        config["base_url"],
+        config["board_id"],
+        state
     )
     response = session.get(url)
 
