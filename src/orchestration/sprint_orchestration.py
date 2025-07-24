@@ -27,7 +27,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     • Transfers incomplete stories
     • Activates the new sprint
     """
-    logging.info("Beginning sprint automation process...")
+    logging.info("\nBeginning sprint automation process...")
 
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
@@ -48,14 +48,14 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
 
     if dart_sprint:
         logging.info(
-            f"Upcoming DART sprint found: {dart_sprint['name']}"
+            f"\nUpcoming DART sprint found: {dart_sprint['name']}"
             "Proceeding with automation process."
         )
         new_sprint_id = dart_sprint["id"]
         new_sprint_name = dart_sprint["name"]
     else:
         logging.warning(
-            "No future sprint found in the backlog starting with 'DART '. "
+            "\nNo future sprint found in the backlog starting with 'DART '. "
             "Initializing sprint generation."
         )
         new_sprint_name = generate_sprint_name(start_date, end_date)
