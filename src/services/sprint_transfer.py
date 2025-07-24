@@ -7,6 +7,12 @@ from src.helpers.key_extraction import extract_issue_keys
 from src.logging_config.error_handling import handle_api_error
 from src.type_defs.jira_issue import JiraIssue
 
+DONE_STATUSES = {
+    "Done",
+    "Cancelled",
+    "Existing Solution",
+    "Abandoned"
+}
 
 def transfer_issue_batch_with_retry(
         session: requests.Session,
@@ -127,6 +133,9 @@ def move_issues_to_new_sprint(
         f"\nMoving the following {len(issue_list)} stories to the new sprint:"
     )
     for issue in issue_list:
-        logging.info(f"\nIssue ID: {issue}")
+        logging.info(
+            f"\nIssue ID: {issue}"
+            f"\nIssue Type: "
+        )
 
     transfer_all_issue_batches(issue_list, session, base_url, new_sprint_id)
