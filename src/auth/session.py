@@ -1,7 +1,7 @@
 import certifi
 import requests
 
-from src.auth.jira_auth import get_auth_header
+from src.auth.credentials import get_auth_header
 
 
 def get_authenticated_session() -> requests.Session:
@@ -12,8 +12,7 @@ def get_authenticated_session() -> requests.Session:
     attaches headers required for authenticating with the Jira API.
 
     Returns:
-        requests.Session: A configured session object with
-                          authentication headers.
+        A configured session object with authentication headers.
     """
     session = requests.Session()
     session.verify = certifi.where()
