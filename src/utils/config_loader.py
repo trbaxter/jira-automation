@@ -1,10 +1,3 @@
-"""
-Utilities for loading the JIRA board configurations.
-
-Defines a typed dictionary for board metadata and provides a function
-to load and validate configuration data from a specified YAML path.
-"""
-
 from pathlib import Path
 from typing import Dict
 
