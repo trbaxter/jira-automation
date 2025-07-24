@@ -34,7 +34,6 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
 
     today = datetime.now(tz=BOARD_TZ).date()
     start_date = datetime.combine(today, datetime.min.time(), tzinfo=BOARD_TZ)
-    logging.info("DEBUG - Board-start_date = %s (tz=%s)", start_date), BOARD_TZ
     end_date = start_date + timedelta(days=13)
     config = get_board_config(board_name)
     future_sprints = get_all_future_sprints(session, config)
