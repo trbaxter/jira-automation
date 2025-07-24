@@ -87,7 +87,6 @@ def create_sprint(
         start_date: datetime,
         end_date: datetime,
         session: requests.Session,
-        config_path: str = "board_config.yaml"
 ) -> Optional[SprintCreateResponse]:
     """
     Creates a new sprint in JIRA using the board config in the YAML file.
@@ -98,13 +97,11 @@ def create_sprint(
         start_date: Datetime of sprint start.
         end_date: Datetime of sprint end.
         session: An authenticated request.Session object.
-        config_path: Optional path to the YAML config file.
-                     Defaults to 'board_config.yaml'.
 
     Returns:
         Parsed JSON response if successful, otherwise None.
     """
-    config = get_board_config(board_name, config_path)
+    config = get_board_config(board_name)
     payload = build_sprint_payload(
         sprint_name,
         start_date,
