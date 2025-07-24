@@ -40,5 +40,5 @@ def start_sprint(
     ):
         return
 
-    logging.info(f"\nSprint {new_sprint_id} is now active.\n")
+    logging.info(f"\nSprint {new_sprint_id} is now active.")
     logging.info("\nSprint automation process complete.")
