@@ -3,7 +3,7 @@ from typing import Dict
 
 import yaml
 
-from src.type_defs.boardconfig import BoardConfig
+from src.models.boardconfig import BoardConfig
 
 
 def load_config(path: str = "board_config.yaml") -> Dict[str, BoardConfig]:
