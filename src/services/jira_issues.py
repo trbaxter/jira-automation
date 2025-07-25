@@ -4,7 +4,7 @@ from typing import List, Optional
 import requests
 
 from src.logging_config.error_handling import handle_api_error
-from src.type_defs.boardconfig import BoardConfig
+from src.models.boardconfig import BoardConfig
 
 DONE_STATUSES = {
     "Done",
