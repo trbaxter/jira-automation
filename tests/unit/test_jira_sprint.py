@@ -30,7 +30,7 @@ from tests.constants.test_constants import (
     MOCK_SPRINT_NAME,
     MOCK_SPRINT_START
 )
-from models.boardconfig import BoardConfig
+from models.board_config import BoardConfig
 
 SPRINT_URL = "https://stuff/rest/agile/1.0/sprint/123"
 POST_URL = "https://localhost/rest/agile/1.0/sprint"

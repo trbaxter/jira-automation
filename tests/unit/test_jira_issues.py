@@ -4,7 +4,7 @@ import requests
 
 from src.services.jira_issues import get_incomplete_stories, DONE_STATUSES
 from tests.constants.patch_targets import JIRA_ISSUES_HANDLE_API_ERROR
-from models.boardconfig import BoardConfig
+from models.board_config import BoardConfig
 
 MOCK_CONFIG: BoardConfig = {
     "board_id": 1,

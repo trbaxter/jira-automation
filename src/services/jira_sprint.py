@@ -6,7 +6,7 @@ import requests
 
 from src.helpers.config_accessor import get_board_config
 from src.logging_config.error_handling import handle_api_error
-from src.models.boardconfig import BoardConfig
+from src.models.board_config import BoardConfig
 from src.models.payload import SprintPayload
 from src.models.sprint_create_response import SprintCreateResponse
 from src.models.sprint_summary import SprintSummary

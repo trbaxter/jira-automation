@@ -2,9 +2,8 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from src.models.boardconfig import BoardConfig
+from src.models.board_config import BoardConfig
 from src.utils.config_loader import load_config
-from tests.constants.test_constants import TEST_YAML_PATH
 from tests.constants.test_objects import (
     MISSING_BOARDS_YAML,
     VALID_CONFIG_YAML
@@ -17,7 +16,7 @@ class TestLoadConfig:
             patch("pathlib.Path.open", mock_open(read_data=VALID_CONFIG_YAML)),
             patch("pathlib.Path.exists", return_value=True)
         ):
-            result = load_config(TEST_YAML_PATH)
+            result = load_config()
             assert isinstance(result, dict)
             assert "test" in result
 
@@ -37,7 +36,7 @@ class TestLoadConfig:
                     KeyError,
                     match="Required section 'boards' missing"
             ):
-                load_config(TEST_YAML_PATH)
+                load_config()
 
     def test_raises_file_not_found_on_missing_file(self) -> None:
         with patch("pathlib.Path.exists", return_value=False):
@@ -45,4 +44,4 @@ class TestLoadConfig:
                     FileNotFoundError,
                     match="board_config.yaml not found"
             ):
-                load_config(TEST_YAML_PATH)
+                load_config()
