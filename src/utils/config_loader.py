@@ -2,7 +2,7 @@ from pathlib import Path
 
 import yaml
 
-from exceptions.config_not_found_error import ConfigNotFoundError
+from src.exceptions.config_not_found_error import ConfigNotFoundError
 from src.models.board_config import BoardConfig
 
 _CONFIG_PATH = Path(__file__).resolve().parents[2] / "board_config.yaml"
