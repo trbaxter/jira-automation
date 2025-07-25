@@ -5,14 +5,12 @@ import yaml
 
 from src.models.boardconfig import BoardConfig
 
+_CONFIG_PATH = Path(__file__).resolve().parents[2] / "board_config.yaml"
 
-def load_config(path: str = "board_config.yaml") -> Dict[str, BoardConfig]:
+
+def load_config() -> Dict[str, BoardConfig]:
     """
     Loads and validates JIRA board configurations.
-
-    Args:
-        path: Optional path to the YAML configuration file. Defaults to
-              'board_config.yaml' in the root directory.
 
     Returns:
         A dictionary mapping board aliases to their config details.
@@ -21,13 +19,12 @@ def load_config(path: str = "board_config.yaml") -> Dict[str, BoardConfig]:
         FileNotFoundError: If the yaml config file is missing.
         KeyError: If the required 'boards' section is missing in the YAML file.
     """
-    full_path = Path(path)
-    if not full_path.exists():
+    if not _CONFIG_PATH.exists():
         raise FileNotFoundError(
             f"board_config.yaml not found in root directory."
         )
 
-    with full_path.open("r", encoding="utf-8") as file:
+    with _CONFIG_PATH.open("r", encoding="utf-8") as file:
         config = yaml.safe_load(file)
 
     if "boards" not in config:

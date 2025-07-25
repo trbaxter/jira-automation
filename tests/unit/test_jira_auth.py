@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from src.errors.missing_credentials_error import MissingCredentialsError
+from src.exceptions.missing_credentials_error import MissingCredentialsError
 from src.auth.credentials import (
     Credentials,
     get_jira_credentials,

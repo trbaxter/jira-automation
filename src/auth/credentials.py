@@ -2,7 +2,7 @@ import base64
 import os
 from typing import NamedTuple, runtime_checkable, Protocol, Optional
 
-from src.errors.missing_credentials_error import MissingCredentialsError
+from src.exceptions.missing_credentials_error import MissingCredentialsError
 
 
 class Credentials(NamedTuple):
