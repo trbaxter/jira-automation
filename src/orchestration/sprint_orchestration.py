@@ -20,7 +20,7 @@ from src.services.sprint_transfer import move_issues_to_new_sprint, parse_issue
 BOARD_TZ = ZoneInfo("America/Chicago")
 
 
-def automate_sprint(board_name: str, session: requests.Session) -> None:
+def automate_sprint(session: requests.Session) -> None:
     """
     Orchestrates the full Jira sprint lifecycle:
     • Creates or fetches the next sprint
@@ -59,7 +59,6 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
         )
         new_sprint_name = generate_sprint_name(start_date, end_date)
         new_sprint = create_sprint(
-            board_name,
             new_sprint_name,
             start_date,
             end_date,
