@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from pydantic import HttpUrl
 
 import requests
 
@@ -13,7 +14,7 @@ def start_sprint(
         start_date: datetime,
         end_date: datetime,
         session: requests.Session,
-        base_url: str
+        base_url: HttpUrl
 ) -> None:
     """
     Activates a new sprint in JIRA by sending a PUT
