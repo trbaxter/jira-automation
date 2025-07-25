@@ -1,7 +1,7 @@
-from typing import TypedDict
+from pydantic import BaseModel
 
 
-class SprintPayload(TypedDict):
+class SprintPayload(BaseModel):
     name: str
     startDate: str
     endDate: str
