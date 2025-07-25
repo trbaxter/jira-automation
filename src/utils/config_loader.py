@@ -16,11 +16,16 @@ def load_config() -> BoardConfig:
         A BoardConfig object containing configuration details.
 
     Raises:
+        TypeError: If the yaml doesn't use the proper dict format.
         FileNotFoundError: If the yaml config file is missing.
     """
     try:
         with _CONFIG_PATH.open("r", encoding="utf-8") as file:
             config = yaml.safe_load(file)
+
+            if not isinstance(config, dict):
+                raise TypeError("YAML content must be a dictionary mapping")
+
             return BoardConfig(**config)
 
     except FileNotFoundError:
