@@ -1,6 +1,6 @@
 class MissingSecretsError(Exception):
     """
-    Raised when required JIRA credentials are missing from repository secrets.
+    Raised when required repository secrets are missing.
     """
 
     def __init__(self, missing_vars: list[str]) -> None:
