@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from src.helpers.sprint_naming import generate_sprint_name
+from utils.sprint_naming import generate_sprint_name
 
 
 def test_sprint_name_generation():

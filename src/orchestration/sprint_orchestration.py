@@ -4,9 +4,9 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from src.helpers.config_accessor import get_board_config
-from src.helpers.sprint_naming import generate_sprint_name
-from src.helpers.sprint_parser import parse_dart_sprint
+from src.utils.sprint_naming import generate_sprint_name
+from src.utils.sprint_parser import parse_dart_sprint
+from src.utils.config_loader import load_config
 from src.services.jira_issues import get_incomplete_stories
 from src.services.jira_sprint import (
     create_sprint,
@@ -33,7 +33,7 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     today = datetime.now(tz=BOARD_TZ).date()
     start_date = datetime.combine(today, datetime.min.time(), tzinfo=BOARD_TZ)
     end_date = start_date + timedelta(days=13)
-    config = get_board_config(board_name)
+    config = load_config()
     future_sprints = get_all_future_sprints(session, config)
 
     dart_sprint = next(

@@ -1,4 +1,4 @@
-from src.helpers.payload_builder import build_close_sprint_payload
+from utils.payload_builder import build_close_sprint_payload
 from tests.constants.test_constants import (
     CLOSED,
     MOCK_SPRINT_END,
