@@ -1,7 +1,7 @@
-from typing import TypedDict
+from pydantic import BaseModel, HttpUrl
 
 
-class BoardConfig(TypedDict):
+class BoardConfig(BaseModel):
     board_id: int
-    base_url: str
+    base_url: HttpUrl
     board_name: str
