@@ -4,12 +4,12 @@ from typing import Optional
 
 import requests
 
-from src.helpers.config_accessor import get_board_config
 from src.logging_config.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
 from src.models.payload import SprintPayload
 from src.models.sprint_create_response import SprintCreateResponse
 from src.models.sprint_summary import SprintSummary
+from src.utils.config_loader import load_config
 from src.utils.datetime_format import format_jira_date
 from src.utils.url_builder import build_sprint_state_query_url
 
@@ -82,7 +82,6 @@ def parse_json_response(
 
 
 def create_sprint(
-        board_name: str,
         sprint_name: str,
         start_date: datetime,
         end_date: datetime,
@@ -92,7 +91,6 @@ def create_sprint(
     Creates a new sprint in JIRA using the board config in the YAML file.
 
     Args:
-        board_name: Alias of the board as set in the YAML config.
         sprint_name: Desired sprint name.
         start_date: Datetime of sprint start.
         end_date: Datetime of sprint end.
@@ -101,14 +99,14 @@ def create_sprint(
     Returns:
         Parsed JSON response if successful, otherwise None.
     """
-    config = get_board_config(board_name)
+    config = load_config()
     payload = build_sprint_payload(
         sprint_name,
         start_date,
         end_date,
-        config["board_id"]
+        config.board_id
     )
-    url = f"{config['base_url']}{SPRINT_CREATE}"
+    url = f"{config.base_url}{SPRINT_CREATE}"
 
     response = post_sprint_payload(session, url, payload)
 
@@ -124,8 +122,8 @@ def get_sprint_by_state(
         state: str
 ) -> Optional[SprintSummary]:
     url = build_sprint_state_query_url(
-        config["base_url"],
-        config["board_id"],
+        config.base_url,
+        config.board_id,
         state
     )
     response = session.get(url)
@@ -141,7 +139,7 @@ def get_all_future_sprints(
         session: requests.Session,
         config: BoardConfig
 ) -> list[SprintSummary]:
-    board_id = config["board_id"]
+    board_id = config.board_id
     start_at = 0
     max_results = 50
     all_sprints = []
