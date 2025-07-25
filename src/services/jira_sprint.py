@@ -143,7 +143,7 @@ def get_all_future_sprints(
     start_at = 0
     max_results = 50
     all_sprints = []
-    url = f"{config['base_url']}/rest/agile/1.0/board/{board_id}/sprint"
+    url = f"{config.base_url}/rest/agile/1.0/board/{board_id}/sprint"
 
     while True:
         params = {
