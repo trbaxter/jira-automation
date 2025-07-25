@@ -38,7 +38,7 @@ def get_incomplete_stories(
     max_results = 50
 
     while True:
-        url = f"{config['base_url']}/rest/agile/1.0/sprint/{sprint_id}/issue"
+        url = f"{config.base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
         params = {"startAt": start_at, "maxResults": max_results}
         response = session.get(url, params=params)
 
