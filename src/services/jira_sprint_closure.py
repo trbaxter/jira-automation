@@ -1,9 +1,10 @@
 import logging
 
 import requests
+from pydantic import HttpUrl
 
-from utils.payload_builder import build_close_sprint_payload
 from src.logging_config.error_handling import handle_api_error
+from src.utils.payload_builder import build_close_sprint_payload
 
 
 def close_sprint(
@@ -12,7 +13,7 @@ def close_sprint(
         start_date: str,
         end_date: str,
         session: requests.Session,
-        base_url: str
+        base_url: HttpUrl
 ) -> None:
     """
     Closes a sprint using the JIRA API.
