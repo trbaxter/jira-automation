@@ -4,7 +4,7 @@ import time
 import requests
 
 from src.logging_config.error_handling import handle_api_error
-from src.type_defs.jira_issue import JiraIssue
+from src.models.jira_issue import JiraIssue
 
 
 def transfer_issue_batch_with_retry(
