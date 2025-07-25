@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -15,7 +16,6 @@ from src.services.jira_sprint import (
 from src.services.jira_sprint_closure import close_sprint
 from src.services.jira_start_sprint import start_sprint
 from src.services.sprint_transfer import move_issues_to_new_sprint, parse_issue
-from zoneinfo import ZoneInfo
 
 BOARD_TZ = ZoneInfo("America/Chicago")
 
@@ -39,11 +39,11 @@ def automate_sprint(board_name: str, session: requests.Session) -> None:
     dart_sprint = next(
         (
             s for s in future_sprints
-            if (parsed := parse_dart_sprint(s["name"])) and parsed.start == today
+            if
+        (parsed := parse_dart_sprint(s["name"])) and parsed.start == today
         ),
         None,
     )
-
 
     if dart_sprint:
         logging.info(
