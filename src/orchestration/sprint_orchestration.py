@@ -102,5 +102,5 @@ def automate_sprint(session: requests.Session) -> None:
         start_date,
         end_date,
         session,
-        config["base_url"]
+        config.base_url
     )
