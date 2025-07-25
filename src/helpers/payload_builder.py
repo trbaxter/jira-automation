@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from src.type_defs.sprint_close_payload import CloseSprintPayload
-from src.type_defs.sprint_start_payload import StartSprintPayload
+from src.models.sprint_close_payload import CloseSprintPayload
+from src.models.sprint_start_payload import StartSprintPayload
 from src.utils.datetime_format import format_jira_date
 
 
