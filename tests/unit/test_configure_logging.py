@@ -12,8 +12,8 @@ def test_configure_logging_sets_level() -> None:
 
 
 def test_configure_logging_sets_format(caplog: LogCaptureFixture) -> None:
+    log_config(logging.INFO, force=False)
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
 
     with caplog.at_level(logging.INFO):
         logger.info("Hello world")

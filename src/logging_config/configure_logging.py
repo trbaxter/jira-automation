@@ -1,7 +1,7 @@
 import logging
 
 
-def log_config(level: int = logging.INFO) -> None:
+def log_config(level: int = logging.INFO, force: bool = True) -> None:
     """
     Sets up the root logger using a message-only format.
 
@@ -11,9 +11,10 @@ def log_config(level: int = logging.INFO) -> None:
 
     Args:
         level: Logging level to set.
+        force: Forces removal of previously attached logging handlers if True.
     """
     logging.basicConfig(
         level=level,
         format="%(message)s",
-        force=True
+        force=force
     )
