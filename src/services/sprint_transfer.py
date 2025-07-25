@@ -3,13 +3,14 @@ import time
 
 import requests
 
+from pydantic import HttpUrl
 from src.logging_config.error_handling import handle_api_error
 from src.models.jira_issue import JiraIssue
 
 
 def transfer_issue_batch_with_retry(
         session: requests.Session,
-        base_url: str,
+        base_url: HttpUrl,
         sprint_id: int,
         issue_keys: list[str],
         batch_start_index: int,
@@ -61,7 +62,7 @@ def transfer_issue_batch_with_retry(
 def transfer_all_issue_batches(
         issue_keys: list[str],
         session: requests.Session,
-        base_url: str,
+        base_url: HttpUrl,
         new_sprint_id: int
 ) -> None:
     """
@@ -101,7 +102,7 @@ def transfer_all_issue_batches(
 def move_issues_to_new_sprint(
         issues: list[JiraIssue],
         session: requests.Session,
-        base_url: str,
+        base_url: HttpUrl,
         new_sprint_id: int
 ) -> None:
     """
