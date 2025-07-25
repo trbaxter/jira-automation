@@ -1,4 +1,4 @@
-from src.type_defs.jira_issue import JiraIssue
+from src.models.jira_issue import JiraIssue
 
 
 def extract_issue_keys(issues: list[JiraIssue]) -> list[str]:
