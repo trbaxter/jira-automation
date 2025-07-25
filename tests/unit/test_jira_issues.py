@@ -2,10 +2,9 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from src.constants.jira_statuses import DONE_STATUSES
-from src.services.jira_issues import get_incomplete_stories
+from src.services.jira_issues import get_incomplete_stories, DONE_STATUSES
 from tests.constants.patch_targets import JIRA_ISSUES_HANDLE_API_ERROR
-from type_defs.boardconfig import BoardConfig
+from models.boardconfig import BoardConfig
 
 MOCK_CONFIG: BoardConfig = {
     "board_id": 1,

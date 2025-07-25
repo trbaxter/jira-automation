@@ -2,7 +2,7 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from src.type_defs.boardconfig import BoardConfig
+from src.models.boardconfig import BoardConfig
 from src.utils.config_loader import load_config
 from tests.constants.test_constants import TEST_YAML_PATH
 from tests.constants.test_objects import (

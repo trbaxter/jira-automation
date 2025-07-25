@@ -13,8 +13,8 @@ from src.services.jira_sprint import (
     parse_json_response,
     post_sprint_payload
 )
-from src.type_defs.payload import SprintPayload
-from src.type_defs.sprint_create_response import SprintCreateResponse
+from src.models.payload import SprintPayload
+from src.models.sprint_create_response import SprintCreateResponse
 from tests.constants.patch_targets import (
     JSPRINT_GET_CONFIG,
     JSPRINT_HANDLE_ERROR,
@@ -30,7 +30,7 @@ from tests.constants.test_constants import (
     MOCK_SPRINT_NAME,
     MOCK_SPRINT_START
 )
-from type_defs.boardconfig import BoardConfig
+from models.boardconfig import BoardConfig
 
 SPRINT_URL = "https://stuff/rest/agile/1.0/sprint/123"
 POST_URL = "https://localhost/rest/agile/1.0/sprint"
