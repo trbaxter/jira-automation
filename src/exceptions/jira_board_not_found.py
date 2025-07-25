@@ -1,4 +1,4 @@
-class JiraBoardNotFound(KeyError):
+class JiraBoardNotFoundError(KeyError):
     """
     Raised when a board configuration is requested using an undefined alias.
     """

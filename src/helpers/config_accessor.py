@@ -1,4 +1,4 @@
-from src.exceptions.jira_board_not_found import JiraBoardNotFound
+from src.exceptions.jira_board_not_found import JiraBoardNotFoundError
 from src.utils.config_loader import BoardConfig, load_config
 
 
@@ -17,4 +17,4 @@ def get_board_config(board_name: str) -> BoardConfig:
     try:
         return config[board_name]
     except KeyError:
-        raise JiraBoardNotFound(board_name)
+        raise JiraBoardNotFoundError(board_name)
