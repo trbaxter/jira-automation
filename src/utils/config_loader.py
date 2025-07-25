@@ -24,14 +24,17 @@ def load_config() -> BoardConfig:
     try:
         with _CONFIG_PATH.open("r", encoding="utf-8") as file:
             config = yaml.safe_load(file)
-    except yaml.YAMLError as error:
-        raise ConfigSchemaError(f"Invalid YAML syntax: {error}")
+            return BoardConfig(**config)
 
-
-    if not _CONFIG_PATH.exists():
+    except FileNotFoundError:
         raise ConfigNotFoundError()
 
-    try:
-        return BoardConfig(**config)
+    except yaml.YAMLError as error:
+        err_msg = str(error).splitlines()[2].strip()
+        formatted_error = err_msg[0].upper() + err_msg[1:]
+        raise ConfigSchemaError(
+            f"{formatted_error}"
+        )
+
     except ValidationError as error:
         raise ConfigSchemaError(str(error))
