@@ -15,7 +15,7 @@ def load_config() -> BoardConfig:
     Loads and validates JIRA board configurations.
 
     Returns:
-        A dictionary mapping board aliases to their config details.
+        A BoardConfig object containing configuration details.
 
     Raises:
         FileNotFoundError: If the yaml config file is missing.
