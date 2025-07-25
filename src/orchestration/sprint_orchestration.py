@@ -86,7 +86,7 @@ def automate_sprint(session: requests.Session) -> None:
             active_sprint["startDate"],
             active_sprint["endDate"],
             session,
-            config["base_url"]
+            config.base_url
         )
 
         move_issues_to_new_sprint(
