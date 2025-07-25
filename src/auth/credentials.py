@@ -2,7 +2,7 @@ import base64
 import os
 from typing import NamedTuple, runtime_checkable, Protocol, Optional
 
-from src.exceptions.missing_credentials_error import MissingCredentialsError
+from src.exceptions.missing_secrets_error import MissingSecretsError
 
 
 class Credentials(NamedTuple):
@@ -41,7 +41,7 @@ def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
         missing.append("JIRA_API_TOKEN")
 
     if missing:
-        raise MissingCredentialsError(missing)
+        raise MissingSecretsError(missing)
 
     return Credentials(email, token)
 

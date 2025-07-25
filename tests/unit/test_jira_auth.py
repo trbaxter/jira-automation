@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from src.exceptions.missing_credentials_error import MissingCredentialsError
+from src.exceptions.missing_secrets_error import MissingSecretsError
 from src.auth.credentials import (
     Credentials,
     get_jira_credentials,
@@ -23,7 +23,7 @@ def test_get_jira_credentials_success() -> None:
 
 def test_get_jira_credentials_both_missing() -> None:
     fake_env = {EMAIL: None, TOKEN: None}.get
-    with pytest.raises(MissingCredentialsError) as error:
+    with pytest.raises(MissingSecretsError) as error:
         get_jira_credentials(fake_env)
 
     error_msg = str(error.value)
@@ -33,7 +33,7 @@ def test_get_jira_credentials_both_missing() -> None:
 
 def test_get_jira_credentials_email_missing() -> None:
     fake_env = {EMAIL: None, TOKEN: "abc123"}.get
-    with pytest.raises(MissingCredentialsError) as error:
+    with pytest.raises(MissingSecretsError) as error:
         get_jira_credentials(fake_env)
 
     error_msg = str(error.value)
@@ -43,7 +43,7 @@ def test_get_jira_credentials_email_missing() -> None:
 
 def test_get_jira_credentials_token_missing() -> None:
     fake_env = {EMAIL: "abc123", TOKEN: None}.get
-    with pytest.raises(MissingCredentialsError) as error:
+    with pytest.raises(MissingSecretsError) as error:
         get_jira_credentials(fake_env)
 
     error_msg = str(error.value)

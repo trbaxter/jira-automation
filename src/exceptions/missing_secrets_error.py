@@ -1,4 +1,4 @@
-class MissingCredentialsError(Exception):
+class MissingSecretsError(Exception):
     """
     Raised when required JIRA credentials are missing from repository secrets.
     """
