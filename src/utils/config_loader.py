@@ -1,14 +1,16 @@
 from pathlib import Path
-from typing import Dict
 
 import yaml
+from pydantic import ValidationError
 
-from src.models.boardconfig import BoardConfig
+from exceptions.config_not_found_error import ConfigNotFoundError
+from exceptions.config_schema_error import ConfigSchemaError
+from src.models.board_config import BoardConfig
 
 _CONFIG_PATH = Path(__file__).resolve().parents[2] / "board_config.yaml"
 
 
-def load_config() -> Dict[str, BoardConfig]:
+def load_config() -> BoardConfig:
     """
     Loads and validates JIRA board configurations.
 
@@ -19,17 +21,17 @@ def load_config() -> Dict[str, BoardConfig]:
         FileNotFoundError: If the yaml config file is missing.
         KeyError: If the required 'boards' section is missing in the YAML file.
     """
+    try:
+        with _CONFIG_PATH.open("r", encoding="utf-8") as file:
+            config = yaml.safe_load(file)
+    except yaml.YAMLError as error:
+        raise ConfigSchemaError(f"Invalid YAML syntax: {error}")
+
+
     if not _CONFIG_PATH.exists():
-        raise FileNotFoundError(
-            f"board_config.yaml not found in root directory."
-        )
+        raise ConfigNotFoundError()
 
-    with _CONFIG_PATH.open("r", encoding="utf-8") as file:
-        config = yaml.safe_load(file)
-
-    if "boards" not in config:
-        raise KeyError(
-            "Required section 'boards' missing in board_config.yaml."
-        )
-
-    return config["boards"]
+    try:
+        return BoardConfig(**config)
+    except ValidationError as error:
+        raise ConfigSchemaError(str(error))
