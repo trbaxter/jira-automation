@@ -1,5 +1,7 @@
+from pydantic import HttpUrl
+
 def build_sprint_state_query_url(
-        base_url: str,
+        base_url: HttpUrl,
         board_id: int,
         state: str
 ) -> str:
