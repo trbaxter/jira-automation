@@ -4,7 +4,7 @@ from pydantic import HttpUrl
 
 import requests
 
-from utils.payload_builder import build_start_sprint_payload
+from src.utils.payload_builder import build_start_sprint_payload
 from src.logging_config.error_handling import handle_api_error
 
 
