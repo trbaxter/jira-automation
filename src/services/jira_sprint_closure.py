@@ -36,7 +36,7 @@ def close_sprint(
         end_date=end_date
     )
 
-    response = session.put(url=url, json=payload)
+    response = session.put(url=url, json=payload.model_dump())
 
     if not handle_api_error(response, f"closing sprint {sprint_id}"):
         return

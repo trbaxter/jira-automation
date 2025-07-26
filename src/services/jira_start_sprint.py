@@ -38,7 +38,7 @@ def start_sprint(
         end_date=end_date
     )
 
-    response = session.put(url=url, json=payload)
+    response = session.put(url=url, json=payload.model_dump())
     context = f"starting sprint {new_sprint_id}"
     if not handle_api_error(response=response, context=context):
         return
