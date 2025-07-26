@@ -2,6 +2,7 @@ import logging
 from typing import List, Optional
 
 import requests
+from pydantic import conint
 
 from src.logging_config.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
@@ -15,7 +16,7 @@ DONE_STATUSES = {
 
 
 def get_incomplete_stories(
-        sprint_id: int,
+        sprint_id: conint(gt=0),
         config: BoardConfig,
         session: requests.Session
 ) -> Optional[List[dict]]:
@@ -40,18 +41,19 @@ def get_incomplete_stories(
     while True:
         url = f"{config.base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
         params = {"startAt": start_at, "maxResults": max_results}
-        response = session.get(url, params=params)
+        response = session.get(url=url, params=params)
+        context = f"retrieving issues from sprint {sprint_id}"
 
-        if not handle_api_error(
-                response,
-                f"retrieving issues from sprint {sprint_id}"):
+        if not handle_api_error(response=response, context=context):
             return []
 
         data = response.json()
         issues = data.get("issues", [])
 
         logging.info(
-            f"\nFetched {len(issues)} issues from page starting at {start_at}."
+            "\nFetched %d issues from page starting at %d.",
+            len(issues),
+            start_at
         )
 
         incomplete_stories.extend(
@@ -65,7 +67,8 @@ def get_incomplete_stories(
         start_at += max_results
 
     logging.info(
-        f"{len(incomplete_stories)} incomplete stories "
-        f"found in sprint {sprint_id}."
+        "%d incomplete stories found in sprint %d.",
+        len(incomplete_stories),
+        sprint_id
     )
     return incomplete_stories
