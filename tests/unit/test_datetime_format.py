@@ -1,7 +1,8 @@
 import re
 from datetime import datetime
 
-import pytest
+from hypothesis import given, settings
+from hypothesis.strategies import datetimes
 
 from src.utils.datetime_format import format_jira_date
 
@@ -10,12 +11,8 @@ JIRA_DATE_REGEX = re.compile(
 )
 
 
-@pytest.mark.parametrize("dt", [
-    datetime(2024, 1, 2, 3, 4, 5),
-    datetime(2035, 12, 31, 23, 59, 59),
-    datetime(9999, 1, 1, 0, 0, 0),
-    datetime.now()
-])
-def test_format_jira_date_datetime_now(dt: datetime) -> None:
+@given(dt=datetimes(min_value=datetime(2025, 1, 1)))
+@settings(max_examples=5000)
+def test_format_jira_date_success(dt: datetime) -> None:
     result = format_jira_date(dt)
-    assert JIRA_DATE_REGEX.fullmatch(result), f"Invalid result: {result}"
+    assert JIRA_DATE_REGEX.fullmatch(result)
