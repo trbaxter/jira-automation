@@ -77,7 +77,10 @@ def parse_json_response(
         return response.json()
     except requests.exceptions.JSONDecodeError:
         logging.error("Error: Failed to parse JSON response.")
-        logging.error(f"Response Content: {response.text}")
+        logging.error(
+            "Response Content: %s"
+            , response.text
+        )
         return None
 
 
@@ -108,9 +111,10 @@ def create_sprint(
     )
     url = f"{config.base_url}{SPRINT_CREATE}"
 
-    response = post_sprint_payload(session, url, payload)
+    response = post_sprint_payload(session=session, url=url, payload=payload)
+    context = "creating sprint"
 
-    if not handle_api_error(response, "creating sprint"):
+    if not handle_api_error(response=response, context=context):
         return None
 
     return parse_json_response(response)
@@ -126,9 +130,10 @@ def get_sprint_by_state(
         board_id=config.board_id,
         state=state
     )
-    response = session.get(url)
+    response = session.get(url=url)
+    context = f"retrieving {state} sprint"
 
-    if not handle_api_error(response, f"retrieving {state} sprint"):
+    if not handle_api_error(response=response, context=context):
         return None
 
     sprints = response.json().get("values", [])
