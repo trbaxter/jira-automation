@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, timedelta
 
-from hypothesis import given, assume
+from hypothesis import assume, given, settings
 from hypothesis.strategies import text, datetimes
 
 from src.utils.datetime_format import format_jira_date
@@ -11,9 +11,10 @@ JIRA_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}")
 
 
 @given(
-    name=text(min_size=1),  # Non-empty string
+    name=text(min_size=1),
     start_dt=datetimes(min_value=datetime(2025, 1, 1))
 )
+@settings(max_examples=5000)
 def test_build_close_sprint_payload_returns_expected_dict(
         name: str,
         start_dt: datetime
