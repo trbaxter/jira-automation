@@ -1,7 +1,11 @@
 import logging
+from pydantic import conint
 
 
-def log_config(level: int = logging.INFO, force: bool = True) -> None:
+def log_config(
+        level: conint(ge=0) = logging.INFO,
+        force: bool = True
+) -> None:
     """
     Sets up the root logger using a message-only format.
 
