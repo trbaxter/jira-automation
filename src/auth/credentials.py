@@ -47,7 +47,10 @@ def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
         raise MissingSecretsError(missing)
 
 
-def make_basic_auth_token(email: str, token: str) -> str:
+def make_basic_auth_token(
+        email: constr(strip_whitespace=True, min_length=1),
+        token: constr(strip_whitespace=True, min_length=1)
+) -> str:
     """
     Creates an encoded token.
 
@@ -77,7 +80,11 @@ def get_auth_header() -> dict[str, str]:
         include in an HTTP request.
     """
     credentials = get_jira_credentials()
-    encoded_token = make_basic_auth_token(credentials.email, credentials.token)
+    encoded_token = make_basic_auth_token(
+        email=credentials.email,
+        token=credentials.token
+    )
+
     return {
         "Authorization": f"Basic {encoded_token}",
         "Content-Type": "application/json"
