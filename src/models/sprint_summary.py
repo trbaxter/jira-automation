@@ -1,10 +1,11 @@
-from typing import TypedDict, Optional
+from typing import Optional
+from pydantic import BaseModel, conint, constr
 
 
-class SprintSummary(TypedDict):
+class SprintSummary(BaseModel):
     id: int
-    name: str
+    name: constr(strip_whitespace=True, min_length=1)
     state: str
-    startDate: Optional[str]
-    endDate: Optional[str]
-    originBoardId: int
+    startDate: Optional[str] = None
+    endDate: Optional[str] = None
+    originBoardId: conint(gt=0)
