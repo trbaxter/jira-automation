@@ -21,7 +21,7 @@ def load_config() -> BoardConfig:
     """
     try:
         with _CONFIG_PATH.open(mode="r", encoding="utf-8") as file:
-            config = yaml.safe_load(file)
+            config = yaml.safe_load(stream=file)
 
             if not isinstance(config, dict):
                 raise TypeError("YAML content must be a dictionary mapping")
