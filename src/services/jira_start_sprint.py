@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from pydantic import HttpUrl
+from pydantic import conint, constr, HttpUrl
 
 import requests
 
@@ -9,8 +9,8 @@ from src.logging_config.error_handling import handle_api_error
 
 
 def start_sprint(
-        new_sprint_id: int,
-        sprint_name: str,
+        new_sprint_id: conint(gt=0),
+        sprint_name: constr(strip_whitespace=True, max_length=1),
         start_date: datetime,
         end_date: datetime,
         session: requests.Session,
@@ -32,9 +32,13 @@ def start_sprint(
         None. Logs the result.
     """
     url = f"{base_url}/rest/agile/1.0/sprint/{new_sprint_id}"
-    payload = build_start_sprint_payload(sprint_name, start_date, end_date)
+    payload = build_start_sprint_payload(
+        sprint_name=sprint_name,
+        start_date=start_date,
+        end_date=end_date
+    )
 
-    response = session.put(url, json=payload)
+    response = session.put(url=url, json=payload)
     if not handle_api_error(
             response,
             f"starting sprint {new_sprint_id}"
