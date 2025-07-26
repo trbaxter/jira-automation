@@ -37,8 +37,12 @@ def close_sprint(
     )
 
     response = session.put(url=url, json=payload.model_dump())
+    context = f"closing sprint {sprint_id}"
 
-    if not handle_api_error(response, f"closing sprint {sprint_id}"):
+    if not handle_api_error(response=response, context=context):
         return
 
-    logging.info(f"Sprint {sprint_id} has been closed.")
+    logging.info(
+        "Sprint %d has been closed.",
+        sprint_id
+    )
