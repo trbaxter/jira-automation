@@ -39,11 +39,9 @@ def start_sprint(
     )
 
     response = session.put(url=url, json=payload)
-    if not handle_api_error(
-            response,
-            f"starting sprint {new_sprint_id}"
-    ):
+    context = f"starting sprint {new_sprint_id}"
+    if not handle_api_error(response=response, context=context):
         return
 
-    logging.info(f"\nSprint {new_sprint_id} is now active.")
+    logging.info("\nSprint %d is now active.", new_sprint_id)
     logging.info("\nSprint automation process complete.")
