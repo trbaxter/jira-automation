@@ -58,7 +58,7 @@ def post_sprint_payload(
     Returns:
         The raw HTTP response from the JIRA API.
     """
-    return session.post(url=url, json=payload)
+    return session.post(url=url, json=payload.model_dump())
 
 
 def parse_json_response(
