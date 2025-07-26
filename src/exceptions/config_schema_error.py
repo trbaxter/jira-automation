@@ -6,7 +6,7 @@ class ConfigSchemaError(Exception):
 
     def __init__(self, details: str) -> None:
         msg = (
-            "Invalid configuration in board_config.yaml schema. "
-            f"{details}"
-        )
+                  "Invalid configuration in board_config.yaml schema. "
+                  "%s"
+              ) % details
         super().__init__(msg)
