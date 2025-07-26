@@ -34,12 +34,12 @@ def build_sprint_payload(
     Returns:
         A dictionary conforming to the SprintPayload structure.
     """
-    return {
-        "name": sprint_name,
-        "startDate": format_jira_date(sprint_start),
-        "endDate": format_jira_date(sprint_end),
-        "originBoardId": board_id
-    }
+    return SprintPayload(
+        name=sprint_name,
+        startDate=format_jira_date(sprint_start),
+        endDate=format_jira_date(sprint_end),
+        originBoardId=board_id
+    )
 
 
 def post_sprint_payload(
