@@ -20,7 +20,7 @@ def load_config() -> BoardConfig:
         FileNotFoundError: If the yaml config file is missing.
     """
     try:
-        with _CONFIG_PATH.open("r", encoding="utf-8") as file:
+        with _CONFIG_PATH.open(mode="r", encoding="utf-8") as file:
             config = yaml.safe_load(file)
 
             if not isinstance(config, dict):
