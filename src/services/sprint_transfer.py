@@ -37,7 +37,7 @@ def transfer_issue_batch_with_retry(
 
     for attempt in range(1, max_attempts + 1):
         logging.info(
-            "Moving batch of %d issues (index %d to %d) to sprint %d. "
+            "\nMoving batch of %d issues (index %d to %d) to sprint %d. "
             "Attempt %d of %d.",
                 len(issue_keys),
                 batch_start_index,
