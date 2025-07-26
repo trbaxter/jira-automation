@@ -6,11 +6,6 @@ from _pytest.logging import LogCaptureFixture
 from requests import Response, Request
 
 from logging_config.error_handling import handle_api_error
-from tests.constants.test_constants import (
-    POST,
-    TIMEOUT,
-    TIMEOUT_JIRA_ERROR
-)
 
 _MOCK_BASE_URL = "https://fake.jira.com/"
 
@@ -39,7 +34,7 @@ def test_success_responses(caplog: LogCaptureFixture, status_code: int) -> None:
         status_code,
         "",
         _MOCK_BASE_URL,
-        POST
+        "POST"
     )
 
     with caplog.at_level(logging.ERROR):
@@ -54,7 +49,7 @@ def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
         400,
         "Bad Request",
         _MOCK_BASE_URL,
-        POST
+        "POST"
     )
 
     with caplog.at_level(logging.ERROR):
@@ -68,15 +63,15 @@ def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
 def test_gateway_timeout_logs(caplog: LogCaptureFixture) -> None:
     response = make_mock_response(
         504,
-        TIMEOUT,
+        "Timeout",
         _MOCK_BASE_URL,
-        POST
+        "POST"
     )
 
     with caplog.at_level(logging.ERROR):
         result = handle_api_error(response, "posting to Jira")
 
     assert result is False
-    assert TIMEOUT_JIRA_ERROR in caplog.text
+    assert "Error during posting to Jira. Status Code: 504" in caplog.text
     assert "Gateway timeout occurred" in caplog.text
     assert "Response content" not in caplog.text
