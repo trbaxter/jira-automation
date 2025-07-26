@@ -164,7 +164,7 @@ def get_all_future_sprints(
 
         data = response.json()
         sprints = data.get("values", [])
-        all_sprints.extend(__iterable=sprints)
+        all_sprints.extend(sprints)
 
         if data.get("isLast", True):
             break
