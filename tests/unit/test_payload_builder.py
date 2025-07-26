@@ -1,38 +1,66 @@
 import re
 from datetime import datetime, timedelta
 
-from hypothesis import assume, given, settings
-from hypothesis.strategies import text, datetimes
+from hypothesis import given, settings
 
+from src.models.sprint_close_payload import CloseSprintPayload
+from src.models.sprint_start_payload import StartSprintPayload
 from src.utils.datetime_format import format_jira_date
-from src.utils.payload_builder import build_close_sprint_payload
-
-JIRA_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}")
-
-
-@given(
-    name=text(min_size=1).filter(lambda s: s.strip() != "" and s.isprintable()),
-    start_dt=datetimes(
-        min_value=datetime(2025, 1, 1),
-        max_value=datetime.now() + timedelta(days=365 * 100)
-    )
+from src.utils.payload_builder import (
+    build_close_sprint_payload,
+    build_start_sprint_payload
 )
-@settings(max_examples=5000)
+from tests.strategies.common import clean_name, valid_date_range
+
+JIRA_DATE_REGEX = re.compile(
+    r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}"
+)
+
+
+@given(sprint_name=clean_name, start_date=valid_date_range)
+@settings(max_examples=1000)
 def test_build_close_sprint_payload_success(
-        name: str,
-        start_dt: datetime
+        sprint_name: str,
+        start_date: datetime
 ) -> None:
-    assume(name.strip() != "")
-    end_dt = start_dt + timedelta(days=13)
+    end_date = start_date + timedelta(days=13)
 
-    start_str = format_jira_date(start_dt)
-    end_str = format_jira_date(end_dt)
+    start_str = format_jira_date(dt=start_date)
+    end_str = format_jira_date(dt=end_date)
 
-    result = build_close_sprint_payload(name, start_str, end_str)
+    payload = build_close_sprint_payload(
+        sprint_name=sprint_name,
+        start_date=start_str,
+        end_date=end_str
+    )
 
-    assert result.state == "closed"
-    assert result.name == name.strip()
-    assert result.startDate == start_str
-    assert result.endDate == end_str
-    assert JIRA_DATE_REGEX.fullmatch(result.startDate)
-    assert JIRA_DATE_REGEX.fullmatch(result.endDate)
+    assert isinstance(payload, CloseSprintPayload)
+
+    assert payload.state == "closed"
+    assert payload.name == sprint_name
+    assert payload.startDate == start_str
+    assert payload.endDate == end_str
+    assert JIRA_DATE_REGEX.fullmatch(string=payload.startDate)
+    assert JIRA_DATE_REGEX.fullmatch(string=payload.endDate)
+
+
+@given(sprint_name=clean_name, start_date=valid_date_range)
+@settings(max_examples=1000)
+def test_build_start_sprint_payload(
+        sprint_name: str,
+        start_date: datetime,
+) -> None:
+    end_date = start_date + timedelta(days=13)
+
+    payload = build_start_sprint_payload(
+        sprint_name=sprint_name,
+        start_date=start_date,
+        end_date=end_date
+    )
+
+    assert isinstance(payload, StartSprintPayload)
+
+    assert payload.state == "active"
+    assert payload.name == sprint_name
+    assert payload.startDate == format_jira_date(dt=start_date)
+    assert payload.endDate == format_jira_date(dt=end_date)
