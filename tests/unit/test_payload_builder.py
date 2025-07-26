@@ -11,15 +11,18 @@ JIRA_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}")
 
 
 @given(
-    name=text(min_size=1),
-    start_dt=datetimes(min_value=datetime(2025, 1, 1))
+    name=text(min_size=1).filter(lambda s: s.strip() != "" and s.isprintable()),
+    start_dt=datetimes(
+        min_value=datetime(2025, 1, 1),
+        max_value=datetime.now() + timedelta(days=365 * 100)
+    )
 )
 @settings(max_examples=5000)
-def test_build_close_sprint_payload_returns_expected_dict(
+def test_build_close_sprint_payload_success(
         name: str,
         start_dt: datetime
 ) -> None:
-    assume(start_dt.year >= 2025)
+    assume(name.strip() != "")
     end_dt = start_dt + timedelta(days=13)
 
     start_str = format_jira_date(start_dt)
@@ -27,9 +30,9 @@ def test_build_close_sprint_payload_returns_expected_dict(
 
     result = build_close_sprint_payload(name, start_str, end_str)
 
-    assert result["state"] == "closed"
-    assert result["name"] == name
-    assert result["startDate"] == start_str
-    assert result["endDate"] == end_str
-    assert JIRA_DATE_REGEX.fullmatch(result["startDate"])
-    assert JIRA_DATE_REGEX.fullmatch(result["endDate"])
+    assert result.state == "closed"
+    assert result.name == name.strip()
+    assert result.startDate == start_str
+    assert result.endDate == end_str
+    assert JIRA_DATE_REGEX.fullmatch(result.startDate)
+    assert JIRA_DATE_REGEX.fullmatch(result.endDate)
