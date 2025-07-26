@@ -7,6 +7,6 @@ class ConfigNotFoundError(FileNotFoundError):
     def __init__(self) -> None:
         msg = (
             "Expected configuration file 'board_config.yaml' not found "
-            f"in root directory."
+            "in root directory."
         )
         super().__init__(msg)
