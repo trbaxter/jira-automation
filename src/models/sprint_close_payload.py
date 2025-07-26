@@ -1,8 +1,8 @@
-from typing import TypedDict
+from pydantic import BaseModel, constr
 
 
-class CloseSprintPayload(TypedDict):
+class CloseSprintPayload(BaseModel):
     state: str
-    name: str
+    name: constr(strip_whitespace=True, min_length=1)
     startDate: str
     endDate: str
