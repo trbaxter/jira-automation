@@ -6,7 +6,7 @@ import requests
 
 from src.logging_config.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
-from src.models.payload import SprintPayload
+from src.models.sprint_payload import SprintPayload
 from src.models.sprint_create_response import SprintCreateResponse
 from src.models.sprint_summary import SprintSummary
 from src.utils.config_loader import load_config
@@ -58,7 +58,7 @@ def post_sprint_payload(
     Returns:
         The raw HTTP response from the JIRA API.
     """
-    return session.post(url, json=payload)
+    return session.post(url=url, json=payload)
 
 
 def parse_json_response(
@@ -101,10 +101,10 @@ def create_sprint(
     """
     config = load_config()
     payload = build_sprint_payload(
-        sprint_name,
-        start_date,
-        end_date,
-        config.board_id
+        sprint_name=sprint_name,
+        sprint_start=start_date,
+        sprint_end=end_date,
+        board_id=config.board_id
     )
     url = f"{config.base_url}{SPRINT_CREATE}"
 
@@ -122,9 +122,9 @@ def get_sprint_by_state(
         state: str
 ) -> Optional[SprintSummary]:
     url = build_sprint_state_query_url(
-        config.base_url,
-        config.board_id,
-        state
+        base_url=config.base_url,
+        board_id=config.board_id,
+        state=state
     )
     response = session.get(url)
 
@@ -151,7 +151,7 @@ def get_all_future_sprints(
             "startAt": start_at,
             "maxResults": max_results
         }
-        response = session.get(url, params=params)
+        response = session.get(url=url, params=params)
         if response.status_code != 200:
             raise RuntimeError(
                 f"\nError while fetching future sprints: {response.text}"
@@ -159,7 +159,7 @@ def get_all_future_sprints(
 
         data = response.json()
         sprints = data.get("values", [])
-        all_sprints.extend(sprints)
+        all_sprints.extend(__iterable=sprints)
 
         if data.get("isLast", True):
             break
