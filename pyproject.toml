@@ -16,3 +16,6 @@ exclude_lines = ['if __name__ == "__main__":']
 
 [tool.coverage.html]
 directory = "htmlcov"
+
+[tool.hypothesis]
+max_examples = 500
