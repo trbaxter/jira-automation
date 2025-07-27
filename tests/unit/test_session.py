@@ -1,29 +1,31 @@
-from unittest.mock import patch, MagicMock
+import base64
+from unittest.mock import patch
+
+import requests
+from hypothesis import given
 
 from src.auth.session import get_authenticated_session
-from tests.constants.patch_targets import (
-    JAUTH_CERT_WHERE,
-    JAUTH_GET_HEADER,
-    JAUTH_REQ_SESSION
-)
+from strategies.common import clean_string
 
 
-def test_get_authenticated_session_returns_configured_session() -> None:
-    mock_session = MagicMock()
-    mock_headers_obj = MagicMock()
-    mock_session.headers = mock_headers_obj
+@given(email=clean_string, token=clean_string)
+def test_get_authenticated_session_success(email: str, token: str) -> None:
+    credentials_str = f"{email}:{token}"
+    encoded_token = base64.b64encode(credentials_str.encode()).decode("utf-8")
 
-    mock_cert_path = "/path/to/cert.pem"
-    mock_headers = {
-        "Authorization": "Basic encoded",
+    expected_header = {
+        "Authorization": f"Basic {encoded_token}",
         "Content-Type": "application/json"
     }
 
-    with (patch(JAUTH_REQ_SESSION, return_value=mock_session),
-          patch(JAUTH_CERT_WHERE, return_value=mock_cert_path),
-          patch(JAUTH_GET_HEADER, return_value=mock_headers)):
-        result = get_authenticated_session()
+    with patch(
+            target="src.auth.session.get_auth_header",
+            return_value=expected_header
+    ):
+        session = get_authenticated_session()
 
-        assert result is mock_session
-        assert result.verify == mock_cert_path
-        mock_headers_obj.update.assert_called_once_with(mock_headers)
+    assert isinstance(session, requests.Session)
+    assert isinstance(session.verify, str) and session.verify
+    assert {"Authorization", "Content-Type"}.issubset(session.headers.keys())
+    assert session.headers["Authorization"] == f"Basic {encoded_token}"
+    assert session.headers["Content-Type"] == "application/json"
