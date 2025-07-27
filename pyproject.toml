@@ -3,7 +3,10 @@ name = "jira-automation"
 version = "1.0.0"
 description = "Modular Python tool for automating sprint tasks in JIRA."
 requires-python = ">=3.13"
-authors = [{name = "Tyler Baxter", email = "trb7074@gmail.com"}]
+authors = [{ name = "Tyler Baxter", email = "trb7074@gmail.com" }]
+
+[tool.black]
+line-length = 80
 
 [tool.coverage.run]
 source = ["src"]
