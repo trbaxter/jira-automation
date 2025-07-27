@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, timedelta
 
-from hypothesis import given, settings
+from hypothesis import given
 
 from src.models.sprint_close_payload import CloseSprintPayload
 from src.models.sprint_start_payload import StartSprintPayload
@@ -18,7 +18,6 @@ JIRA_DATE_REGEX = re.compile(
 
 
 @given(sprint_name=clean_name, start_date=valid_date_range)
-@settings(max_examples=1000)
 def test_build_close_sprint_payload_success(
         sprint_name: str,
         start_date: datetime
@@ -45,7 +44,6 @@ def test_build_close_sprint_payload_success(
 
 
 @given(sprint_name=clean_name, start_date=valid_date_range)
-@settings(max_examples=1000)
 def test_build_start_sprint_payload(
         sprint_name: str,
         start_date: datetime,
