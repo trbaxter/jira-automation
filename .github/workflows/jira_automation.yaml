@@ -40,20 +40,45 @@ jobs:
 #        if: steps.week_check.outputs.proceed == 'true'
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13.0'
+          python-version: '3.13'
 
 
       # Install Dependencies
       - name: Install Dependencies
 #        if: steps.week_check.outputs.proceed == 'true'
         run: |
-          python -m pip install --upgrade pip --quiet
-          pip install --quiet certifi hypothesis requests pydantic pyyaml
-          echo
-          echo -e "\033[0;32mDependency installation successful.\033[0m"
+          set -e  # Fail immediately if any command fails
 
+          {
+            python -m pip install --upgrade pip --quiet 2> pip_upgrade_error.log
+            pip install --quiet certifi hypothesis requests pydantic pyyaml 2> pip_install_error.log
 
-      # Run the script with stored secrets
+            echo -e "\033[0;32mDependency installation successful.\033[0m"
+          } 
+          || 
+          {
+            echo -e "\033[0;31mDependency installation failed.\033[0m"
+            echo
+
+            if [ -s pip_upgrade_error.log ]; then
+              echo -e "\033[0;33m--- pip upgrade error log ---\033[0m"
+              cat pip_upgrade_error.log
+              echo
+            fi
+
+            if [ -s pip_install_error.log ]; then
+              echo -e "\033[0;33m--- pip install error log ---\033[0m"
+              cat pip_install_error.log
+              echo
+            fi
+
+            exit 1
+        }
+
+          
+          
+          
+          # Run the script with stored secrets
       - name: Begin Automation
 #        if: steps.week_check.outputs.proceed == 'true'
         env:
