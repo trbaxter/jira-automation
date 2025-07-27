@@ -47,7 +47,7 @@ jobs:
       - name: Install Dependencies
 #        if: steps.week_check.outputs.proceed == 'true'
         run: |
-          set -e  # Fail on any command failure
+          set -e
 
           python -m pip install --upgrade pip --quiet 2> pip_upgrade_error.log || echo $? > exit_code.txt
           pip install --quiet certifi hypothesis requests pydantic pyyaml 2> pip_install_error.log || echo $? >> exit_code.txt
@@ -71,6 +71,7 @@ jobs:
 
             exit 1
           else
+            echo
             echo -e "\033[0;32mDependency installation successful.\033[0m"
           fi
 
