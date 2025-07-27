@@ -1,8 +1,16 @@
+import base64
+from unittest.mock import patch
+
 import pytest
 from hypothesis import given, settings
 from pydantic import ValidationError
 
-from src.auth.credentials import get_jira_credentials
+from src.auth.credentials import (
+    get_jira_credentials,
+    make_basic_auth_token,
+    get_auth_header
+)
+from src.models.credentials import Credentials
 from tests.strategies.common import clean_string
 
 EMAIL = "JIRA_EMAIL"
@@ -45,7 +53,7 @@ def test_get_jira_credentials_missing_key(
 
 
 def test_get_jira_credentials_missing_both_keys() -> None:
-    def getenv(key: str) -> str | None:
+    def getenv(_key: str) -> str | None:
         return None
 
     with pytest.raises(ValidationError) as e:
@@ -54,3 +62,34 @@ def test_get_jira_credentials_missing_both_keys() -> None:
     message = str(e.value)
     assert "email" in message
     assert "token" in message
+
+
+@given(email=clean_string, token=clean_string)
+@settings(max_examples=1000)
+def test_make_basic_auth_token_success(email: str, token: str) -> None:
+    auth_token = make_basic_auth_token(email, token)
+
+    decoded = base64.b64decode(auth_token).decode("utf-8")
+
+    assert isinstance(auth_token, str)
+    assert decoded == f"{email}:{token}"
+
+
+@given(email=clean_string, token=clean_string)
+@settings(max_examples=1000)
+def test_get_auth_header_success(email: str, token: str) -> None:
+    creds = Credentials(email=email, token=token)
+    expected_token = (
+        base64.b64encode(f"{email}:{token}".encode()).decode("utf-8")
+    )
+
+    with patch(
+            target="src.auth.credentials.get_jira_credentials",
+            return_value=creds
+    ):
+        header = get_auth_header()
+
+    assert isinstance(header, dict)
+    assert set(header.keys()) == {"Authorization", "Content-Type"}
+    assert header["Authorization"] == f"Basic {expected_token}"
+    assert header["Content-Type"] == "application/json"
