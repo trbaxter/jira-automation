@@ -47,14 +47,13 @@ jobs:
       - name: Install Dependencies
 #        if: steps.week_check.outputs.proceed == 'true'
         run: |
-          set -e  # Fail immediately if any command fails
+          set -e  # Fail on any command failure
 
-          {
-            python -m pip install --upgrade pip --quiet 2> pip_upgrade_error.log
-            pip install --quiet certifi hypothesis requests pydantic pyyaml 2> pip_install_error.log
+          python -m pip install --upgrade pip --quiet 2> pip_upgrade_error.log || echo $? > exit_code.txt
+          pip install --quiet certifi hypothesis requests pydantic pyyaml 2> pip_install_error.log || echo $? >> exit_code.txt
 
-            echo -e "\033[0;32mDependency installation successful.\033[0m"
-          } || {
+          # Did a step fail?
+          if [ -s exit_code.txt ]; then
             echo -e "\033[0;31mDependency installation failed.\033[0m"
             echo
 
@@ -71,12 +70,12 @@ jobs:
             fi
 
             exit 1
-        }
+          else
+            echo -e "\033[0;32mDependency installation successful.\033[0m"
+          fi
 
-          
-          
-          
-          # Run the script with stored secrets
+
+        # Run the script with stored secrets
       - name: Begin Automation
 #        if: steps.week_check.outputs.proceed == 'true'
         env:
