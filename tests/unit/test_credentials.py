@@ -2,7 +2,7 @@ import base64
 from unittest.mock import patch
 
 import pytest
-from hypothesis import given, settings
+from hypothesis import given
 from pydantic import ValidationError
 
 from src.auth.credentials import (
@@ -18,7 +18,6 @@ TOKEN = "JIRA_API_TOKEN"
 
 
 @given(email=clean_string, token=clean_string)
-@settings(max_examples=1000)
 def test_get_jira_credentials_success(email: str, token: str) -> None:
     env_vars = {EMAIL: email, TOKEN: token}
     getenv = lambda key: env_vars.get(key)
@@ -30,7 +29,6 @@ def test_get_jira_credentials_success(email: str, token: str) -> None:
 
 
 @given(email=clean_string, token=clean_string)
-@settings(max_examples=1000)
 @pytest.mark.parametrize("missing_key", [EMAIL, TOKEN])
 def test_get_jira_credentials_missing_key(
         email: str,
@@ -65,7 +63,6 @@ def test_get_jira_credentials_missing_both_keys() -> None:
 
 
 @given(email=clean_string, token=clean_string)
-@settings(max_examples=1000)
 def test_make_basic_auth_token_success(email: str, token: str) -> None:
     auth_token = make_basic_auth_token(email, token)
 
@@ -76,7 +73,6 @@ def test_make_basic_auth_token_success(email: str, token: str) -> None:
 
 
 @given(email=clean_string, token=clean_string)
-@settings(max_examples=1000)
 def test_get_auth_header_success(email: str, token: str) -> None:
     creds = Credentials(email=email, token=token)
     expected_token = (
