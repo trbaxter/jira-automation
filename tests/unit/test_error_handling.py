@@ -1,9 +1,9 @@
 import logging
 from unittest.mock import Mock
-from pydantic import conint, constr, HttpUrl
 
 import pytest
 from _pytest.logging import LogCaptureFixture
+from pydantic import conint, constr, HttpUrl
 from requests import Response, Request
 
 from logging_config.error_handling import handle_api_error
