@@ -1,26 +1,11 @@
 import base64
 import os
-from typing import runtime_checkable, Protocol
 
-from pydantic import BaseModel, constr, ValidationError
+from pydantic import constr, ValidationError
 
 from src.exceptions.missing_secrets_error import MissingSecretsError
-
-
-class Credentials(BaseModel):
-    email: constr(strip_whitespace=True, min_length=1)
-    token: constr(strip_whitespace=True, min_length=1)
-
-
-@runtime_checkable
-class EnvReader(Protocol):
-    """
-    Serves as a type-safe contract for injecting environment values rather
-    than relying on hard-coded usages of 'os.getenv'. Uses '...' to indicate
-    that no class body is required to function.
-    """
-
-    def __call__(self, key: str) -> str: ...
+from src.models.credentials import Credentials
+from src.models.env_reader import EnvReader
 
 
 def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
@@ -80,10 +65,10 @@ def get_auth_header() -> dict[str, str]:
         include in an HTTP request.
     """
     credentials = get_jira_credentials()
-    encoded_token = make_basic_auth_token(
-        email=credentials.email,
-        token=credentials.token
-    )
+    email = credentials.email
+    token = credentials.token
+
+    encoded_token = make_basic_auth_token(email=email, token=token)
 
     return {
         "Authorization": f"Basic {encoded_token}",
