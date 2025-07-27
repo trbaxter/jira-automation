@@ -8,19 +8,16 @@ from src.models.sprint_start_payload import StartSprintPayload
 from src.utils.datetime_format import format_jira_date
 from src.utils.payload_builder import (
     build_close_sprint_payload,
-    build_start_sprint_payload
+    build_start_sprint_payload,
 )
-from tests.strategies.common import clean_name, valid_date_range
+from tests.strategies.common import clean_string, valid_date_range
 
-JIRA_DATE_REGEX = re.compile(
-    r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}"
-)
+JIRA_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}")
 
 
-@given(sprint_name=clean_name, start_date=valid_date_range)
+@given(sprint_name=clean_string, start_date=valid_date_range)
 def test_build_close_sprint_payload_success(
-        sprint_name: str,
-        start_date: datetime
+        sprint_name: str, start_date: datetime
 ) -> None:
     end_date = start_date + timedelta(days=13)
 
@@ -28,9 +25,7 @@ def test_build_close_sprint_payload_success(
     end_str = format_jira_date(dt=end_date)
 
     payload = build_close_sprint_payload(
-        sprint_name=sprint_name,
-        start_date=start_str,
-        end_date=end_str
+        sprint_name=sprint_name, start_date=start_str, end_date=end_str
     )
 
     assert isinstance(payload, CloseSprintPayload)
@@ -43,7 +38,7 @@ def test_build_close_sprint_payload_success(
     assert JIRA_DATE_REGEX.fullmatch(string=payload.endDate)
 
 
-@given(sprint_name=clean_name, start_date=valid_date_range)
+@given(sprint_name=clean_string, start_date=valid_date_range)
 def test_build_start_sprint_payload(
         sprint_name: str,
         start_date: datetime,
@@ -51,9 +46,7 @@ def test_build_start_sprint_payload(
     end_date = start_date + timedelta(days=13)
 
     payload = build_start_sprint_payload(
-        sprint_name=sprint_name,
-        start_date=start_date,
-        end_date=end_date
+        sprint_name=sprint_name, start_date=start_date, end_date=end_date
     )
 
     assert isinstance(payload, StartSprintPayload)
