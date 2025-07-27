@@ -1,9 +1,8 @@
 import base64
 import os
 
-from pydantic import constr, ValidationError
+from pydantic import constr
 
-from src.exceptions.missing_secrets_error import MissingSecretsError
 from src.models.credentials import Credentials
 from src.models.env_reader import EnvReader
 
@@ -20,16 +19,7 @@ def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
     """
     email = getenv("JIRA_EMAIL")
     token = getenv("JIRA_API_TOKEN")
-
-    try:
-        return Credentials(email=email, token=token)
-    except ValidationError:
-        missing = []
-        if not email:
-            missing.append("JIRA_EMAIL")
-        if not token:
-            missing.append("JIRA_API_TOKEN")
-        raise MissingSecretsError(missing)
+    return Credentials(email=email, token=token)
 
 
 def make_basic_auth_token(
