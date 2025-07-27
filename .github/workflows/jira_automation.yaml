@@ -54,9 +54,7 @@ jobs:
             pip install --quiet certifi hypothesis requests pydantic pyyaml 2> pip_install_error.log
 
             echo -e "\033[0;32mDependency installation successful.\033[0m"
-          } 
-          || 
-          {
+          } || {
             echo -e "\033[0;31mDependency installation failed.\033[0m"
             echo
 
