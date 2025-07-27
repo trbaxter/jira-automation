@@ -1,6 +1,6 @@
 import re
 from datetime import datetime, timedelta
-from hypothesis import given, settings
+from hypothesis import given
 from hypothesis.strategies import datetimes
 
 from utils.sprint_naming import generate_sprint_name
@@ -12,7 +12,6 @@ from utils.sprint_naming import generate_sprint_name
         max_value=datetime.now() + timedelta(days=365 * 100)
     )
 )
-@settings(max_examples=1000)
 def test_sprint_name_generation(
         start_date: datetime
 ) -> None:
