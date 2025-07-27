@@ -42,3 +42,15 @@ def test_get_jira_credentials_missing_key(
         get_jira_credentials(getenv=getenv)
 
     assert env_key_to_field[missing_key] in str(e.value)
+
+
+def test_get_jira_credentials_missing_both_keys() -> None:
+    def getenv(key: str) -> str | None:
+        return None
+
+    with pytest.raises(ValidationError) as e:
+        get_jira_credentials(getenv=getenv)
+
+    message = str(e.value)
+    assert "email" in message
+    assert "token" in message
