@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import List
 
 import requests
 from pydantic import conint
@@ -7,19 +7,12 @@ from pydantic import conint
 from src.logging_config.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
 
-DONE_STATUSES = {
-    "Done",
-    "Cancelled",
-    "Existing Solution",
-    "Abandoned"
-}
+DONE_STATUSES = {"Done", "Cancelled", "Existing Solution", "Abandoned"}
 
 
 def get_incomplete_stories(
-        sprint_id: conint(gt=0),
-        config: BoardConfig,
-        session: requests.Session
-) -> Optional[List[dict]]:
+        sprint_id: conint(gt=0), config: BoardConfig, session: requests.Session
+) -> List[dict] | None:
     """
     Retrieves all incomplete stories from the specified sprint.
 
@@ -53,11 +46,12 @@ def get_incomplete_stories(
         logging.info(
             "\nFetched %d issues from page starting at %d.",
             len(issues),
-            start_at
+            start_at,
         )
 
         incomplete_stories.extend(
-            issue for issue in issues
+            issue
+            for issue in issues
             if issue["fields"]["status"]["name"] not in DONE_STATUSES
         )
 
@@ -69,6 +63,6 @@ def get_incomplete_stories(
     logging.info(
         "%d incomplete stories found in sprint %d.",
         len(incomplete_stories),
-        sprint_id
+        sprint_id,
     )
     return incomplete_stories
