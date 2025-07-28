@@ -1,6 +1,6 @@
 import re
 from datetime import date, datetime, timedelta
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 
 class DartSprint(NamedTuple):
@@ -23,8 +23,8 @@ _DART_RE = re.compile(
 )
 
 
-def parse_dart_sprint(name: str) -> Optional[DartSprint]:
-    m = _DART_RE.match(name)
+def parse_dart_sprint(name: str) -> DartSprint | None:
+    m = _DART_RE.match(string=name)
     if not m:
         return None
 
@@ -32,7 +32,6 @@ def parse_dart_sprint(name: str) -> Optional[DartSprint]:
         start = datetime.strptime(m["yymmdd"], "%y%m%d").date()
     except ValueError:
         return None
-
 
     mmdd_from_payload = start.strftime("%m/%d")
     if m["start_mmdd"] != mmdd_from_payload:
@@ -42,9 +41,9 @@ def parse_dart_sprint(name: str) -> Optional[DartSprint]:
     if m["end_mmdd"] != expected_end.strftime("%m/%d"):
         return None
 
-    return DartSprint(name, start, expected_end)
+    return DartSprint(raw_name=name, start=start, end=expected_end)
 
 
 def is_valid_dart_sprint(name: str, ref_date: datetime) -> bool:
-    sprint = parse_dart_sprint(name)
+    sprint = parse_dart_sprint(name=name)
     return sprint is not None and sprint.start == ref_date.date()
