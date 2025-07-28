@@ -1,6 +1,5 @@
 import logging
-from datetime import datetime, timedelta, time
-from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta
 
 import requests
 
@@ -17,8 +16,6 @@ from src.utils.config_loader import load_config
 from src.utils.sprint_naming import generate_sprint_name
 from src.utils.sprint_parser import parse_dart_sprint
 
-BOARD_TZ = ZoneInfo("America/Chicago")
-
 
 def automate_sprint(session: requests.Session) -> None:
     """
@@ -30,10 +27,7 @@ def automate_sprint(session: requests.Session) -> None:
     """
     logging.info("\nBeginning sprint automation process...")
 
-    today = datetime.now(tz=BOARD_TZ).date()
-    start_date = datetime.combine(
-        today, time(hour=6, minute=0), tzinfo=BOARD_TZ
-    )
+    start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
     config = load_config()
     future_sprints = get_all_future_sprints(session, config)
@@ -43,7 +37,7 @@ def automate_sprint(session: requests.Session) -> None:
             s
             for s in future_sprints
             if (parsed := parse_dart_sprint(s["name"]))
-               and parsed.start == today
+               and parsed.start == start_date
         ),
         None,
     )
