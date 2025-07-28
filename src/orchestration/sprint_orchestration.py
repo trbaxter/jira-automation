@@ -34,7 +34,7 @@ def automate_sprint(session: requests.Session) -> None:
     start_date = datetime.combine(
         today, time(hour=6, minute=0), tzinfo=BOARD_TZ
     )
-    end_date = start_date + timedelta(days=15)
+    end_date = start_date + timedelta(days=14)
     config = load_config()
     future_sprints = get_all_future_sprints(session, config)
 
