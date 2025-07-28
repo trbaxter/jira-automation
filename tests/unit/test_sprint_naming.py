@@ -10,7 +10,7 @@ from utils.sprint_naming import generate_sprint_name
 @given(valid_datetime_range())
 def test_sprint_name_generation(start_date: datetime) -> None:
     end_date = start_date + timedelta(days=14)
-    result = generate_sprint_name(start_date, end_date)
+    result = generate_sprint_name(start_date=start_date, end_date=end_date)
 
     prefix = start_date.strftime(format="%y%m%d")
     start_fmt = start_date.strftime(format="%m/%d")
