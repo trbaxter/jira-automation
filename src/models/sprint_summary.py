@@ -1,11 +1,10 @@
-from typing import Optional
 from pydantic import BaseModel, conint, constr
 
 
 class SprintSummary(BaseModel):
-    id: int
+    id: conint(gt=0)
     name: constr(strip_whitespace=True, min_length=1)
-    state: str
-    startDate: Optional[str] = None
-    endDate: Optional[str] = None
+    state: constr(strip_whitespace=True, min_length=1)
+    startDate: str | None
+    endDate: str | None
     originBoardId: conint(gt=0)
