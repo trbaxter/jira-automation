@@ -3,7 +3,7 @@ from hypothesis import given
 from pydantic import ValidationError
 
 from src.models.jira_issue import JiraIssue
-from tests.strategies.common import clean_string
+from tests.strategies.common import cleaned_string
 
 KEY = "key"
 TYPE = "type"
@@ -11,7 +11,7 @@ STATUS = "status"
 SUMMARY = "summary"
 
 
-@given(value=clean_string)
+@given(value=cleaned_string())
 def test_jira_issue_valid_input(value: str) -> None:
     raw_data = {
         KEY: value,
@@ -43,7 +43,7 @@ def test_jira_issue_valid_input(value: str) -> None:
     ],
 )
 def test_jira_issue_rejects_blank_or_missing_fields(
-    field: str, value: str | None
+        field: str, value: str | None
 ) -> None:
     valid_data = {
         KEY: "ISSUE-1",
@@ -54,7 +54,7 @@ def test_jira_issue_rejects_blank_or_missing_fields(
     invalid_data = valid_data.copy()
     invalid_data[field] = value
 
-    with pytest.raises(ValidationError) as error:
+    with pytest.raises(expected_exception=ValidationError) as error:
         JiraIssue(**invalid_data)
 
     assert field in str(error.value)
