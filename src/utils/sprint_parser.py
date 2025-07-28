@@ -37,7 +37,7 @@ def parse_dart_sprint(name: str) -> DartSprint | None:
     if m["start_mmdd"] != mmdd_from_payload:
         return None
 
-    expected_end = start + timedelta(days=13)
+    expected_end = start + timedelta(days=14)
     if m["end_mmdd"] != expected_end.strftime("%m/%d"):
         return None
 
