@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from zoneinfo import ZoneInfo
 
 import requests
@@ -31,7 +31,7 @@ def automate_sprint(session: requests.Session) -> None:
     logging.info("\nBeginning sprint automation process...")
 
     today = datetime.now(tz=BOARD_TZ).date()
-    start_date = datetime.combine(today, datetime.min.time(), tzinfo=BOARD_TZ)
+    start_date = datetime.combine(today, time(6, 0), tzinfo=BOARD_TZ)
     end_date = start_date + timedelta(days=15)
     config = load_config()
     future_sprints = get_all_future_sprints(session, config)
