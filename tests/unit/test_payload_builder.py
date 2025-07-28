@@ -19,7 +19,7 @@ JIRA_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}")
 def test_build_close_sprint_payload_success(
         sprint_name: str, start_date: datetime
 ) -> None:
-    end_date = start_date + timedelta(days=13)
+    end_date = start_date + timedelta(days=14)
 
     start_str = format_jira_date(dt=start_date)
     end_str = format_jira_date(dt=end_date)
@@ -43,7 +43,7 @@ def test_build_start_sprint_payload(
         sprint_name: str,
         start_date: datetime,
 ) -> None:
-    end_date = start_date + timedelta(days=13)
+    end_date = start_date + timedelta(days=14)
 
     payload = build_start_sprint_payload(
         sprint_name=sprint_name, start_date=start_date, end_date=end_date
