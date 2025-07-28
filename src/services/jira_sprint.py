@@ -6,8 +6,8 @@ import requests
 
 from src.logging_config.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
-from src.models.sprint_payload import SprintPayload
 from src.models.sprint_create_response import SprintCreateResponse
+from src.models.sprint_payload import SprintPayload
 from src.models.sprint_summary import SprintSummary
 from src.utils.config_loader import load_config
 from src.utils.datetime_format import format_jira_date
@@ -20,7 +20,7 @@ def build_sprint_payload(
         sprint_name: str,
         sprint_start: datetime,
         sprint_end: datetime,
-        board_id: int
+        board_id: int,
 ) -> SprintPayload:
     """
     Assembles the JSON payload to send to the JIRA API.
@@ -38,14 +38,12 @@ def build_sprint_payload(
         name=sprint_name,
         startDate=format_jira_date(sprint_start),
         endDate=format_jira_date(sprint_end),
-        originBoardId=board_id
+        originBoardId=board_id,
     )
 
 
 def post_sprint_payload(
-        session: requests.Session,
-        url: str,
-        payload: SprintPayload
+        session: requests.Session, url: str, payload: SprintPayload
 ) -> requests.Response:
     """
     Posts the sprint payload to the JIRA API.
@@ -62,7 +60,7 @@ def post_sprint_payload(
 
 
 def parse_json_response(
-        response: requests.Response
+        response: requests.Response,
 ) -> Optional[SprintCreateResponse]:
     """
     Parses the JSON response, handling decode errors with logging.
@@ -77,10 +75,7 @@ def parse_json_response(
         return response.json()
     except requests.exceptions.JSONDecodeError:
         logging.error("Error: Failed to parse JSON response.")
-        logging.error(
-            "Response Content: %s"
-            , response.text
-        )
+        logging.error("Response Content: %s", response.text)
         return None
 
 
@@ -89,7 +84,7 @@ def create_sprint(
         start_date: datetime,
         end_date: datetime,
         session: requests.Session,
-) -> Optional[SprintCreateResponse]:
+) -> SprintCreateResponse | None:
     """
     Creates a new sprint in JIRA using the board config in the YAML file.
 
@@ -107,7 +102,7 @@ def create_sprint(
         sprint_name=sprint_name,
         sprint_start=start_date,
         sprint_end=end_date,
-        board_id=config.board_id
+        board_id=config.board_id,
     )
     url = f"{config.base_url}{SPRINT_CREATE}"
 
@@ -121,14 +116,10 @@ def create_sprint(
 
 
 def get_sprint_by_state(
-        session: requests.Session,
-        config: BoardConfig,
-        state: str
-) -> Optional[SprintSummary]:
+        session: requests.Session, config: BoardConfig, state: str
+) -> SprintSummary | None:
     url = build_sprint_state_query_url(
-        base_url=config.base_url,
-        board_id=config.board_id,
-        state=state
+        base_url=config.base_url, board_id=config.board_id, state=state
     )
     response = session.get(url=url)
     context = f"retrieving {state} sprint"
@@ -141,8 +132,7 @@ def get_sprint_by_state(
 
 
 def get_all_future_sprints(
-        session: requests.Session,
-        config: BoardConfig
+        session: requests.Session, config: BoardConfig
 ) -> list[SprintSummary]:
     board_id = config.board_id
     start_at = 0
@@ -154,7 +144,7 @@ def get_all_future_sprints(
         params = {
             "state": "future",
             "startAt": start_at,
-            "maxResults": max_results
+            "maxResults": max_results,
         }
         response = session.get(url=url, params=params)
         if response.status_code != 200:
