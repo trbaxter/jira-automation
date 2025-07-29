@@ -1,10 +1,10 @@
-from pydantic import BaseModel, conint, constr
+from pydantic import BaseModel
 
-VALID_DATETIME_FORM = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}$"
+from src.fieldtypes.common import INT_GT_0, JIRA_DATETIME_STR, SAFE_STR
 
 
 class SprintPayload(BaseModel):
-    name: constr(strip_whitespace=True, min_length=1)
-    startDate: constr(pattern=VALID_DATETIME_FORM)
-    endDate: constr(pattern=VALID_DATETIME_FORM)
-    originBoardId: conint(gt=0)
+    name: SAFE_STR
+    startDate: JIRA_DATETIME_STR
+    endDate: JIRA_DATETIME_STR
+    originBoardId: INT_GT_0
