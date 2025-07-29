@@ -11,7 +11,7 @@ DONE_STATUSES = {"Done", "Cancelled", "Existing Solution", "Abandoned"}
 
 
 def get_incomplete_stories(
-    sprint_id: INT_GT_0, config: BoardConfig, session: requests.Session
+        sprint_id: INT_GT_0, config: BoardConfig, session: requests.Session
 ) -> List[dict] | None:
     """
     Retrieves all incomplete stories from the specified sprint.
@@ -42,11 +42,13 @@ def get_incomplete_stories(
 
         data = response.json()
         issues = data.get("issues", [])
+        num_issues = len(issues)
 
         logging.info(
-            "\nFetched %d issues from page starting at %d.",
-            len(issues),
-            start_at,
+            msg=(
+                f"\nFetched {num_issues} issues from page starting at"
+                f" {start_at}."
+            )
         )
 
         incomplete_stories.extend(
@@ -60,9 +62,8 @@ def get_incomplete_stories(
 
         start_at += max_results
 
+    num_inc_stories = len(incomplete_stories)
     logging.info(
-        "%d incomplete stories found in sprint %d.",
-        len(incomplete_stories),
-        sprint_id,
+        msg=f"{num_inc_stories} incomplete stories found in sprint {sprint_id}."
     )
     return incomplete_stories
