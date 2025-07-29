@@ -1,7 +1,9 @@
 from datetime import datetime
 
+from src.fieldtypes.common import SAFE_STR
 
-def generate_sprint_name(start_date: datetime, end_date: datetime) -> str:
+
+def generate_sprint_name(start_date: datetime, end_date: datetime) -> SAFE_STR:
     """
     Dynamically generates sprint names.
 
