@@ -30,7 +30,7 @@ def automate_sprint(session: requests.Session) -> None:
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
     config = load_config()
-    future_sprints = get_all_future_sprints(session, config)
+    future_sprints = get_all_future_sprints(session=session, config=config)
 
     dart_sprint = next(
         (
@@ -49,47 +49,63 @@ def automate_sprint(session: requests.Session) -> None:
         )
         new_sprint_id = dart_sprint["id"]
         new_sprint_name = dart_sprint["name"]
+
     else:
         logging.warning(
             msg="\nNo future sprint found in the backlog starting with 'DART '."
             "\nInitializing sprint generation."
         )
-        new_sprint_name = generate_sprint_name(start_date, end_date)
-        new_sprint = create_sprint(
-            new_sprint_name, start_date, end_date, session
+
+        new_sprint_name = generate_sprint_name(
+            start_date=start_date, end_date=end_date
         )
+
+        new_sprint = create_sprint(
+            sprint_name=new_sprint_name,
+            start_date=start_date,
+            end_date=end_date,
+            session=session,
+        )
+
         if not new_sprint:
             logging.error(msg="Failed to create new sprint.")
             return
+
         new_sprint_id = new_sprint.get("id")
 
-    active_sprint = get_sprint_by_state(session, config, "active")
+    active_sprint = get_sprint_by_state(
+        session=session, config=config, state="active"
+    )
+
     if active_sprint:
         incomplete_stories = get_incomplete_stories(
-            active_sprint["id"], config, session
+            sprint_id=active_sprint["id"], config=config, session=session
         )
         incomplete_stories = [
             parse_issue(issue) for issue in incomplete_stories
         ]
 
         close_sprint(
-            active_sprint["id"],
-            active_sprint["name"],
-            active_sprint["startDate"],
-            active_sprint["endDate"],
-            session,
-            config.base_url,
+            sprint_id=active_sprint["id"],
+            sprint_name=active_sprint["name"],
+            start_date=active_sprint["startDate"],
+            end_date=active_sprint["endDate"],
+            session=session,
+            base_url=config.base_url,
         )
 
         move_issues_to_new_sprint(
-            incomplete_stories, session, config.base_url, new_sprint_id
+            issues=incomplete_stories,
+            session=session,
+            base_url=config.base_url,
+            new_sprint_id=new_sprint_id,
         )
 
     start_sprint(
-        new_sprint_id,
-        new_sprint_name,
-        start_date,
-        end_date,
-        session,
-        config.base_url,
+        new_sprint_id=new_sprint_id,
+        sprint_name=new_sprint_name,
+        start_date=start_date,
+        end_date=end_date,
+        session=session,
+        base_url=config.base_url,
     )
