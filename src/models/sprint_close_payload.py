@@ -1,8 +1,10 @@
-from pydantic import BaseModel, constr
+from pydantic import BaseModel
+
+from src.fieldtypes.common import SAFE_STR
 
 
 class CloseSprintPayload(BaseModel):
-    state: str
-    name: constr(strip_whitespace=True, min_length=1)
-    startDate: str
-    endDate: str
+    state: SAFE_STR
+    name: SAFE_STR
+    startDate: SAFE_STR
+    endDate: SAFE_STR
