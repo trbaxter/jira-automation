@@ -7,6 +7,6 @@ class SprintSummary(BaseModel):
     id: INT_GT_0
     name: SAFE_STR
     state: SAFE_STR
-    startDate: str | None
-    endDate: str | None
+    startDate: SAFE_STR | None
+    endDate: SAFE_STR | None
     originBoardId: INT_GT_0
