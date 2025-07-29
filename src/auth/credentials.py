@@ -1,8 +1,7 @@
 import base64
 import os
 
-from pydantic import constr
-
+from src.fieldtypes.common import SAFE_STR
 from src.models.credentials import Credentials
 from src.models.env_reader import EnvReader
 
@@ -22,10 +21,7 @@ def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
     return Credentials(email=email, token=token)
 
 
-def make_basic_auth_token(
-        email: constr(strip_whitespace=True, min_length=1),
-        token: constr(strip_whitespace=True, min_length=1)
-) -> str:
+def make_basic_auth_token(email: SAFE_STR, token: SAFE_STR) -> str:
     """
     Creates an encoded token.
 
