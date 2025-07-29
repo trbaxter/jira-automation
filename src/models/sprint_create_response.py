@@ -1,11 +1,13 @@
-from pydantic import BaseModel, conint, constr
+from pydantic import BaseModel
+
+from src.fieldtypes.common import SAFE_STR, INT_GT_0
 
 
 class SprintCreateResponse(BaseModel):
-    id: conint(gt=0)
-    self: str
-    state: constr(strip_whitespace=True, min_length=1)
-    name: constr(strip_whitespace=True, min_length=1)
+    id: INT_GT_0
+    self: SAFE_STR
+    state: SAFE_STR
+    name: SAFE_STR
     startDate: str
     endDate: str
-    originBoardId: conint(gt=0)
+    originBoardId: INT_GT_0
