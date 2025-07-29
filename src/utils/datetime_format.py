@@ -11,4 +11,4 @@ def format_jira_date(dt: datetime) -> str:
     Returns:
         A string in the format 'YYYY-MM-DDTHH:MM:SS.000+0000'.
     """
-    return dt.strftime("%Y-%m-%dT%H:%M:%S.000+0000")
+    return dt.strftime(format="%Y-%m-%dT%H:%M:%S.000+0000")
