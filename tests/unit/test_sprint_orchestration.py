@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from typing import Any, Callable, Tuple
 from unittest.mock import MagicMock
 
 from _pytest.logging import LogCaptureFixture
@@ -8,40 +9,48 @@ from freezegun import freeze_time
 
 from src.orchestration.sprint_orchestration import automate_sprint
 
-CLOSE_SPRINT = "src.orchestration.sprint_orchestration.close_sprint"
-CREATE_SPRINT = "src.orchestration.sprint_orchestration.create_sprint"
-DATETIME = "src.orchestration.sprint_orchestration.datetime"
-LOAD_CONFIG = "src.orchestration.sprint_orchestration.load_config"
-GET_ALL_FUTURE_SPRINTS = (
-    "src.orchestration.sprint_orchestration.get_all_future_sprints"
-)
-GET_INCOMPLETE_STORIES = (
-    "src.orchestration.sprint_orchestration.get_incomplete_stories"
-)
-GET_SPRINT_BY_STATE = (
-    "src.orchestration.sprint_orchestration.get_sprint_by_state"
-)
-MOVE_ISSUES = "src.orchestration.sprint_orchestration.move_issues_to_new_sprint"
-PARSE_ISSUE = "src.orchestration.sprint_orchestration.parse_issue"
-SPRINT_PARSER = "src.orchestration.sprint_orchestration.parse_dart_sprint"
-START_SPRINT = "src.orchestration.sprint_orchestration.start_sprint"
+TARGET_BASE = "src.orchestration.sprint_orchestration"
 
 
-def test_creates_new_sprint_if_none_found(monkeypatch: MonkeyPatch):
+# Helper function to shorten target names
+def function(name: str) -> str:
+    return f"{TARGET_BASE}.{name}"
+
+
+# Helper function to silently return some value
+def return_value(val) -> Callable[..., Any]:
+    return lambda *_, **__: val
+
+
+# Helper function for configuration setup required for each test
+def setup() -> Tuple[MagicMock, MagicMock]:
     session = MagicMock()
     config = MagicMock(base_url="https://mock.atlassian.net", board_id=1)
+    return session, config
 
-    monkeypatch.setattr(target=LOAD_CONFIG, name=(lambda: config))
-    monkeypatch.setattr(target=GET_ALL_FUTURE_SPRINTS, name=(lambda *_: []))
-    create_sprint_mock = MagicMock(
-        return_value={"id": 123, "name": "DART 250101"}
+
+# Helper function to avoid writing "monkeypatch.attr" multiple times per test
+def patch_all(
+    monkeypatch: MonkeyPatch, **target_name_pairs: Callable[..., Any]
+) -> None:
+    for target, name in target_name_pairs.items():
+        monkeypatch.setattr(target=function(target), name=name)
+
+
+def test_creates_new_sprint_if_none_found(monkeypatch: MonkeyPatch) -> None:
+    session, config = setup()
+    create_sprint_mock = MagicMock(return_value={"id": 1, "name": "test"})
+
+    patch_all(
+        monkeypatch,
+        load_config=(lambda: config),
+        get_all_future_sprints=return_value([]),
+        create_sprint=create_sprint_mock,
+        get_sprint_by_state=return_value(None),
+        start_sprint=return_value(None),
     )
-    monkeypatch.setattr(target=CREATE_SPRINT, name=create_sprint_mock)
-    monkeypatch.setattr(target=GET_SPRINT_BY_STATE, name=(lambda *_: None))
-    monkeypatch.setattr(target=START_SPRINT, name=(lambda *_: None))
 
     automate_sprint(session)
-
     create_sprint_mock.assert_called_once()
 
 
@@ -49,24 +58,21 @@ def test_creates_new_sprint_if_none_found(monkeypatch: MonkeyPatch):
 def test_uses_existing_dart_sprint(
     monkeypatch: MonkeyPatch, caplog: LogCaptureFixture
 ) -> None:
-    session = MagicMock()
-    config = MagicMock(base_url="https://mock.atlassian.net", board_id=1)
+    session, config = setup()
 
+    sprint_date = MagicMock(start=datetime(year=2025, month=7, day=28))
     sprint_name = "DART 250728 (07/28-08/11)"
+
     future_sprints = [{"name": sprint_name, "id": 42}]
 
-    monkeypatch.setattr(target=LOAD_CONFIG, name=(lambda: config))
-    monkeypatch.setattr(
-        target=GET_ALL_FUTURE_SPRINTS, name=(lambda *_: future_sprints)
+    patch_all(
+        monkeypatch,
+        load_config=(lambda: config),
+        get_all_future_sprints=return_value(future_sprints),
+        parse_dart_sprint=lambda name: sprint_date,
+        get_sprint_by_state=return_value(None),
+        start_sprint=return_value(None),
     )
-    monkeypatch.setattr(
-        target=SPRINT_PARSER,
-        name=(
-            lambda name: MagicMock(start=datetime(year=2025, month=7, day=28))
-        ),
-    )
-    monkeypatch.setattr(target=GET_SPRINT_BY_STATE, name=(lambda *_: None))
-    monkeypatch.setattr(target=START_SPRINT, name=(lambda *_: None))
 
     with caplog.at_level(logging.INFO):
         automate_sprint(session)
@@ -75,65 +81,58 @@ def test_uses_existing_dart_sprint(
     assert "Proceeding with automation process." in caplog.text
 
 
-def test_skips_closing_if_no_active_sprint(monkeypatch: MonkeyPatch):
-    session = MagicMock()
-    config = MagicMock(base_url="https://mock.atlassian.net", board_id=1)
+def test_skips_closing_if_no_active_sprint(monkeypatch: MonkeyPatch) -> None:
+    session, config = setup()
 
-    monkeypatch.setattr(target=LOAD_CONFIG, name=(lambda: config))
-    monkeypatch.setattr(target=GET_ALL_FUTURE_SPRINTS, name=(lambda *_: []))
-    monkeypatch.setattr(
-        target=CREATE_SPRINT, name=(lambda *_: {"id": 123, "name": "NewSprint"})
+    patch_all(
+        monkeypatch,
+        load_config=(lambda: config),
+        get_all_future_sprints=return_value([]),
+        create_sprint=return_value({"id": 123, "name": "NewSprint"}),
+        get_sprint_by_state=return_value(None),
+        start_sprint=return_value(None),
     )
-    monkeypatch.setattr(target=GET_SPRINT_BY_STATE, name=(lambda *_: None))
-    monkeypatch.setattr(target=START_SPRINT, name=(lambda *_: None))
 
     automate_sprint(session)
 
 
-def test_returns_early_if_create_sprint_fails(monkeypatch: MonkeyPatch):
-    session = MagicMock()
-    config = MagicMock(base_url="https://mock.atlassian.net", board_id=1)
-
-    monkeypatch.setattr(target=LOAD_CONFIG, name=(lambda: config))
-    monkeypatch.setattr(target=GET_ALL_FUTURE_SPRINTS, name=(lambda *_: []))
-    monkeypatch.setattr(target=CREATE_SPRINT, name=(lambda *_: None))
+def test_returns_early_if_create_sprint_fails(monkeypatch: MonkeyPatch) -> None:
+    session, config = setup()
     start_sprint = MagicMock()
-    monkeypatch.setattr(target=START_SPRINT, name=start_sprint)
+
+    patch_all(
+        monkeypatch,
+        load_config=(lambda: config),
+        get_all_future_sprints=return_value([]),
+        create_sprint=return_value(None),
+        start_sprint=start_sprint,
+    )
 
     automate_sprint(session)
-
     start_sprint.assert_not_called()
 
 
-def test_full_orchestration_path(monkeypatch: MonkeyPatch):
-    session = MagicMock()
-    config = MagicMock(base_url="https://mock.atlassian.net", board_id=1)
+def test_full_orchestration_path(monkeypatch: MonkeyPatch) -> None:
+    session, config = setup()
+    new_sprint = {"id": 12, "name": "DART 241218 (12/18-01/01)"}
+    active_sprint = {
+        "id": 99,
+        "name": "DART 250101 (01/01-01/15)",
+        "startDate": "2025-01-01",
+        "endDate": "2025-01-15",
+    }
 
-    monkeypatch.setattr(target=LOAD_CONFIG, name=(lambda: config))
-    monkeypatch.setattr(target=GET_ALL_FUTURE_SPRINTS, name=(lambda *_: []))
-    monkeypatch.setattr(
-        target=CREATE_SPRINT, name=(lambda *_: {"id": 123, "name": "DART X"})
+    patch_all(
+        monkeypatch,
+        load_config=(lambda: config),
+        get_all_future_sprints=return_value([]),
+        create_sprint=return_value(new_sprint),
+        get_sprint_by_state=return_value(active_sprint),
+        get_incomplete_stories=return_value([{"key": "JIRA-1"}]),
+        parse_issue=(lambda issue: {"key": issue["key"], "fields": {}}),
+        close_sprint=return_value(None),
+        move_issues_to_new_sprint=return_value(None),
+        start_sprint=return_value(None),
     )
-    monkeypatch.setattr(
-        target=GET_SPRINT_BY_STATE,
-        name=(
-            lambda *_: {
-                "id": 99,
-                "name": "DART 123456",
-                "startDate": "2025-01-01",
-                "endDate": "2025-01-15",
-            }
-        ),
-    )
-    monkeypatch.setattr(
-        target=GET_INCOMPLETE_STORIES, name=(lambda *_: [{"key": "JIRA-1"}])
-    )
-    monkeypatch.setattr(
-        target=PARSE_ISSUE,
-        name=(lambda issue: {"key": issue["key"], "fields": {}}),
-    )
-    monkeypatch.setattr(target=CLOSE_SPRINT, name=(lambda *_: None))
-    monkeypatch.setattr(target=MOVE_ISSUES, name=(lambda *_: None))
-    monkeypatch.setattr(target=START_SPRINT, name=(lambda *_: None))
 
     automate_sprint(session)
