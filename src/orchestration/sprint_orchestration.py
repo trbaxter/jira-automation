@@ -34,9 +34,9 @@ def automate_sprint(session: requests.Session) -> None:
 
     dart_sprint = next(
         (
-            s
-            for s in future_sprints
-            if (parsed := parse_dart_sprint(s["name"]))
+            sprint
+            for sprint in future_sprints
+            if (parsed := parse_dart_sprint(name=sprint["name"]))
             and parsed.start == start_date
         ),
         None,
