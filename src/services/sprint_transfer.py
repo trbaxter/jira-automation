@@ -2,20 +2,21 @@ import logging
 import time
 
 import requests
-from pydantic import conint, HttpUrl
+from pydantic import HttpUrl
 
+from src.fieldtypes.common import INT_GT_0, INT_GEQ_0
 from src.logging_config.error_handling import handle_api_error
 from src.models.jira_issue import JiraIssue
 
 
 def transfer_issue_batch_with_retry(
-        session: requests.Session,
-        base_url: HttpUrl,
-        sprint_id: conint(gt=0),
-        issue_keys: list[str],
-        batch_start_index: conint(ge=0),
-        max_attempts: conint(ge=0) = 3,
-        cooldown_seconds: conint(ge=0) = 5,
+    session: requests.Session,
+    base_url: HttpUrl,
+    sprint_id: INT_GT_0,
+    issue_keys: list[str],
+    batch_start_index: INT_GEQ_0,
+    max_attempts: INT_GEQ_0 = 3,
+    cooldown_seconds: INT_GEQ_0 = 5,
 ) -> bool:
     """
     Attempts to batch transfer issue keys to a given sprint with retry logic.
@@ -51,23 +52,23 @@ def transfer_issue_batch_with_retry(
         context = f"moving issues batch from {batch_start_index}"
 
         if handle_api_error(response=response, context=context):
-            logging.info("Transfer process successful.")
+            logging.info(msg="Transfer process successful.")
             time.sleep(cooldown_seconds)
             return True
 
         if attempt < max_attempts:
-            logging.info("\nTransfer failed. Retrying...")
+            logging.info(msg="\nTransfer failed. Retrying...")
         else:
-            logging.error("Transfer failed. Max attempts exceeded.")
+            logging.error(msg="Transfer failed. Max attempts exceeded.")
 
     return False
 
 
 def transfer_all_issue_batches(
-        issue_keys: list[str],
-        session: requests.Session,
-        base_url: HttpUrl,
-        new_sprint_id: conint(gt=0),
+    issue_keys: list[str],
+    session: requests.Session,
+    base_url: HttpUrl,
+    new_sprint_id: INT_GT_0,
 ) -> None:
     """
     Iterates through issue keys in batches and transfers them to a new sprint.
@@ -86,7 +87,7 @@ def transfer_all_issue_batches(
     batch_size = 50
 
     for i in range(start_index, stop_index, batch_size):
-        batch = issue_keys[i: i + batch_size]
+        batch = issue_keys[i : i + batch_size]
         success = transfer_issue_batch_with_retry(
             session=session,
             base_url=base_url,
@@ -97,20 +98,20 @@ def transfer_all_issue_batches(
 
         if not success:
             message = (
-                          "Transfer process aborted. "
-                          "\nFailed to move issues from index %d to %d."
-                      ) % (i, i + len(batch) - 1)
+                "Transfer process aborted. "
+                "\nFailed to move issues from index %d to %d."
+            ) % (i, i + len(batch) - 1)
 
             raise SystemExit(message)
 
-    logging.info("Migration of unfinished stories complete.")
+    logging.info(msg="Migration of unfinished stories complete.")
 
 
 def move_issues_to_new_sprint(
-        issues: list[JiraIssue],
-        session: requests.Session,
-        base_url: HttpUrl,
-        new_sprint_id: conint(gt=0),
+    issues: list[JiraIssue],
+    session: requests.Session,
+    base_url: HttpUrl,
+    new_sprint_id: INT_GT_0,
 ) -> None:
     """
     Coordinates the transfer of JIRA issues to a new sprint in batches.
@@ -125,11 +126,13 @@ def move_issues_to_new_sprint(
         None.
     """
     if not issues:
-        logging.info("No incomplete stories to transfer.")
+        logging.info(msg="No incomplete stories to transfer.")
         return
 
+    num_issues = len(issues)
+
     logging.info(
-        "\nMoving the following %d stories to the new sprint:", len(issues)
+        msg=f"\nMoving the following {num_issues} stories to the new sprint:"
     )
 
     for issue in issues:
