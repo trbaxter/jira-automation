@@ -1,8 +1,9 @@
-from pydantic import conint, constr, HttpUrl
+from pydantic import HttpUrl
+
+from src.fieldtypes.common import INT_GT_0, SAFE_STR
+
 
 def build_sprint_state_query_url(
-        base_url: HttpUrl,
-        board_id: conint(gt=0),
-        state: constr(strip_whitespace=True, min_length=1)
+    base_url: HttpUrl, board_id: INT_GT_0, state: SAFE_STR
 ) -> str:
     return f"{base_url}rest/agile/1.0/board/{board_id}/sprint?state={state}"
