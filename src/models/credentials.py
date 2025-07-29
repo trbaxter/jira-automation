@@ -1,6 +1,8 @@
-from pydantic import BaseModel, constr
+from pydantic import BaseModel
+
+from src.fieldtypes.common import SAFE_STR
 
 
 class Credentials(BaseModel):
-    email: constr(strip_whitespace=True, min_length=1)
-    token: constr(strip_whitespace=True, min_length=1)
+    email: SAFE_STR
+    token: SAFE_STR
