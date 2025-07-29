@@ -1,16 +1,17 @@
 import logging
 from datetime import datetime
-from pydantic import conint, constr, HttpUrl
 
 import requests
+from pydantic import HttpUrl
 
-from src.utils.payload_builder import build_start_sprint_payload
+from src.fieldtypes.common import SAFE_STR, INT_GT_0
 from src.logging_config.error_handling import handle_api_error
+from src.utils.payload_builder import build_start_sprint_payload
 
 
 def start_sprint(
-        new_sprint_id: conint(gt=0),
-        sprint_name: constr(strip_whitespace=True, max_length=1),
+        new_sprint_id: INT_GT_0,
+        sprint_name: SAFE_STR,
         start_date: datetime,
         end_date: datetime,
         session: requests.Session,
@@ -43,5 +44,5 @@ def start_sprint(
     if not handle_api_error(response=response, context=context):
         return
 
-    logging.info("\nSprint %d is now active.", new_sprint_id)
-    logging.info("\nSprint automation process complete.")
+    logging.info(msg=f"\nSprint {new_sprint_id} is now active.")
+    logging.info(msg="\nSprint automation process complete.")
