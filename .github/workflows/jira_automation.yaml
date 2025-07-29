@@ -52,7 +52,7 @@ jobs:
           
             set -e
             python -m pip install --upgrade pip --quiet 2> pip_upgrade_error.log || echo $? > exit_code.txt
-            pip install --quiet certifi hypothesis requests pydantic pyyaml 2> pip_install_error.log || echo $? >> exit_code.txt
+            pip install --quiet certifi freezegun hypothesis requests pydantic pyyaml 2> pip_install_error.log || echo $? >> exit_code.txt
 
             if [ -s exit_code.txt ]; then
               echo -e "\033[0;31mDependency installation failed.\033[0m"
