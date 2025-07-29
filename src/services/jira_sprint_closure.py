@@ -1,19 +1,20 @@
 import logging
 
 import requests
-from pydantic import conint, constr, HttpUrl
+from pydantic import HttpUrl
 
+from src.fieldtypes.common import SAFE_STR, INT_GT_0
 from src.logging_config.error_handling import handle_api_error
 from src.utils.payload_builder import build_close_sprint_payload
 
 
 def close_sprint(
-        sprint_id: conint(gt=0),
-        sprint_name: constr(strip_whitespace=True, max_length=1),
-        start_date: str,
-        end_date: str,
-        session: requests.Session,
-        base_url: HttpUrl
+    sprint_id: INT_GT_0,
+    sprint_name: SAFE_STR,
+    start_date: SAFE_STR,
+    end_date: SAFE_STR,
+    session: requests.Session,
+    base_url: HttpUrl,
 ) -> None:
     """
     Closes a sprint using the JIRA API.
@@ -31,9 +32,7 @@ def close_sprint(
     """
     url = f"{base_url}/rest/agile/1.0/sprint/{sprint_id}"
     payload = build_close_sprint_payload(
-        sprint_name=sprint_name,
-        start_date=start_date,
-        end_date=end_date
+        sprint_name=sprint_name, start_date=start_date, end_date=end_date
     )
 
     response = session.put(url=url, json=payload.model_dump())
@@ -42,7 +41,4 @@ def close_sprint(
     if not handle_api_error(response=response, context=context):
         return
 
-    logging.info(
-        "Sprint %d has been closed.",
-        sprint_id
-    )
+    logging.info(msg=f"Sprint {sprint_id} has been closed.")
