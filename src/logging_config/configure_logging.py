@@ -1,12 +1,9 @@
 import logging
 
-from pydantic import conint
+from src.fieldtypes.common import INT_GEQ_0
 
 
-def log_config(
-        level: conint(ge=0) = logging.INFO,
-        force: bool = True
-) -> None:
+def log_config(level: INT_GEQ_0 = logging.INFO, force: bool = True) -> None:
     """
     Sets up the root logger using a message-only format.
 
@@ -18,8 +15,4 @@ def log_config(
         level: Logging level to set.
         force: Forces removal of previously attached logging handlers if True.
     """
-    logging.basicConfig(
-        level=level,
-        format="%(message)s",
-        force=force
-    )
+    logging.basicConfig(level=level, format="%(message)s", force=force)
