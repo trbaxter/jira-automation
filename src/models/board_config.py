@@ -1,7 +1,9 @@
-from pydantic import BaseModel, conint, constr, HttpUrl
+from pydantic import BaseModel, HttpUrl
+
+from src.fieldtypes.common import SAFE_STR, INT_GT_0
 
 
 class BoardConfig(BaseModel):
-    board_id: conint(gt=0)
+    board_id: INT_GT_0
     base_url: HttpUrl
-    board_name: constr(strip_whitespace=True, min_length=1)
+    board_name: SAFE_STR
