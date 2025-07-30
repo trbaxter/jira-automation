@@ -7,13 +7,16 @@ from src.auth.credentials import get_jira_credentials
 
 def get_authenticated_session() -> requests.Session:
     """
-    Creates & configures an authenticated HTTP session for Jira API access.
+    Create and return a pre-configured Session object for authenticated
+    access to the Jira API.
 
-    Initializes a Session object with trusted certificate authorities and
-    attaches headers required for authenticating with the Jira API.
+    The session ncludes:
+        • HTTP Basic Authentication using Jira credentials (email + API token)
+        • Certificate verification via certifi
+        • Default JSON content headers
 
     Returns:
-        A configured session object with authentication headers.
+        A configured Session object.
     """
     creds = get_jira_credentials()
     session = requests.Session()
