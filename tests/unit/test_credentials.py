@@ -42,20 +42,20 @@ def test_get_jira_credentials_missing_key(
 
     env_key_to_field = {EMAIL: "email", TOKEN: "token"}
 
-    with pytest.raises(expected_exception=ValidationError) as e:
+    with pytest.raises(expected_exception=ValidationError) as error:
         get_jira_credentials(getenv=getenv)
 
-    assert env_key_to_field[missing_key] in str(e.value)
+    assert env_key_to_field[missing_key] in str(error.value)
 
 
 def test_get_jira_credentials_missing_both_keys() -> None:
     def getenv(_key: str) -> str | None:
         return None
 
-    with pytest.raises(expected_exception=ValidationError) as e:
+    with pytest.raises(expected_exception=ValidationError) as error:
         get_jira_credentials(getenv=getenv)
 
-    message = str(object=e.value)
+    message = str(object=error.value)
     assert "email" in message
     assert "token" in message
 
