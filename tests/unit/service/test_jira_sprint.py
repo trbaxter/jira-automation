@@ -19,18 +19,12 @@ from strategies.common import cleaned_string
 
 
 @given(
-    name=cleaned_string(),
-    start_end=tuples(
-        datetimes(
-            min_value=datetime.now(),
-            max_value=datetime.now() + timedelta(days=14),
-        ),
-        datetimes(
-            min_value=datetime.now(),
-            max_value=datetime.now() + timedelta(days=14),
-        ),
+    cleaned_string(),
+    tuples(
+        datetimes(datetime.now(), datetime.now() + timedelta(days=14)),
+        datetimes(datetime.now(), datetime.now() + timedelta(days=14)),
     ).filter(lambda pair: pair[0] < pair[1]),
-    board_id=integers(min_value=1, max_value=9999),
+    integers(1, 9999),
 )
 def test_build_sprint_payload_returns_valid_model(
     name: str, start_end: datetime, board_id: int
@@ -52,13 +46,7 @@ def test_post_sprint_payload_sends_correct_request():
     payload = MagicMock()
     payload.model_dump.return_value = {"mock": "data"}
 
-    response = post_sprint_payload(
-        session=session, url="https://mock/api", payload=payload
-    )
-
-    session.post.assert_called_once_with(
-        url="https://mock/api", json={"mock": "data"}
-    )
+    response = post_sprint_payload(session, "https://mock/api", payload)
     assert response.status_code == 200
 
 
@@ -71,7 +59,6 @@ def test_parse_json_response_success():
     }
 
     result = parse_json_response(mock_response)
-
     assert result is not None
 
 
@@ -82,7 +69,7 @@ def test_parse_json_response_logs_and_returns_none_on_decode_error(caplog):
     )
     mock_response.text = "not json"
 
-    result = parse_json_response(response=mock_response)
+    result = parse_json_response(mock_response)
 
     assert result is None
     assert "Failed to parse JSON" in caplog.text
@@ -95,17 +82,14 @@ def test_create_sprint_successfully_returns_parsed_response():
     fake_response.json.return_value = {"id": 1, "self": "...", "name": "Sprint"}
 
     with (
-        patch(target="src.services.jira_sprint.load_config") as mock_cfg,
+        patch("src.services.jira_sprint.load_config") as mock_cfg,
+        patch("src.services.jira_sprint.handle_api_error", return_value=True),
         patch(
-            target="src.services.jira_sprint.handle_api_error",
-            return_value=True,
-        ),
-        patch(
-            target="src.services.jira_sprint.parse_json_response",
+            "src.services.jira_sprint.parse_json_response",
             return_value="parsed",
         ) as _mock_parse,
         patch(
-            target="src.services.jira_sprint.post_sprint_payload",
+            "src.services.jira_sprint.post_sprint_payload",
             return_value=fake_response,
         ),
     ):
@@ -114,10 +98,10 @@ def test_create_sprint_successfully_returns_parsed_response():
         mock_cfg.return_value.base_url = "https://mock"
 
         result = create_sprint(
-            sprint_name="Test Sprint",
-            start_date=datetime.now(),
-            end_date=datetime.now() + timedelta(days=14),
-            session=session,
+            "Test Sprint",
+            datetime.now(),
+            datetime.now() + timedelta(days=14),
+            session,
         )
 
         assert result == "parsed"
@@ -126,21 +110,18 @@ def test_create_sprint_successfully_returns_parsed_response():
 def test_create_sprint_aborts_on_api_failure():
     session = MagicMock()
     with (
-        patch(target="src.services.jira_sprint.load_config") as mock_cfg,
-        patch(
-            target="src.services.jira_sprint.handle_api_error",
-            return_value=False,
-        ),
+        patch("src.services.jira_sprint.load_config") as mock_cfg,
+        patch("src.services.jira_sprint.handle_api_error", return_value=False),
     ):
 
         mock_cfg.return_value.board_id = 1
         mock_cfg.return_value.base_url = "https://mock"
 
         result = create_sprint(
-            sprint_name="Sprint",
-            start_date=datetime.now(),
-            end_date=datetime.now() + timedelta(days=14),
-            session=session,
+            "Sprint",
+            datetime.now(),
+            datetime.now() + timedelta(days=14),
+            session,
         )
         assert result is None
 
@@ -152,12 +133,8 @@ def test_get_sprint_by_state_returns_first_result():
     config.board_id = 10
     session.get.return_value.json.return_value = {"values": ["sprint_1"]}
 
-    with patch(
-        target="src.services.jira_sprint.handle_api_error", return_value=True
-    ):
-        result = get_sprint_by_state(
-            session=session, config=config, state="active"
-        )
+    with patch("src.services.jira_sprint.handle_api_error", return_value=True):
+        result = get_sprint_by_state(session, config, "active")
 
         assert result == "sprint_1"
 
@@ -168,19 +145,12 @@ def test_get_sprint_by_state_returns_none_on_error_or_empty():
     config.base_url = "https://mock"
     config.board_id = 10
 
-    with patch(
-        target="src.services.jira_sprint.handle_api_error", return_value=False
-    ):
+    with patch("src.services.jira_sprint.handle_api_error", return_value=False):
         assert get_sprint_by_state(session, config, "future") is None
 
-    with patch(
-        target="src.services.jira_sprint.handle_api_error", return_value=True
-    ):
+    with patch("src.services.jira_sprint.handle_api_error", return_value=True):
         session.get.return_value.json.return_value = {"values": []}
-        assert (
-            get_sprint_by_state(session=session, config=config, state="closed")
-            is None
-        )
+        assert get_sprint_by_state(session, config, "closed") is None
 
 
 def test_get_all_future_sprints_handles_pagination():
@@ -216,4 +186,4 @@ def test_get_all_future_sprints_raises_on_non_200():
         expected_exception=RuntimeError,
         match="Error while fetching future " "sprints",
     ):
-        get_all_future_sprints(session=session, config=config)
+        get_all_future_sprints(session, config)

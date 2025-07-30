@@ -1,7 +1,7 @@
 import base64
 import os
 
-from src.fieldtypes.common import SAFE_STR
+from src.constants.field_types import SAFE_STR
 from src.models.credentials import Credentials
 from src.models.env_reader import EnvReader
 
@@ -58,5 +58,5 @@ def get_auth_header() -> dict[str, str]:
 
     return {
         "Authorization": f"Basic {encoded_token}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }

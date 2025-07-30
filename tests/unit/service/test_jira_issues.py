@@ -38,7 +38,7 @@ def filter_incomplete_issues(issues: list[dict]) -> list[dict]:
         issue
         for issue in issues
         if issue.get("fields", {}).get("status", {}).get("name")
-           not in DONE_STATUSES
+        not in DONE_STATUSES
     ]
 
 
@@ -85,7 +85,7 @@ def test_filter_incomplete_issues_correctly(issues) -> None:
 )
 def test_filter_ignores_malformed_issues(issues: list[dict]) -> None:
     try:
-        result = filter_incomplete_issues(issues=issues)
+        result = filter_incomplete_issues(issues)
     except Exception as error:
         assert (
             False
@@ -97,21 +97,16 @@ def test_filter_ignores_malformed_issues(issues: list[dict]) -> None:
 
 
 def test_returns_empty_list_if_api_error_detected(
-        mock_session: MagicMock, mock_config: BoardConfig
+    mock_session: MagicMock, mock_config: BoardConfig
 ) -> None:
     mock_session.get.return_value = MagicMock()
-    with patch(
-            target="src.services.jira_issues.handle_api_error",
-            return_value=False
-    ):
-        result = get_incomplete_stories(
-            sprint_id=42, config=mock_config, session=mock_session
-        )
+    with patch("src.services.jira_issues.handle_api_error", return_value=False):
+        result = get_incomplete_stories(42, mock_config, mock_session)
         assert result == []
 
 
 def test_returns_incomplete_stories_across_pages(
-        mock_session: MagicMock, mock_config: BoardConfig
+    mock_session: MagicMock, mock_config: BoardConfig
 ) -> None:
     page1_issues = [{"fields": {"status": {"name": "To Do"}}}] * 49 + [
         {"fields": {"status": {"name": "Done"}}}
@@ -126,19 +121,14 @@ def test_returns_incomplete_stories_across_pages(
         MagicMock(json=lambda: page2),
     ]
 
-    with patch(
-            target="src.services.jira_issues.handle_api_error",
-            return_value=True
-    ):
-        result = get_incomplete_stories(
-            sprint_id=123, config=mock_config, session=mock_session
-        )
+    with patch("src.services.jira_issues.handle_api_error", return_value=True):
+        result = get_incomplete_stories(123, mock_config, mock_session)
 
     assert len(result) == 50
 
 
 def test_stops_fetching_when_results_less_than_max(
-        mock_session: MagicMock, mock_config: BoardConfig
+    mock_session: MagicMock, mock_config: BoardConfig
 ) -> None:
     response_data = {
         "issues": [
@@ -152,13 +142,8 @@ def test_stops_fetching_when_results_less_than_max(
     mock_response.json.return_value = response_data
     mock_session.get.return_value = mock_response
 
-    with patch(
-            target="src.services.jira_issues.handle_api_error",
-            return_value=True
-    ):
-        result = get_incomplete_stories(
-            sprint_id=99, config=mock_config, session=mock_session
-        )
+    with patch("src.services.jira_issues.handle_api_error", return_value=True):
+        result = get_incomplete_stories(99, mock_config, mock_session)
 
     assert result == [
         {"fields": {"status": {"name": "To Do"}}},

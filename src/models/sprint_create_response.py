@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.fieldtypes.common import SAFE_STR, INT_GT_0
+from src.constants.field_types import SAFE_STR, INT_GT_0
 
 
 class SprintCreateResponse(BaseModel):

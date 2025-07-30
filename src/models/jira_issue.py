@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.fieldtypes.common import SAFE_STR
+from src.constants.field_types import SAFE_STR
 
 
 class JiraIssue(BaseModel):

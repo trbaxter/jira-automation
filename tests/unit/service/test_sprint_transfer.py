@@ -28,11 +28,12 @@ def raw_issue_strategy(draw: DrawFn) -> dict[str, object]:
         },
     }
 
+
 def base_path(name: str):
     return f"src.services.sprint_transfer.{name}"
 
 
-@given(raw=raw_issue_strategy())
+@given(raw_issue_strategy())
 def test_parse_issue_handles_missing_fields(raw: dict[str, object]) -> None:
     result = parse_issue(raw)
 
@@ -67,15 +68,11 @@ def test_transfer_batch_success_first_try() -> None:
     session.post.return_value = MagicMock()
 
     with (
-        patch(target=base_path("handle_api_error"), return_value=True),
-        patch(target="time.sleep", return_value=None),
+        patch(base_path("handle_api_error"), return_value=True),
+        patch("time.sleep", return_value=None),
     ):
         result = transfer_issue_batch_with_retry(
-            session=session,
-            base_url=HttpUrl("https://mock.atlassian.net"),
-            sprint_id=1,
-            issue_keys=["ISSUE-1"],
-            batch_start_index=0,
+            session, HttpUrl("https://mock.atlassian.net"), 1, ["ISSUE-1"], 0
         )
         assert result is True
 
@@ -84,30 +81,30 @@ def test_transfer_batch_fails_all_attempts() -> None:
     session = MagicMock()
     session.post.return_value = MagicMock()
 
-    with patch(target=base_path("handle_api_error"), return_value=False):
+    with patch(base_path("handle_api_error"), return_value=False):
         result = transfer_issue_batch_with_retry(
-            session=session,
-            base_url=HttpUrl("https://mock.atlassian.net"),
-            sprint_id=1,
-            issue_keys=["ISSUE-1"],
-            batch_start_index=0,
-            max_attempts=2,
-            cooldown_seconds=0,
+            session,
+            HttpUrl("https://mock.atlassian.net"),
+            1,
+            ["ISSUE-1"],
+            0,
+            2,
+            0,
         )
         assert result is False
 
 
 def test_transfer_all_batches_success(monkeypatch: MonkeyPatch) -> None:
     mock_transfer = MagicMock(return_value=True)
-    monkeypatch.setattr(target=base_path("transfer_issue_batch_with_retry"),
-        name=mock_transfer
+    monkeypatch.setattr(
+        base_path("transfer_issue_batch_with_retry"), mock_transfer
     )
 
     transfer_all_issue_batches(
-        issue_keys=["A", "B", "C", "D", "E"],
-        session=MagicMock(),
-        base_url=HttpUrl("https://mock.atlassian.net"),
-        new_sprint_id=123,
+        ["A", "B", "C", "D", "E"],
+        MagicMock(),
+        HttpUrl("https://mock.atlassian.net"),
+        123,
     )
 
     assert mock_transfer.call_args[1]["issue_keys"] == ["A", "B", "C", "D", "E"]
@@ -115,18 +112,14 @@ def test_transfer_all_batches_success(monkeypatch: MonkeyPatch) -> None:
 
 def test_transfer_batch_fails_raises_exit(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
-        target=base_path("transfer_issue_batch_with_retry"),
-        name=(lambda *a, **kw: False),
+        base_path("transfer_issue_batch_with_retry"), (lambda *a, **kw: False)
     )
 
-    with pytest.raises(expected_exception=SystemExit) as exit_info:
+    with pytest.raises(SystemExit) as exit_info:
         transfer_all_issue_batches(
-            issue_keys=["A", "B"],
-            session=MagicMock(),
-            base_url=HttpUrl("https://mock.atlassian.net"),
-            new_sprint_id=123,
+            ["A", "B"], MagicMock(), HttpUrl("https://mock.atlassian.net"), 123
         )
-    assert "Transfer process aborted." in str(object=exit_info.value)
+    assert "Transfer process aborted." in str(exit_info.value)
 
 
 def test_move_issues_logs_and_transfers(
@@ -138,17 +131,18 @@ def test_move_issues_logs_and_transfers(
         called["keys"] = issue_keys
 
     monkeypatch.setattr(
-        target=base_path("transfer_all_issue_batches"), name=mock_transfer_all)
+        base_path("transfer_all_issue_batches"), mock_transfer_all
+    )
 
     move_issues_to_new_sprint(
-        issues=[
+        [
             JiraIssue(
                 key="KEY-1", type="Bug", status="To Do", summary="Fix stuff"
             )
         ],
-        session=MagicMock(),
-        base_url=HttpUrl("https://mock.atlassian.net"),
-        new_sprint_id=999,
+        MagicMock(),
+        HttpUrl("https://mock.atlassian.net"),
+        999,
     )
 
     assert called["keys"] == ["KEY-1"]
@@ -159,9 +153,6 @@ def test_move_issues_exits_gracefully_on_empty(
     caplog: LogCaptureFixture,
 ) -> None:
     move_issues_to_new_sprint(
-        issues=[],
-        session=MagicMock(),
-        base_url=HttpUrl("https://mock.atlassian.net"),
-        new_sprint_id=999,
+        [], MagicMock(), HttpUrl("https://mock.atlassian.net"), 999
     )
     assert "No incomplete stories to transfer." in caplog.text

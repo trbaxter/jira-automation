@@ -30,20 +30,17 @@ def test_parse_valid_sprint_returns_object() -> None:
     ],
 )
 def test_parse_invalid_returns_none(invalid_name: str) -> None:
-    assert parse_dart_sprint(name=invalid_name) is None
+    assert parse_dart_sprint(invalid_name) is None
 
 
 def test_is_valid_dart_sprint_true() -> None:
-    assert is_valid_dart_sprint(name=VALID_SPRINT, ref_date=REF_DATE) is True
+    assert is_valid_dart_sprint(VALID_SPRINT, REF_DATE) is True
 
 
 def test_is_valid_dart_sprint_false_on_date_mismatch() -> None:
     bad_date = REF_DATE - timedelta(days=1)
-    assert is_valid_dart_sprint(name=VALID_SPRINT, ref_date=bad_date) is False
+    assert is_valid_dart_sprint(VALID_SPRINT, bad_date) is False
 
 
 def test_is_valid_dart_sprint_false_on_parse_fail() -> None:
-    assert (
-            is_valid_dart_sprint(name="INVALID STRING",
-                                 ref_date=REF_DATE) is False
-    )
+    assert is_valid_dart_sprint("INVALID STRING", REF_DATE) is False

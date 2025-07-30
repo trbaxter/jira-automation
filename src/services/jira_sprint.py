@@ -4,7 +4,7 @@ from typing import Optional
 
 import requests
 
-from src.logging_config.error_handling import handle_api_error
+from src.logs.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
 from src.models.sprint_create_response import SprintCreateResponse
 from src.models.sprint_payload import SprintPayload
@@ -17,10 +17,10 @@ SPRINT_CREATE = "/rest/agile/1.0/sprint"
 
 
 def build_sprint_payload(
-        sprint_name: str,
-        sprint_start: datetime,
-        sprint_end: datetime,
-        board_id: int,
+    sprint_name: str,
+    sprint_start: datetime,
+    sprint_end: datetime,
+    board_id: int,
 ) -> SprintPayload:
     """
     Assembles the JSON payload to send to the JIRA API.
@@ -43,7 +43,7 @@ def build_sprint_payload(
 
 
 def post_sprint_payload(
-        session: requests.Session, url: str, payload: SprintPayload
+    session: requests.Session, url: str, payload: SprintPayload
 ) -> requests.Response:
     """
     Posts the sprint payload to the JIRA API.
@@ -60,7 +60,7 @@ def post_sprint_payload(
 
 
 def parse_json_response(
-        response: requests.Response,
+    response: requests.Response,
 ) -> Optional[SprintCreateResponse]:
     """
     Parses the JSON response, handling decode errors with logging.
@@ -80,10 +80,10 @@ def parse_json_response(
 
 
 def create_sprint(
-        sprint_name: str,
-        start_date: datetime,
-        end_date: datetime,
-        session: requests.Session,
+    sprint_name: str,
+    start_date: datetime,
+    end_date: datetime,
+    session: requests.Session,
 ) -> SprintCreateResponse | None:
     """
     Creates a new sprint in JIRA using the board config in the YAML file.
@@ -116,7 +116,7 @@ def create_sprint(
 
 
 def get_sprint_by_state(
-        session: requests.Session, config: BoardConfig, state: str
+    session: requests.Session, config: BoardConfig, state: str
 ) -> SprintSummary | None:
     url = build_sprint_state_query_url(
         base_url=config.base_url, board_id=config.board_id, state=state
@@ -132,7 +132,7 @@ def get_sprint_by_state(
 
 
 def get_all_future_sprints(
-        session: requests.Session, config: BoardConfig
+    session: requests.Session, config: BoardConfig
 ) -> list[SprintSummary]:
     board_id = config.board_id
     start_at = 0

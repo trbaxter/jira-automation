@@ -2,7 +2,7 @@ import logging
 
 from _pytest.logging import LogCaptureFixture
 
-from src.logging_config.configure_logging import log_config
+from src.logs.configure_logging import log_config
 
 
 def test_configure_logging_sets_level() -> None:

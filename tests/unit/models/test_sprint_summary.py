@@ -22,7 +22,7 @@ def test_name_accepts_valid_clean_strings(name: str) -> None:
     assert model.name == name
 
 
-@given(integers(min_value=1))
+@given(integers(1))
 def test_positive_id_accepted(id_value: int) -> None:
     model = SprintSummary(**{**VALID_SUMMARY, "id": id_value})
     assert model.id == id_value

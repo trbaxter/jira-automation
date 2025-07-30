@@ -21,7 +21,7 @@ def test_valid_static_input() -> None:
     assert payload.model_dump() == VALID_INPUT
 
 
-@given(name=cleaned_string())
+@given(cleaned_string())
 def test_valid_varied_name(name: str) -> None:
     data = {**VALID_INPUT, "name": name}
     payload = SprintPayload(**data)
@@ -30,13 +30,13 @@ def test_valid_varied_name(name: str) -> None:
 
 @pytest.mark.parametrize("bad_date", ["2024-01-01", "", "not-a-date"])
 def test_bad_date_inputs(bad_date: str) -> None:
-    with pytest.raises(expected_exception=ValidationError):
+    with pytest.raises(ValidationError):
         data = {**VALID_INPUT, "startDate": bad_date}
         SprintPayload(**data)
 
 
-@given(dt=valid_datetime_range())
+@given(valid_datetime_range())
 def test_pydantic_rejects_non_formatted_datetimes(dt: datetime) -> None:
-    with pytest.raises(expected_exception=ValidationError):
+    with pytest.raises(ValidationError):
         data = {**VALID_INPUT, "startDate": dt, "endDate": dt}
         SprintPayload(**data)

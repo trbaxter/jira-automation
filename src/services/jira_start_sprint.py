@@ -4,18 +4,18 @@ from datetime import datetime
 import requests
 from pydantic import HttpUrl
 
-from src.fieldtypes.common import SAFE_STR, INT_GT_0
-from src.logging_config.error_handling import handle_api_error
+from src.constants.field_types import SAFE_STR, INT_GT_0
+from src.logs.error_handling import handle_api_error
 from src.utils.payload_builder import build_start_sprint_payload
 
 
 def start_sprint(
-        new_sprint_id: INT_GT_0,
-        sprint_name: SAFE_STR,
-        start_date: datetime,
-        end_date: datetime,
-        session: requests.Session,
-        base_url: HttpUrl
+    new_sprint_id: INT_GT_0,
+    sprint_name: SAFE_STR,
+    start_date: datetime,
+    end_date: datetime,
+    session: requests.Session,
+    base_url: HttpUrl,
 ) -> None:
     """
     Activates a new sprint in JIRA by sending a PUT
@@ -34,9 +34,7 @@ def start_sprint(
     """
     url = f"{base_url}/rest/agile/1.0/sprint/{new_sprint_id}"
     payload = build_start_sprint_payload(
-        sprint_name=sprint_name,
-        start_date=start_date,
-        end_date=end_date
+        sprint_name=sprint_name, start_date=start_date, end_date=end_date
     )
 
     response = session.put(url=url, json=payload.model_dump())

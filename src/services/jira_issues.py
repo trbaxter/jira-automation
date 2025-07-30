@@ -3,15 +3,15 @@ from typing import List
 
 import requests
 
-from src.fieldtypes.common import INT_GT_0
-from src.logging_config.error_handling import handle_api_error
+from src.constants.field_types import INT_GT_0
+from src.logs.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
 
 DONE_STATUSES = {"Done", "Cancelled", "Existing Solution", "Abandoned"}
 
 
 def get_incomplete_stories(
-        sprint_id: INT_GT_0, config: BoardConfig, session: requests.Session
+    sprint_id: INT_GT_0, config: BoardConfig, session: requests.Session
 ) -> List[dict] | None:
     """
     Retrieves all incomplete stories from the specified sprint.

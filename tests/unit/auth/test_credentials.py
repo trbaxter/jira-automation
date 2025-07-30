@@ -22,7 +22,7 @@ def test_get_jira_credentials_success(email: str, token: str) -> None:
     env_vars = {EMAIL: email, TOKEN: token}
     getenv = lambda key: env_vars.get(key)
 
-    creds = get_jira_credentials(getenv=getenv)
+    creds = get_jira_credentials(getenv)
 
     assert creds.email == email
     assert creds.token == token
@@ -31,7 +31,7 @@ def test_get_jira_credentials_success(email: str, token: str) -> None:
 @given(email=cleaned_string(), token=cleaned_string())
 @pytest.mark.parametrize("missing_key", [EMAIL, TOKEN])
 def test_get_jira_credentials_missing_key(
-        email: str, missing_key: str, token: str
+    email: str, missing_key: str, token: str
 ) -> None:
     def getenv(key):
         env = {
@@ -42,8 +42,8 @@ def test_get_jira_credentials_missing_key(
 
     env_key_to_field = {EMAIL: "email", TOKEN: "token"}
 
-    with pytest.raises(expected_exception=ValidationError) as error:
-        get_jira_credentials(getenv=getenv)
+    with pytest.raises(ValidationError) as error:
+        get_jira_credentials(getenv)
 
     assert env_key_to_field[missing_key] in str(error.value)
 
@@ -52,17 +52,17 @@ def test_get_jira_credentials_missing_both_keys() -> None:
     def getenv(_key: str) -> str | None:
         return None
 
-    with pytest.raises(expected_exception=ValidationError) as error:
-        get_jira_credentials(getenv=getenv)
+    with pytest.raises(ValidationError) as error:
+        get_jira_credentials(getenv)
 
-    message = str(object=error.value)
+    message = str(error.value)
     assert "email" in message
     assert "token" in message
 
 
 @given(email=cleaned_string(), token=cleaned_string())
 def test_make_basic_auth_token_success(email: str, token: str) -> None:
-    auth_token = make_basic_auth_token(email=email, token=token)
+    auth_token = make_basic_auth_token(email, token)
 
     decoded = base64.b64decode(auth_token).decode("utf-8")
 
@@ -77,10 +77,7 @@ def test_get_auth_header_success(email: str, token: str) -> None:
         "utf-8"
     )
 
-    with patch(
-            target="src.auth.credentials.get_jira_credentials",
-            return_value=creds
-    ):
+    with patch("src.auth.credentials.get_jira_credentials", return_value=creds):
         header = get_auth_header()
 
     assert isinstance(header, dict)

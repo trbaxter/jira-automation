@@ -1,6 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
+from src.constants.field_types import SAFE_STR
 from src.models.sprint_create_response import SprintCreateResponse
 
 ID = "id"
@@ -30,16 +31,10 @@ def test_response_accepts_valid_data() -> None:
 
 
 @pytest.mark.parametrize(
-    "field, bad_value",
-    [
-        (ID, 0),
-        (BOARD_ID, -1),
-        (STATE, "   "),
-        (NAME, ""),
-    ],
+    "field, bad_value", [(ID, 0), (BOARD_ID, -1), (STATE, "   "), (NAME, "")]
 )
 def test_response_rejects_invalid_fields(
-        field: str, bad_value: int | str
+    field: SAFE_STR, bad_value: int | SAFE_STR
 ) -> None:
     invalid_data = VALID_RESPONSE.copy()
     invalid_data[field] = bad_value

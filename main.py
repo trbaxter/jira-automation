@@ -1,7 +1,7 @@
 import logging
 
 from src.auth.session import get_authenticated_session
-from src.logging_config.configure_logging import log_config
+from src.logs.configure_logging import log_config
 from src.orchestration.sprint_orchestration import automate_sprint
 from src.utils.config_loader import load_config
 

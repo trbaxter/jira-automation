@@ -11,7 +11,7 @@ JIRA_DATE_REGEX = re.compile(
 )
 
 
-@given(dt=valid_datetime_range())
+@given(valid_datetime_range())
 def test_format_jira_date_success(dt: datetime) -> None:
     result = format_jira_date(dt)
     assert JIRA_DATE_REGEX.fullmatch(result)
