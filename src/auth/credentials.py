@@ -6,13 +6,26 @@ from src.models.env_reader import EnvReader
 
 def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
     """
-    Retrieves Jira credentials (email and API token) from repository secrets.
+    Retrieve Jira credentials (email and API token) from environment variables
+    populated by repository secrets.
+
+    The function expects two environment variables to be set:
+        • JIRA_EMAIL
+        • JIRA_API_TOKEN
+
+    If either missing or invalid, a pydantic.ValidationError will be raised
+    when constructing the Credentials object.
+
+    Parameters:
+        getenv: A callable that accepts a key string and returns an
+                environment value. Defaults to os.getenv.
 
     Returns:
-        The values of the email and API token.
+        A Credentials object containing the Jira email and API token.
 
     Raises:
-        MissingCredentialsError: If credentials are missing from the repository.
+        pydantic.ValidationError: If either environment variable is
+                                  missing or invalid.
     """
     email = getenv("JIRA_EMAIL")
     token = getenv("JIRA_API_TOKEN")
