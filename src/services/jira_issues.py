@@ -34,7 +34,7 @@ def get_incomplete_stories(
     while True:
         url = f"{config.base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
         params = {"startAt": start_at, "maxResults": max_results}
-        response = session.get(url=url, params=params)
+        response = session.get(url, params=params)
         context = f"retrieving issues from sprint {sprint_id}"
 
         if not handle_api_error(response, context):
