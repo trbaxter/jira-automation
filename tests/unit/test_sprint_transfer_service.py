@@ -28,6 +28,9 @@ def raw_issue_strategy(draw: DrawFn) -> dict[str, object]:
         },
     }
 
+def base_path(name: str):
+    return f"src.services.sprint_transfer.{name}"
+
 
 @given(raw=raw_issue_strategy())
 def test_parse_issue_handles_missing_fields(raw: dict[str, object]) -> None:
@@ -64,10 +67,7 @@ def test_transfer_batch_success_first_try() -> None:
     session.post.return_value = MagicMock()
 
     with (
-        patch(
-            target="src.services.sprint_transfer.handle_api_error",
-            return_value=True,
-        ),
+        patch(target=base_path("handle_api_error"), return_value=True),
         patch(target="time.sleep", return_value=None),
     ):
         result = transfer_issue_batch_with_retry(
@@ -84,10 +84,7 @@ def test_transfer_batch_fails_all_attempts() -> None:
     session = MagicMock()
     session.post.return_value = MagicMock()
 
-    with patch(
-        target="src.services.sprint_transfer.handle_api_error",
-        return_value=False,
-    ):
+    with patch(target=base_path("handle_api_error"), return_value=False):
         result = transfer_issue_batch_with_retry(
             session=session,
             base_url=HttpUrl("https://mock.atlassian.net"),
@@ -102,9 +99,8 @@ def test_transfer_batch_fails_all_attempts() -> None:
 
 def test_transfer_all_batches_success(monkeypatch: MonkeyPatch) -> None:
     mock_transfer = MagicMock(return_value=True)
-    monkeypatch.setattr(
-        target="src.services.sprint_transfer.transfer_issue_batch_with_retry",
-        name=mock_transfer,
+    monkeypatch.setattr(target=base_path("transfer_issue_batch_with_retry"),
+        name=mock_transfer
     )
 
     transfer_all_issue_batches(
@@ -119,7 +115,7 @@ def test_transfer_all_batches_success(monkeypatch: MonkeyPatch) -> None:
 
 def test_transfer_batch_fails_raises_exit(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(
-        target="src.services.sprint_transfer.transfer_issue_batch_with_retry",
+        target=base_path("transfer_issue_batch_with_retry"),
         name=(lambda *a, **kw: False),
     )
 
@@ -142,9 +138,7 @@ def test_move_issues_logs_and_transfers(
         called["keys"] = issue_keys
 
     monkeypatch.setattr(
-        target="src.services.sprint_transfer.transfer_all_issue_batches",
-        name=mock_transfer_all,
-    )
+        target=base_path("transfer_all_issue_batches"), name=mock_transfer_all)
 
     move_issues_to_new_sprint(
         issues=[
