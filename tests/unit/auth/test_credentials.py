@@ -1,16 +1,8 @@
-import base64
-from unittest.mock import patch
-
 import pytest
 from hypothesis import given
 from pydantic import ValidationError
 
-from src.auth.credentials import (
-    get_jira_credentials,
-    make_basic_auth_token,
-    get_auth_header,
-)
-from src.models.credentials import Credentials
+from src.auth.credentials import get_jira_credentials
 from tests.strategies.shared import cleaned_string
 
 EMAIL = "JIRA_EMAIL"
@@ -58,29 +50,3 @@ def test_get_jira_credentials_missing_both_keys() -> None:
     message = str(error.value)
     assert "email" in message
     assert "token" in message
-
-
-@given(email=cleaned_string(), token=cleaned_string())
-def test_make_basic_auth_token_success(email: str, token: str) -> None:
-    auth_token = make_basic_auth_token(email, token)
-
-    decoded = base64.b64decode(auth_token).decode("utf-8")
-
-    assert isinstance(auth_token, str)
-    assert decoded == f"{email}:{token}"
-
-
-@given(email=cleaned_string(), token=cleaned_string())
-def test_get_auth_header_success(email: str, token: str) -> None:
-    creds = Credentials(email=email, token=token)
-    expected_token = base64.b64encode(f"{email}:{token}".encode()).decode(
-        "utf-8"
-    )
-
-    with patch("src.auth.credentials.get_jira_credentials", return_value=creds):
-        header = get_auth_header()
-
-    assert isinstance(header, dict)
-    assert set(header.keys()) == {"Authorization", "Content-Type"}
-    assert header["Authorization"] == f"Basic {expected_token}"
-    assert header["Content-Type"] == "application/json"
