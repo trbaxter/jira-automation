@@ -1,30 +1,26 @@
-import base64
 from unittest.mock import patch
 
 import requests
 from hypothesis import given
+from requests.auth import HTTPBasicAuth
 
 from src.auth.session import get_authenticated_session
+from src.models.credentials import Credentials
 from strategies.shared import cleaned_string
 
 
 @given(cleaned_string(), cleaned_string())
 def test_get_authenticated_session_success(email: str, token: str) -> None:
-    credentials_str = f"{email}:{token}"
-    encoded_token = base64.b64encode(credentials_str.encode()).decode("utf-8")
+    creds = Credentials(email=email, token=token)
 
-    expected_header = {
-        "Authorization": f"Basic {encoded_token}",
-        "Content-Type": "application/json",
-    }
-
-    with patch(
-        "src.auth.session.get_auth_header", return_value=expected_header
-    ):
+    with patch("src.auth.session.get_jira_credentials", return_value=creds):
         session = get_authenticated_session()
 
     assert isinstance(session, requests.Session)
     assert isinstance(session.verify, str) and session.verify
-    assert {"Authorization", "Content-Type"}.issubset(session.headers.keys())
-    assert session.headers["Authorization"] == f"Basic {encoded_token}"
     assert session.headers["Content-Type"] == "application/json"
+
+    # Proper type narrowing
+    assert isinstance(session.auth, HTTPBasicAuth)
+    assert session.auth.username == email
+    assert session.auth.password == token
