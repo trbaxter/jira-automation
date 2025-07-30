@@ -2,7 +2,7 @@ import pytest
 from hypothesis import given
 
 from src.exceptions.jira_board_not_found_error import JiraBoardNotFoundError
-from tests.strategies.common import cleaned_string
+from tests.strategies.shared import cleaned_string
 
 
 @given(cleaned_string())

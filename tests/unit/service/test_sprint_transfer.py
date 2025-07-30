@@ -14,7 +14,7 @@ from src.services.sprint_transfer import (
     transfer_all_issue_batches,
     move_issues_to_new_sprint,
 )
-from strategies.common import cleaned_string
+from strategies.shared import cleaned_string
 
 
 @composite

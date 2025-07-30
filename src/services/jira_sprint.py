@@ -56,7 +56,7 @@ def post_sprint_payload(
     Returns:
         The raw HTTP response from the JIRA API.
     """
-    return session.post(url=url, json=payload.model_dump())
+    return session.post(url, json=payload.model_dump())
 
 
 def parse_json_response(
@@ -99,17 +99,14 @@ def create_sprint(
     """
     config = load_config()
     payload = build_sprint_payload(
-        sprint_name=sprint_name,
-        sprint_start=start_date,
-        sprint_end=end_date,
-        board_id=config.board_id,
+        sprint_name, start_date, end_date, config.board_id
     )
     url = f"{config.base_url}{SPRINT_CREATE}"
 
-    response = post_sprint_payload(session=session, url=url, payload=payload)
+    response = post_sprint_payload(session, url, payload)
     context = "creating sprint"
 
-    if not handle_api_error(response=response, context=context):
+    if not handle_api_error(response, context):
         return None
 
     return parse_json_response(response)
@@ -118,13 +115,11 @@ def create_sprint(
 def get_sprint_by_state(
     session: requests.Session, config: BoardConfig, state: str
 ) -> SprintSummary | None:
-    url = build_sprint_state_query_url(
-        base_url=config.base_url, board_id=config.board_id, state=state
-    )
-    response = session.get(url=url)
+    url = build_sprint_state_query_url(config.base_url, config.board_id, state)
+    response = session.get(url)
     context = f"retrieving {state} sprint"
 
-    if not handle_api_error(response=response, context=context):
+    if not handle_api_error(response, context):
         return None
 
     sprints = response.json().get("values", [])
@@ -146,7 +141,7 @@ def get_all_future_sprints(
             "startAt": start_at,
             "maxResults": max_results,
         }
-        response = session.get(url=url, params=params)
+        response = session.get(url, params=params)
         if response.status_code != 200:
             raise RuntimeError(
                 f"\nError while fetching future sprints: {response.text}"

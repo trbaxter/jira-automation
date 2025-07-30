@@ -11,7 +11,7 @@ from src.utils.payload_builder import (
     build_close_sprint_payload,
     build_start_sprint_payload,
 )
-from tests.strategies.common import cleaned_string, valid_datetime_range
+from tests.strategies.shared import cleaned_string, valid_datetime_range
 
 JIRA_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}")
 

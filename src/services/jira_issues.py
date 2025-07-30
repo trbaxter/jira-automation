@@ -37,7 +37,7 @@ def get_incomplete_stories(
         response = session.get(url=url, params=params)
         context = f"retrieving issues from sprint {sprint_id}"
 
-        if not handle_api_error(response=response, context=context):
+        if not handle_api_error(response, context):
             return []
 
         data = response.json()
@@ -45,10 +45,8 @@ def get_incomplete_stories(
         num_issues = len(issues)
 
         logging.info(
-            msg=(
-                f"\nFetched {num_issues} issues from page starting at"
-                f" {start_at}."
-            )
+            f"\nFetched {num_issues} issues from page starting at"
+            f" {start_at}."
         )
 
         incomplete_stories.extend(
@@ -64,6 +62,6 @@ def get_incomplete_stories(
 
     num_inc_stories = len(incomplete_stories)
     logging.info(
-        msg=f"{num_inc_stories} incomplete stories found in sprint {sprint_id}."
+        f"{num_inc_stories} incomplete stories found in sprint {sprint_id}."
     )
     return incomplete_stories

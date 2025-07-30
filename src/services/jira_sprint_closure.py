@@ -31,14 +31,12 @@ def close_sprint(
         None. Logs success or failure.
     """
     url = f"{base_url}/rest/agile/1.0/sprint/{sprint_id}"
-    payload = build_close_sprint_payload(
-        sprint_name=sprint_name, start_date=start_date, end_date=end_date
-    )
+    payload = build_close_sprint_payload(sprint_name, start_date, end_date)
 
-    response = session.put(url=url, json=payload.model_dump())
+    response = session.put(url, json=payload.model_dump())
     context = f"closing sprint {sprint_id}"
 
-    if not handle_api_error(response=response, context=context):
+    if not handle_api_error(response, context):
         return
 
-    logging.info(msg=f"Sprint {sprint_id} has been closed.")
+    logging.info(f"Sprint {sprint_id} has been closed.")

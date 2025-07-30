@@ -33,14 +33,12 @@ def start_sprint(
         None. Logs the result.
     """
     url = f"{base_url}/rest/agile/1.0/sprint/{new_sprint_id}"
-    payload = build_start_sprint_payload(
-        sprint_name=sprint_name, start_date=start_date, end_date=end_date
-    )
+    payload = build_start_sprint_payload(sprint_name, start_date, end_date)
 
-    response = session.put(url=url, json=payload.model_dump())
+    response = session.put(url, json=payload.model_dump())
     context = f"starting sprint {new_sprint_id}"
-    if not handle_api_error(response=response, context=context):
+    if not handle_api_error(response, context):
         return
 
-    logging.info(msg=f"\nSprint {new_sprint_id} is now active.")
-    logging.info(msg="\nSprint automation process complete.")
+    logging.info(f"\nSprint {new_sprint_id} is now active.")
+    logging.info("\nSprint automation process complete.")

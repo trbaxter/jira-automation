@@ -54,7 +54,7 @@ def get_auth_header() -> dict[str, str]:
     email = credentials.email
     token = credentials.token
 
-    encoded_token = make_basic_auth_token(email=email, token=token)
+    encoded_token = make_basic_auth_token(email, token)
 
     return {
         "Authorization": f"Basic {encoded_token}",

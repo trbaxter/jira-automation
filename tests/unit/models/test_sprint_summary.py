@@ -4,7 +4,7 @@ from hypothesis.strategies import integers
 from pydantic import ValidationError
 
 from src.models.sprint_summary import SprintSummary
-from strategies.common import cleaned_string
+from strategies.shared import cleaned_string
 
 VALID_SUMMARY = {
     "id": 1,

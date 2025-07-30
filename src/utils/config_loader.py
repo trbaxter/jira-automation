@@ -5,7 +5,7 @@ import yaml
 from src.exceptions.config_not_found_error import ConfigNotFoundError
 from src.models.board_config import BoardConfig
 
-_CONFIG_PATH = Path(__file__).resolve().parents[2] / "board_config.yaml"
+CONFIG_PATH = Path(__file__).resolve().parents[2] / "board_config.yaml"
 
 
 def load_config() -> BoardConfig:
@@ -20,8 +20,8 @@ def load_config() -> BoardConfig:
         FileNotFoundError: If the yaml config file is missing.
     """
     try:
-        with _CONFIG_PATH.open(mode="r", encoding="utf-8") as file:
-            config = yaml.safe_load(stream=file)
+        with CONFIG_PATH.open(mode="r", encoding="utf-8") as file:
+            config = yaml.safe_load(file)
 
             if not isinstance(config, dict):
                 raise TypeError("YAML content must be a dictionary mapping")

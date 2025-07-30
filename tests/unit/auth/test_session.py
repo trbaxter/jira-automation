@@ -5,7 +5,7 @@ import requests
 from hypothesis import given
 
 from src.auth.session import get_authenticated_session
-from strategies.common import cleaned_string
+from strategies.shared import cleaned_string
 
 
 @given(cleaned_string(), cleaned_string())

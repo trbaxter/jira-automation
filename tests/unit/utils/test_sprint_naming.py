@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from hypothesis import given
 
-from strategies.common import valid_datetime_range
+from strategies.shared import valid_datetime_range
 from utils.sprint_naming import generate_sprint_name
 
 

@@ -48,18 +48,18 @@ def transfer_issue_batch_with_retry(
             max_attempts,
         )
 
-        response = session.post(url=url, json=payload)
+        response = session.post(url, json=payload)
         context = f"moving issues batch from {batch_start_index}"
 
-        if handle_api_error(response=response, context=context):
-            logging.info(msg="Transfer process successful.")
+        if handle_api_error(response, context):
+            logging.info("Transfer process successful.")
             time.sleep(cooldown_seconds)
             return True
 
         if attempt < max_attempts:
-            logging.info(msg="\nTransfer failed. Retrying...")
+            logging.info("\nTransfer failed. Retrying...")
         else:
-            logging.error(msg="Transfer failed. Max attempts exceeded.")
+            logging.error("Transfer failed. Max attempts exceeded.")
 
     return False
 
@@ -104,7 +104,7 @@ def transfer_all_issue_batches(
 
             raise SystemExit(message)
 
-    logging.info(msg="Migration of unfinished stories complete.")
+    logging.info("Migration of unfinished stories complete.")
 
 
 def move_issues_to_new_sprint(
@@ -126,13 +126,13 @@ def move_issues_to_new_sprint(
         None.
     """
     if not issues:
-        logging.info(msg="No incomplete stories to transfer.")
+        logging.info("No incomplete stories to transfer.")
         return
 
     num_issues = len(issues)
 
     logging.info(
-        msg=f"\nMoving the following {num_issues} stories to the new sprint:"
+        f"\nMoving the following {num_issues} stories to the new sprint:"
     )
 
     for issue in issues:

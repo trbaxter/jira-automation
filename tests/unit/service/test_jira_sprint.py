@@ -15,7 +15,7 @@ from src.services.jira_sprint import (
     get_sprint_by_state,
     get_all_future_sprints,
 )
-from strategies.common import cleaned_string
+from strategies.shared import cleaned_string
 
 
 @given(

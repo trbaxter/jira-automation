@@ -4,7 +4,7 @@ from pydantic import ValidationError
 
 from src.constants.field_types import SAFE_STR
 from src.models.jira_issue import JiraIssue
-from tests.strategies.common import cleaned_string
+from tests.strategies.shared import cleaned_string
 
 KEY = "key"
 TYPE = "type"

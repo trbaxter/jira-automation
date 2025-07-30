@@ -24,14 +24,14 @@ def handle_api_error(response: requests.Response, context: str) -> bool:
     """
     if response.status_code not in SUCCESS_CODES:
         logging.error(
-            msg=f"\nError during {context}. Status Code: {response.status_code}"
+            f"\nError during {context}. Status Code: {response.status_code}"
         )
 
         if response.status_code == 504:
-            logging.error(msg="Gateway timeout occurred.")
+            logging.error("Gateway timeout occurred.")
 
         else:
-            logging.error(msg=f"Response content: {response.text}")
+            logging.error(f"Response content: {response.text}")
 
         return False
     return True

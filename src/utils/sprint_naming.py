@@ -19,8 +19,7 @@ def generate_sprint_name(start_date: datetime, end_date: datetime) -> SAFE_STR:
         str: A formatted sprint name as a string.
     """
     sprint_name = (
-        f"DART {start_date.strftime(format='%y%m%d')} "
-        f"({start_date.strftime(format='%m/%d')}-"
-        f"{end_date.strftime(format='%m/%d')})"
+        f"DART {start_date.strftime('%y%m%d')} "
+        f"({start_date.strftime('%m/%d')}-{end_date.strftime('%m/%d')})"
     )
     return sprint_name

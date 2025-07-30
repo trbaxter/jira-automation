@@ -11,7 +11,7 @@ from src.auth.credentials import (
     get_auth_header,
 )
 from src.models.credentials import Credentials
-from tests.strategies.common import cleaned_string
+from tests.strategies.shared import cleaned_string
 
 EMAIL = "JIRA_EMAIL"
 TOKEN = "JIRA_API_TOKEN"
