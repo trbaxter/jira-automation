@@ -8,7 +8,7 @@ from requests import Response, Request
 
 from logging_config.error_handling import handle_api_error
 
-_MOCK_BASE_URL = HttpUrl("https://fake.jira.com/")
+MOCK_BASE_URL = HttpUrl("https://fake.jira.com/")
 CONTEXT = "posting to Jira"
 
 
@@ -39,7 +39,7 @@ def test_success_responses(
     response = make_mock_response(
         status_code=status_code,
         text="",
-        url=_MOCK_BASE_URL,
+        url=MOCK_BASE_URL,
         method="POST"
     )
 
@@ -54,7 +54,7 @@ def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
     response = make_mock_response(
         status_code=400,
         text="Bad Request",
-        url=_MOCK_BASE_URL,
+        url=MOCK_BASE_URL,
         method="POST"
     )
 
@@ -75,7 +75,7 @@ def test_gateway_timeout_logs(caplog: LogCaptureFixture) -> None:
     response = make_mock_response(
         status_code=504,
         text="Timeout",
-        url=_MOCK_BASE_URL,
+        url=MOCK_BASE_URL,
         method="POST"
     )
 
