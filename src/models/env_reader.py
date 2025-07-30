@@ -4,10 +4,13 @@ from typing import runtime_checkable, Protocol
 @runtime_checkable
 class EnvReader(Protocol):
     """
-    Serves as a type-safe contract for injecting environment values rather
-    than relying on hard-coded usages of 'os.getenv'.
+    Represents a callable that retrieves values from environment variables.
 
-    Uses '...' to indicate that no class body is required to function.
+    Intended to abstract access to repository secrets. Allows injection of
+    mock implementations for testing and decouples environment access from
+    core application logic.
+
+    Implemented by default with 'os.getenv'.
     """
 
     def __call__(self, key: str) -> str: ...
