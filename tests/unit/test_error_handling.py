@@ -6,7 +6,7 @@ from _pytest.logging import LogCaptureFixture
 from pydantic import conint, constr, HttpUrl
 from requests import Response, Request
 
-from logging_config.error_handling import handle_api_error
+from src.logging_config.error_handling import handle_api_error
 
 MOCK_BASE_URL = HttpUrl("https://fake.jira.com/")
 CONTEXT = "posting to Jira"
