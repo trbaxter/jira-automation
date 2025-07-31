@@ -44,7 +44,7 @@ def transfer_issue_batch_with_retry(
             time.sleep(5)
             return True
 
-        if attempt < 4:
+        if attempt < 3:
             logging.info("\nTransfer failed. Retrying...")
         else:
             logging.error("Transfer failed. Max attempts exceeded.")
