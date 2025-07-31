@@ -53,7 +53,7 @@ def automate_sprint(session: requests.Session) -> None:
 
     else:
         logging.warning(
-            f"\n{YELLOW_BOLD}[WARNING]{RESET}: "
+            f"\n{YELLOW_BOLD}[WARNING]{RESET} "
             "No future sprint found in the backlog starting with 'DART '."
         )
 
