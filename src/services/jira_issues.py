@@ -42,12 +42,6 @@ def get_incomplete_stories(
 
         data = response.json()
         issues = data.get("issues", [])
-        num_issues = len(issues)
-
-        logging.info(
-            f"\nFetched {num_issues} issues from page starting at"
-            f" {start_at}."
-        )
 
         incomplete_stories.extend(
             issue
