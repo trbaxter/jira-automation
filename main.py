@@ -15,8 +15,10 @@ if __name__ == "__main__":
         config = load_config()
 
     except ConfigNotFoundError as error:
-        print(f"\n{BOLD_RED}[ERROR]: "
-              f"board_config.yaml missing in root directory{TEXT_RESET}")
+        print(
+            f"\n{BOLD_RED}[ERROR]: "
+            f"board_config.yaml missing in root directory{TEXT_RESET}"
+        )
         sys.exit(1)
 
     try:
@@ -24,5 +26,5 @@ if __name__ == "__main__":
         automate_sprint(session)
 
     except Exception as e:
-        logging.exception("Unexpected error occurred.")
+        logging.exception("Unexpected error occurred")
         raise
