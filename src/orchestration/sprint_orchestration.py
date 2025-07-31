@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 
-from constants.shared import YELLOW_BOLD
+from src.constants.shared import YELLOW_BOLD
 from src.services.jira_issues import get_incomplete_stories
 from src.services.jira_sprint import (
     create_sprint,
