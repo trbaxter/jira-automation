@@ -64,8 +64,8 @@ def automate_sprint(session: requests.Session) -> None:
 
         if new_sprint:
             logging.info(
-                f"{GREEN_BOLD}[SUCCESS]{RESET} New sprint successfully "
-                f"generated:  [ {new_sprint.name} ]"
+                f"New sprint successfully generated: "
+                f"[ {GREEN_BOLD}{new_sprint_name}{RESET} ]"
             )
 
         if not new_sprint:
