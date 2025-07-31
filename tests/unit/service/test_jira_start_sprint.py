@@ -10,6 +10,9 @@ from pydantic import HttpUrl
 from src.constants.shared import SAFE_STR
 from src.services.jira_start_sprint import start_sprint
 from tests.strategies.shared import cleaned_string, valid_datetime_range
+from tests.utils.patch_helper import make_base_path
+
+base_path = make_base_path("src.services.jira_start_sprint")
 
 
 @pytest.fixture
@@ -17,10 +20,6 @@ def mock_session() -> MagicMock:
     session = MagicMock()
     session.put.return_value = MagicMock()
     return session
-
-
-def base_path(name: str):
-    return f"src.services.jira_start_sprint.{name}"
 
 
 @given(sprint_name=cleaned_string(), start_date=valid_datetime_range())

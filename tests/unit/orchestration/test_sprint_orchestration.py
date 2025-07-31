@@ -8,13 +8,9 @@ from _pytest.monkeypatch import MonkeyPatch
 from freezegun import freeze_time
 
 from src.orchestration.sprint_orchestration import automate_sprint
+from tests.utils.patch_helper import make_base_path
 
-TARGET_BASE = "src.orchestration.sprint_orchestration"
-
-
-# Helper function to shorten target names
-def function(name: str) -> str:
-    return f"{TARGET_BASE}.{name}"
+base_path = make_base_path("src.orchestration.sprint_orchestration")
 
 
 # Helper function to silently return some value
@@ -34,7 +30,7 @@ def patch_all(
     monkeypatch: MonkeyPatch, **target_name_pairs: Callable[..., Any]
 ) -> None:
     for target, name in target_name_pairs.items():
-        monkeypatch.setattr(target=function(target), name=name)
+        monkeypatch.setattr(base_path(target), name)
 
 
 def test_creates_new_sprint_if_none_found(monkeypatch: MonkeyPatch) -> None:

@@ -8,6 +8,9 @@ from pydantic import HttpUrl
 from src.constants.shared import SAFE_STR
 from src.services.jira_sprint_closure import close_sprint
 from tests.strategies.shared import cleaned_string
+from tests.utils.patch_helper import make_base_path
+
+base_path = make_base_path("src.services.jira_sprint_closure")
 
 
 @given(
@@ -26,13 +29,8 @@ def test_close_sprint_success_logs_expected_messages(
     session.put.return_value = MagicMock()
 
     with (
-        patch(
-            "src.services.jira_sprint_closure.build_close_sprint_payload"
-        ) as mock_builder,
-        patch(
-            "src.services.jira_sprint_closure.handle_api_error",
-            return_value=True,
-        ),
+        patch(base_path("build_close_sprint_payload")) as mock_builder,
+        patch(base_path("handle_api_error"), return_value=True),
         caplog.at_level(logging.INFO),
     ):
         payload_mock = MagicMock()
@@ -55,9 +53,7 @@ def test_close_sprint_handles_api_failure(caplog: LogCaptureFixture) -> None:
     session = MagicMock()
     session.put.return_value = MagicMock()
 
-    with patch(
-        "src.services.jira_sprint_closure.handle_api_error", return_value=False
-    ):
+    with patch(base_path("handle_api_error"), return_value=False):
         close_sprint(
             456,
             "ABCDEFG",

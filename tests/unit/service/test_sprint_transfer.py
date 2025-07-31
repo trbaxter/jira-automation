@@ -15,6 +15,9 @@ from src.services.sprint_transfer import (
     move_issues_to_new_sprint,
 )
 from tests.strategies.shared import cleaned_string
+from tests.utils.patch_helper import make_base_path
+
+base_path = make_base_path("src.services.sprint_transfer")
 
 
 @composite
@@ -27,10 +30,6 @@ def raw_issue_strategy(draw: DrawFn) -> dict[str, object]:
             "issuetype": {"name": draw(cleaned_string())},
         },
     }
-
-
-def base_path(name: str):
-    return f"src.services.sprint_transfer.{name}"
 
 
 @given(raw_issue_strategy())

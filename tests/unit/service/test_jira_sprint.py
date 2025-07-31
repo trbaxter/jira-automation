@@ -16,6 +16,9 @@ from src.services.jira_sprint import (
     get_all_future_sprints,
 )
 from tests.strategies.shared import cleaned_string
+from tests.utils.patch_helper import make_base_path
+
+base_path = make_base_path("src.services.jira_sprint")
 
 
 @given(
@@ -82,16 +85,12 @@ def test_create_sprint_successfully_returns_parsed_response():
     fake_response.json.return_value = {"id": 1, "self": "...", "name": "Sprint"}
 
     with (
-        patch("src.services.jira_sprint.load_config") as mock_cfg,
-        patch("src.services.jira_sprint.handle_api_error", return_value=True),
+        patch(base_path("load_config")) as mock_cfg,
+        patch(base_path("handle_api_error"), return_value=True),
         patch(
-            "src.services.jira_sprint.parse_json_response",
-            return_value="parsed",
+            base_path("parse_json_response"), return_value="parsed"
         ) as _mock_parse,
-        patch(
-            "src.services.jira_sprint.post_sprint_payload",
-            return_value=fake_response,
-        ),
+        patch(base_path("post_sprint_payload"), return_value=fake_response),
     ):
 
         mock_cfg.return_value.board_id = 1
@@ -110,8 +109,8 @@ def test_create_sprint_successfully_returns_parsed_response():
 def test_create_sprint_aborts_on_api_failure():
     session = MagicMock()
     with (
-        patch("src.services.jira_sprint.load_config") as mock_cfg,
-        patch("src.services.jira_sprint.handle_api_error", return_value=False),
+        patch(base_path("load_config")) as mock_cfg,
+        patch(base_path("handle_api_error"), return_value=False),
     ):
 
         mock_cfg.return_value.board_id = 1
@@ -133,7 +132,7 @@ def test_get_sprint_by_state_returns_first_result():
     config.board_id = 10
     session.get.return_value.json.return_value = {"values": ["sprint_1"]}
 
-    with patch("src.services.jira_sprint.handle_api_error", return_value=True):
+    with patch(base_path("handle_api_error"), return_value=True):
         result = get_sprint_by_state(session, config, "active")
 
         assert result == "sprint_1"
@@ -145,10 +144,10 @@ def test_get_sprint_by_state_returns_none_on_error_or_empty():
     config.base_url = "https://mock"
     config.board_id = 10
 
-    with patch("src.services.jira_sprint.handle_api_error", return_value=False):
+    with patch(base_path("handle_api_error"), return_value=False):
         assert get_sprint_by_state(session, config, "future") is None
 
-    with patch("src.services.jira_sprint.handle_api_error", return_value=True):
+    with patch(base_path("handle_api_error"), return_value=True):
         session.get.return_value.json.return_value = {"values": []}
         assert get_sprint_by_state(session, config, "closed") is None
 

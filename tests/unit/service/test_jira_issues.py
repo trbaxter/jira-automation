@@ -7,6 +7,7 @@ from pydantic import HttpUrl
 
 from src.models.board_config import BoardConfig
 from src.services.jira_issues import DONE_STATUSES, get_incomplete_stories
+from tests.utils.patch_helper import make_base_path
 
 
 @pytest.fixture
@@ -22,6 +23,8 @@ def mock_config() -> BoardConfig:
         board_name="TEST",
     )
 
+
+base_path = make_base_path("src.services.jira_issues")
 
 non_done_statuses = text(min_size=1).filter(
     lambda string: string not in DONE_STATUSES
@@ -100,7 +103,7 @@ def test_returns_empty_list_if_api_error_detected(
     mock_session: MagicMock, mock_config: BoardConfig
 ) -> None:
     mock_session.get.return_value = MagicMock()
-    with patch("src.services.jira_issues.handle_api_error", return_value=False):
+    with patch(base_path("handle_api_error"), return_value=False):
         result = get_incomplete_stories(42, mock_config, mock_session)
         assert result == []
 
@@ -121,7 +124,7 @@ def test_returns_incomplete_stories_across_pages(
         MagicMock(json=lambda: page2),
     ]
 
-    with patch("src.services.jira_issues.handle_api_error", return_value=True):
+    with patch(base_path("handle_api_error"), return_value=True):
         result = get_incomplete_stories(123, mock_config, mock_session)
 
     assert len(result) == 50
@@ -142,7 +145,7 @@ def test_stops_fetching_when_results_less_than_max(
     mock_response.json.return_value = response_data
     mock_session.get.return_value = mock_response
 
-    with patch("src.services.jira_issues.handle_api_error", return_value=True):
+    with patch(base_path("handle_api_error"), return_value=True):
         result = get_incomplete_stories(99, mock_config, mock_session)
 
     assert result == [
