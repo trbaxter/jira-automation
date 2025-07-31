@@ -15,7 +15,6 @@ def transfer_issue_batch_with_retry(
     sprint_id: INT_GT_0,
     issue_keys: list[str],
     batch_start_index: INT_GEQ_0,
-    max_attempts: INT_GEQ_0 = 3,
     cooldown_seconds: INT_GEQ_0 = 5,
 ) -> bool:
     """
@@ -27,7 +26,6 @@ def transfer_issue_batch_with_retry(
         sprint_id: The ID of the target sprint.
         issue_keys: A list of issue keys to transfer.
         batch_start_index: Index of the first issue in the batch (for logging).
-        max_attempts: Maximum retry attempts before failing.
         cooldown_seconds: Delay between successful batch transfers.
 
     Returns:
@@ -36,10 +34,10 @@ def transfer_issue_batch_with_retry(
     url = f"{base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
     payload = {"issues": issue_keys}
 
-    for attempt in range(1, max_attempts + 1):
+    for attempt in range(1, 4):
         logging.info(
             f"\nMoving batch of {len(issue_keys)} issues to sprint {sprint_id}."
-            f" (Attempt {attempt} of {max_attempts}."
+            f" (Attempt {attempt} of 3."
         )
 
         response = session.post(url, json=payload)
@@ -50,7 +48,7 @@ def transfer_issue_batch_with_retry(
             time.sleep(cooldown_seconds)
             return True
 
-        if attempt < max_attempts:
+        if attempt < 4:
             logging.info("\nTransfer failed. Retrying...")
         else:
             logging.error("Transfer failed. Max attempts exceeded.")
