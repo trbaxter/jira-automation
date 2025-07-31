@@ -30,6 +30,7 @@ def automate_sprint(session: requests.Session) -> None:
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
     config = load_config()
+    active_sprint = get_sprint_by_state(session, config, "active")
     future_sprints = get_all_future_sprints(session, config)
 
     dart_sprint = next(
@@ -73,7 +74,7 @@ def automate_sprint(session: requests.Session) -> None:
 
         new_sprint_id = new_sprint.get("id")
 
-    active_sprint = get_sprint_by_state(session, config, "active")
+    # active_sprint = get_sprint_by_state(session, config, "active")
 
     if active_sprint:
         incomplete_stories = get_incomplete_stories(
