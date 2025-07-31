@@ -8,14 +8,17 @@ field validation.
 
 from pydantic import conint, constr
 
-JIRA_DATETIME_REGEX = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}$"
-RESET = "\033[0m"
+# Colors
+GREEN_BOLD = "\033[1;32m"
 YELLOW_BOLD = "\033[1;33m"
-
+RESET = "\033[0m"
 
 # Integers
 INT_GEQ_0 = conint(ge=0)
 INT_GT_0 = conint(gt=0)
+
+# Patterns
+JIRA_DATETIME_REGEX = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}$"
 
 # Strings
 JIRA_DATETIME_STR = constr(pattern=JIRA_DATETIME_REGEX)
