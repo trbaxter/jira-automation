@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 
-from src.constants.shared import GREEN_BOLD, RESET
+from constants.shared import YELLOW_BOLD
 from src.services.jira_issues import get_incomplete_stories
 from src.services.jira_sprint import (
     create_sprint,
@@ -53,7 +53,8 @@ def automate_sprint(session: requests.Session) -> None:
 
     else:
         logging.warning(
-            "\nNo future sprint found in the backlog starting with 'DART '."
+            f"\n[{YELLOW_BOLD}WARNING]: "
+            "No future sprint found in the backlog starting with 'DART '."
         )
 
         new_sprint_name = generate_sprint_name(start_date, end_date)
@@ -64,8 +65,8 @@ def automate_sprint(session: requests.Session) -> None:
 
         if new_sprint:
             logging.info(
-                f"New sprint successfully generated with sprint name: "
-                f"{GREEN_BOLD}{new_sprint_name}{RESET}"
+                "New sprint successfully generated with sprint name: "
+                f"{new_sprint_name}"
             )
 
         if not new_sprint:
