@@ -116,8 +116,8 @@ def move_issues_to_new_sprint(
 
     logging.info(
         f"\n::group::"
-        f"Moving {len(issues)} stories to the new sprint:."
-        f"Click the dropdown for more information."
+        f"Moving {len(issues)} stories to the new sprint. "
+        f"Click the dropdown arrow for more information."
     )
 
     for issue in issues:
