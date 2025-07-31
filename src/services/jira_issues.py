@@ -57,6 +57,7 @@ def get_incomplete_stories(
     num_inc_stories = len(incomplete_stories)
     logging.info(
         f"\n{num_inc_stories} incomplete stories found in "
-        f"previous sprint: {YELLOW_BOLD}[ {config.board_name} ]{RESET}"
+        f"previous sprint:"
+        f"\n{YELLOW_BOLD}{config.board_name}{RESET}"
     )
     return incomplete_stories
