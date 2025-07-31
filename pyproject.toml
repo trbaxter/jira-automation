@@ -8,17 +8,21 @@ authors = [{ name = "Tyler Baxter", email = "trb7074@gmail.com" }]
 [tool.black]
 line-length = 80
 
-[tool.coverage.run]
-source = ["src"]
-omit = ["*/__init__.py"]
+[tool.coverage.html]
+directory = "htmlcov"
 
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
 exclude_lines = ['if __name__ == "__main__":']
 
-[tool.coverage.html]
-directory = "htmlcov"
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/__init__.py"]
 
 [tool.hypothesis]
 max_examples = 500
+
+[tool.pytest.ini_options]
+addopts = "--no-header --no-summary -qq"
+testpaths = ["tests"]
