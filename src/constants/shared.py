@@ -8,12 +8,6 @@ field validation.
 
 from pydantic import conint, constr
 
-# Colors
-GREEN_BOLD = "\033[1;32m"
-YELLOW_BOLD = "\033[1;33m"
-RED_BOLD = "\033[1;31m"
-RESET = "\033[0m"
-
 # Integers
 INT_GEQ_0 = conint(ge=0)
 INT_GT_0 = conint(gt=0)
