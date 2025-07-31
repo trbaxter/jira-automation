@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.constants.field_types import INT_GT_0, JIRA_DATETIME_STR, SAFE_STR
+from src.constants.shared import INT_GT_0, JIRA_DATETIME_STR, SAFE_STR
 
 
 class SprintPayload(BaseModel):

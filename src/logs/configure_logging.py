@@ -1,6 +1,6 @@
 import logging
 
-from src.constants.field_types import INT_GEQ_0
+from src.constants.shared import INT_GEQ_0
 
 
 def log_config(level: INT_GEQ_0 = logging.INFO, force: bool = True) -> None:

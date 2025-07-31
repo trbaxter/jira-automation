@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.constants.field_types import SAFE_STR
+from src.constants.shared import SAFE_STR
 from src.models.sprint_create_response import SprintCreateResponse
 
 ID = "id"

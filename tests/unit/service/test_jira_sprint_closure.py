@@ -5,7 +5,7 @@ from _pytest.logging import LogCaptureFixture
 from hypothesis import given, settings, HealthCheck
 from pydantic import HttpUrl
 
-from src.constants.field_types import SAFE_STR
+from src.constants.shared import SAFE_STR
 from src.services.jira_sprint_closure import close_sprint
 from strategies.shared import cleaned_string
 

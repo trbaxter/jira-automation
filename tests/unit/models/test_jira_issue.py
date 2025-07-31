@@ -2,7 +2,7 @@ import pytest
 from hypothesis import given
 from pydantic import ValidationError
 
-from src.constants.field_types import SAFE_STR
+from src.constants.shared import SAFE_STR
 from src.models.jira_issue import JiraIssue
 from tests.strategies.shared import cleaned_string
 

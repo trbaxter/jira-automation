@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from hypothesis import given
 
-from src.constants.field_types import SAFE_STR
+from src.constants.shared import SAFE_STR
 from src.models.sprint_close_payload import CloseSprintPayload
 from src.models.sprint_start_payload import StartSprintPayload
 from src.utils.datetime_format import format_jira_date

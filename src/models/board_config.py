@@ -1,6 +1,6 @@
 from pydantic import BaseModel, HttpUrl
 
-from src.constants.field_types import SAFE_STR, INT_GT_0
+from src.constants.shared import SAFE_STR, INT_GT_0
 
 
 class BoardConfig(BaseModel):

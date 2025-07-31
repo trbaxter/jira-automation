@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.constants.field_types import INT_GT_0, SAFE_STR
+from src.constants.shared import INT_GT_0, SAFE_STR
 
 
 class SprintSummary(BaseModel):

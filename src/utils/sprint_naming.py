@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from src.constants.field_types import SAFE_STR
+from src.constants.shared import SAFE_STR
 
 
 def generate_sprint_name(start_date: datetime, end_date: datetime) -> SAFE_STR:

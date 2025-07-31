@@ -6,7 +6,7 @@ from _pytest.logging import LogCaptureFixture
 from pydantic import conint, HttpUrl
 from requests import Response, Request
 
-from src.constants.field_types import SAFE_STR
+from src.constants.shared import SAFE_STR
 from src.logs.error_handling import handle_api_error
 
 CONTEXT = "posting to Jira"

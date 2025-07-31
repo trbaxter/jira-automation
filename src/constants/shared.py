@@ -9,6 +9,8 @@ field validation.
 from pydantic import conint, constr
 
 JIRA_DATETIME_REGEX = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}$"
+RESET = "\033[0m"
+YELLOW = "\033[33m"
 
 
 # Integers
