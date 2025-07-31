@@ -33,7 +33,7 @@ def transfer_issue_batch_with_retry(
     for attempt in range(1, 4):
         logging.info(
             f"\nMoving batch of {len(issue_keys)} issues to sprint {sprint_id}."
-            f" (Attempt {attempt} of 3."
+            f" (Attempt {attempt} of 3)."
         )
 
         response = session.post(url, json=payload)
