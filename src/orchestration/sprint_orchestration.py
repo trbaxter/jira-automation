@@ -52,7 +52,7 @@ def automate_sprint(session: requests.Session) -> None:
 
     else:
         logging.warning(
-            "No future sprint found in the backlog starting with 'DART '."
+            "\nNo future sprint found in the backlog starting with 'DART '."
         )
 
         new_sprint_name = generate_sprint_name(start_date, end_date)
