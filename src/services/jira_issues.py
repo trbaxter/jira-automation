@@ -3,7 +3,7 @@ from typing import List
 
 import requests
 
-from src.constants.shared import INT_GT_0, RESET, YELLOW
+from src.constants.shared import INT_GT_0, RESET, YELLOW_BOLD
 from src.logs.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
 
@@ -57,6 +57,6 @@ def get_incomplete_stories(
     num_inc_stories = len(incomplete_stories)
     logging.info(
         f"\n{num_inc_stories} incomplete stories found in "
-        f"previous sprint: {YELLOW}{config.board_name}{RESET}"
+        f"previous sprint: {YELLOW_BOLD}{config.board_name}{RESET}"
     )
     return incomplete_stories
