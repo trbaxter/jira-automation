@@ -4,7 +4,7 @@ import time
 import requests
 from pydantic import HttpUrl
 
-from src.constants.field_types import INT_GEQ_0, INT_GT_0
+from src.constants.field_types import INT_GT_0
 from src.logs.error_handling import handle_api_error
 from src.models.jira_issue import JiraIssue
 
@@ -14,8 +14,6 @@ def transfer_issue_batch_with_retry(
     base_url: HttpUrl,
     sprint_id: INT_GT_0,
     issue_keys: list[str],
-    batch_start_index: INT_GEQ_0,
-    cooldown_seconds: INT_GEQ_0 = 5,
 ) -> bool:
     """
     Attempts to batch transfer issue keys to a given sprint with retry logic.
@@ -25,8 +23,6 @@ def transfer_issue_batch_with_retry(
         base_url: The base URL of the JIRA API.
         sprint_id: The ID of the target sprint.
         issue_keys: A list of issue keys to transfer.
-        batch_start_index: Index of the first issue in the batch (for logging).
-        cooldown_seconds: Delay between successful batch transfers.
 
     Returns:
         True if the batch was successfully transferred, False otherwise.
@@ -41,11 +37,11 @@ def transfer_issue_batch_with_retry(
         )
 
         response = session.post(url, json=payload)
-        context = f"moving issues batch from {batch_start_index}"
+        context = f"moving issues batch"
 
         if handle_api_error(response, context):
             logging.info("Transfer process successful.")
-            time.sleep(cooldown_seconds)
+            time.sleep(5)
             return True
 
         if attempt < 4:
@@ -81,7 +77,7 @@ def transfer_all_issue_batches(
     for i in range(start_index, stop_index, batch_size):
         batch = issue_keys[i : i + batch_size]
         success = transfer_issue_batch_with_retry(
-            session, base_url, new_sprint_id, batch, i
+            session, base_url, new_sprint_id, batch
         )
 
         if not success:

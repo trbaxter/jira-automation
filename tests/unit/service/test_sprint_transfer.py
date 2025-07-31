@@ -72,7 +72,7 @@ def test_transfer_batch_success_first_try() -> None:
         patch("time.sleep", return_value=None),
     ):
         result = transfer_issue_batch_with_retry(
-            session, HttpUrl("https://mock.atlassian.net"), 1, ["ISSUE-1"], 0
+            session, HttpUrl("https://mock.atlassian.net"), 1, ["ISSUE-1"]
         )
         assert result is True
 
@@ -83,7 +83,7 @@ def test_transfer_batch_fails_all_attempts() -> None:
 
     with patch(base_path("handle_api_error"), return_value=False):
         result = transfer_issue_batch_with_retry(
-            session, HttpUrl("https://mock.atlassian.net"), 1, ["ISSUE-1"], 0, 0
+            session, HttpUrl("https://mock.atlassian.net"), 1, ["ISSUE-1"]
         )
         assert result is False
 
