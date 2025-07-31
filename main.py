@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     try:
         config = load_config()
+
     except ConfigNotFoundError as error:
         print(f"{BOLD_RED}[ERROR]: Config file missing.{TEXT_RESET}")
         sys.exit(1)
@@ -20,9 +21,6 @@ if __name__ == "__main__":
     try:
         session = get_authenticated_session()
         automate_sprint(session)
-    except SystemExit as e:
-        logging.error(f"Process terminated: {e}")
-        raise
 
     except Exception as e:
         logging.exception("Unexpected error occurred.")
