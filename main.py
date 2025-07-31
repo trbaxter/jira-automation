@@ -22,5 +22,5 @@ if __name__ == "__main__":
         automate_sprint(session)
 
     except Exception as e:
-        logging.exception("Unexpected error occurred")
+        logging.exception("An unexpected error occurred")
         raise
