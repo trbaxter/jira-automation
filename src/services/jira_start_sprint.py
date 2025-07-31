@@ -40,5 +40,5 @@ def start_sprint(
     if not handle_api_error(response, context):
         return
 
-    logging.info(f"\nSprint {new_sprint_id} is now active.")
+    logging.info(f"\nActivating sprint: {sprint_name}")
     logging.info("\nSprint automation process complete.")

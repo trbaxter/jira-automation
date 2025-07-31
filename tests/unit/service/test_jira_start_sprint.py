@@ -50,7 +50,7 @@ def test_start_sprint_success_logs_expected_messages(
             HttpUrl("https://mock.atlassian.net"),
         )
 
-        assert "Sprint 42 is now active." in caplog.text
+        assert f"Activating sprint: {sprint_name}" in caplog.text
         assert "Sprint automation process complete." in caplog.text
 
 
