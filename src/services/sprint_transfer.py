@@ -38,14 +38,8 @@ def transfer_issue_batch_with_retry(
 
     for attempt in range(1, max_attempts + 1):
         logging.info(
-            "\nMoving batch of %d issues (index %d to %d) to sprint %d. "
-            "Attempt %d of %d.",
-            len(issue_keys),
-            batch_start_index,
-            batch_start_index + len(issue_keys) - 1,
-            sprint_id,
-            attempt,
-            max_attempts,
+            f"\nMoving batch of {len(issue_keys)} issues to sprint {sprint_id}."
+            f" (Attempt {attempt} of {max_attempts}."
         )
 
         response = session.post(url, json=payload)
@@ -89,18 +83,15 @@ def transfer_all_issue_batches(
     for i in range(start_index, stop_index, batch_size):
         batch = issue_keys[i : i + batch_size]
         success = transfer_issue_batch_with_retry(
-            session=session,
-            base_url=base_url,
-            sprint_id=new_sprint_id,
-            issue_keys=batch,
-            batch_start_index=i,
+            session, base_url, new_sprint_id, batch, i
         )
 
         if not success:
             message = (
                 "Transfer process aborted. "
-                "\nFailed to move issues from index %d to %d."
-            ) % (i, i + len(batch) - 1)
+                f"\nFailed to move issues from index {i}"
+                f" to {(i, i + len(batch) - 1)}."
+            )
 
             raise SystemExit(message)
 
@@ -129,37 +120,28 @@ def move_issues_to_new_sprint(
         logging.info("No incomplete stories to transfer.")
         return
 
-    num_issues = len(issues)
-
     logging.info(
-        f"\nMoving the following {num_issues} stories to the new sprint:"
+        f"\nMoving the following {len(issues)} stories to the new sprint:"
     )
 
     for issue in issues:
         logging.info(
-            "\nIssue ID: %s" "\nType: %s" "\nStatus: %s" "\nSummary: %s",
-            issue.key,
-            issue.type,
-            issue.status,
-            issue.summary,
+            f"\nIssue ID: {issue.key}"
+            f"\nType: {issue.type}"
+            f"\nStatus: {issue.status}"
+            f"\nDescription: {issue.summary}"
         )
 
     issue_keys = [issue.key for issue in issues]
-
-    transfer_all_issue_batches(
-        issue_keys=issue_keys,
-        session=session,
-        base_url=base_url,
-        new_sprint_id=new_sprint_id,
-    )
+    transfer_all_issue_batches(issue_keys, session, base_url, new_sprint_id)
 
 
 def parse_issue(raw: dict) -> JiraIssue:
-    fields = raw.get("fields", {})
+    fields = raw["fields"]
 
     return JiraIssue(
-        key=raw.get("key", "UNKNOWN"),
-        type=fields.get("issuetype", {}).get("name") or "Unknown",
-        status=fields.get("status", {}).get("name") or "Unknown",
-        summary=(fields.get("summary") or "").strip(),
+        key=raw["key"],
+        type=fields["issuetype"]["name"],
+        status=fields["status"]["name"],
+        summary=fields["summary"],
     )

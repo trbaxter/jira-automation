@@ -107,7 +107,9 @@ def test_transfer_all_batches_success(monkeypatch: MonkeyPatch) -> None:
         123,
     )
 
-    assert mock_transfer.call_args[1]["issue_keys"] == ["A", "B", "C", "D", "E"]
+    args, kwargs = mock_transfer.call_args
+    issue_keys = kwargs.get("issue_keys", args[3])
+    assert issue_keys == ["A", "B", "C", "D", "E"]
 
 
 def test_transfer_batch_fails_raises_exit(monkeypatch: MonkeyPatch) -> None:
@@ -127,7 +129,7 @@ def test_move_issues_logs_and_transfers(
 ) -> None:
     called = {}
 
-    def mock_transfer_all(issue_keys, **_kwargs):
+    def mock_transfer_all(issue_keys, *_):
         called["keys"] = issue_keys
 
     monkeypatch.setattr(
