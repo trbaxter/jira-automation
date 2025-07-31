@@ -19,6 +19,10 @@ def mock_session() -> MagicMock:
     return session
 
 
+def base_path(name: str):
+    return f"src.services.jira_start_sprint.{name}"
+
+
 @given(sprint_name=cleaned_string(), start_date=valid_datetime_range())
 @settings(suppress_health_check=[HealthCheck.function_scoped_fixture])
 def test_start_sprint_success_logs_expected_messages(
@@ -29,12 +33,8 @@ def test_start_sprint_success_logs_expected_messages(
     mock_session.put.return_value = MagicMock()
 
     with (
-        patch(
-            "src.services.jira_start_sprint.build_start_sprint_payload"
-        ) as mock_builder,
-        patch(
-            "src.services.jira_start_sprint.handle_api_error", return_value=True
-        ),
+        patch(base_path("build_start_sprint_payload")) as mock_builder,
+        patch(base_path("handle_api_error"), return_value=True),
         caplog.at_level(logging.INFO),
     ):
         payload_mock = MagicMock()
@@ -57,9 +57,7 @@ def test_start_sprint_success_logs_expected_messages(
 def test_start_sprint_handles_api_failure(
     caplog: LogCaptureFixture, mock_session: MagicMock
 ) -> None:
-    with patch(
-        "src.services.jira_start_sprint.handle_api_error", return_value=False
-    ):
+    with patch(base_path("handle_api_error"), return_value=False):
         start_sprint(
             999,
             "Z",
