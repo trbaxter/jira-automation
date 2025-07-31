@@ -115,7 +115,8 @@ def move_issues_to_new_sprint(
         return
 
     logging.info(
-        f"\nMoving the following {len(issues)} stories to the new sprint:"
+        f"\n::group::"
+        f"Moving the following {len(issues)} stories to the new sprint:"
     )
 
     for issue in issues:
@@ -125,6 +126,8 @@ def move_issues_to_new_sprint(
             f"\nStatus: {issue.status}"
             f"\nDescription: {issue.summary}"
         )
+
+    logging.info("::endgroup::")
 
     issue_keys = [issue.key for issue in issues]
     transfer_all_issue_batches(issue_keys, session, base_url, new_sprint_id)
