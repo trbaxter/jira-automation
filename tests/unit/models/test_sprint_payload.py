@@ -4,8 +4,8 @@ import pytest
 from hypothesis import given
 from pydantic import ValidationError
 
-from models.sprint_payload import SprintPayload
-from strategies.shared import cleaned_string, valid_datetime_range
+from src.models.sprint_payload import SprintPayload
+from tests.strategies.shared import cleaned_string, valid_datetime_range
 
 VALID_INPUT = {
     "name": "Sprint 12345",

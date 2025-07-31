@@ -9,7 +9,7 @@ from pydantic import HttpUrl
 
 from src.constants.shared import SAFE_STR
 from src.services.jira_start_sprint import start_sprint
-from strategies.shared import cleaned_string, valid_datetime_range
+from tests.strategies.shared import cleaned_string, valid_datetime_range
 
 
 @pytest.fixture

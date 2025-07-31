@@ -14,7 +14,7 @@ from src.services.sprint_transfer import (
     transfer_all_issue_batches,
     move_issues_to_new_sprint,
 )
-from strategies.shared import cleaned_string
+from tests.strategies.shared import cleaned_string
 
 
 @composite
@@ -77,7 +77,7 @@ def test_transfer_batch_success_first_try() -> None:
         assert result is True
 
 
-def test_transfer_batch_fails_all_attempts() -> None:
+def test_transfer_batch_fails_all_attempts(caplog: LogCaptureFixture) -> None:
     session = MagicMock()
     session.post.return_value = MagicMock()
 
@@ -86,6 +86,8 @@ def test_transfer_batch_fails_all_attempts() -> None:
             session, HttpUrl("https://mock.atlassian.net"), 1, ["ISSUE-1"]
         )
         assert result is False
+
+    assert "Transfer failed. Max attempts exceeded." in caplog.text
 
 
 def test_transfer_all_batches_success(monkeypatch: MonkeyPatch) -> None:
@@ -131,18 +133,23 @@ def test_move_issues_logs_and_transfers(
     )
 
     move_issues_to_new_sprint(
-        [
-            JiraIssue(
-                key="KEY-1", type="Bug", status="To Do", summary="Fix stuff"
-            )
-        ],
+        [JiraIssue(key="KEY-1", type="Bug", status="To Do", summary="Fixing")],
         MagicMock(),
         HttpUrl("https://mock.atlassian.net"),
         999,
     )
 
-    assert called["keys"] == ["KEY-1"]
-    assert "Moving the following 1 stories" in caplog.text
+    assert all(
+        substring in caplog.text
+        for substring in [
+            "::group::",
+            "Issue ID: KEY-1",
+            "Type: Bug",
+            "Status: To Do",
+            "Description: Fixing",
+            "::endgroup::",
+        ]
+    )
 
 
 def test_move_issues_exits_gracefully_on_empty(

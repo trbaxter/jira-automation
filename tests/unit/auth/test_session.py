@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 
 from src.auth.session import get_authenticated_session
 from src.models.credentials import Credentials
-from strategies.shared import cleaned_string
+from tests.strategies.shared import cleaned_string
 
 
 @given(cleaned_string(), cleaned_string())

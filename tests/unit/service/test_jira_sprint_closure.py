@@ -7,7 +7,7 @@ from pydantic import HttpUrl
 
 from src.constants.shared import SAFE_STR
 from src.services.jira_sprint_closure import close_sprint
-from strategies.shared import cleaned_string
+from tests.strategies.shared import cleaned_string
 
 
 @given(
