@@ -26,7 +26,7 @@ def test_close_sprint_success_logs_expected_messages(
     caplog: LogCaptureFixture,
 ) -> None:
     session = MagicMock()
-    session.put.return_value = MagicMock()
+    session.put.lambda_return = MagicMock()
 
     with (
         patch(base_path("build_close_sprint_payload")) as mock_builder,
@@ -34,7 +34,7 @@ def test_close_sprint_success_logs_expected_messages(
         caplog.at_level(logging.INFO),
     ):
         payload_mock = MagicMock()
-        payload_mock.model_dump.return_value = {"mock": "data"}
+        payload_mock.model_dump.lambda_return = {"mock": "data"}
         mock_builder.return_value = payload_mock
 
         close_sprint(
@@ -51,7 +51,7 @@ def test_close_sprint_success_logs_expected_messages(
 
 def test_close_sprint_handles_api_failure(caplog: LogCaptureFixture) -> None:
     session = MagicMock()
-    session.put.return_value = MagicMock()
+    session.put.lambda_return = MagicMock()
 
     with patch(base_path("handle_api_error"), return_value=False):
         close_sprint(
