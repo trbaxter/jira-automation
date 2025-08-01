@@ -25,7 +25,9 @@ def load_config() -> BoardConfig:
             config = yaml.safe_load(file)
 
             if config is None:
-                raise ConfigError("Expected a non-empty configuration.")
+                raise ConfigError(
+                    "Expected a non-empty configuration for "
+                    "'board_config.yaml' in root directory.")
 
             if not isinstance(config, dict):
                 raise ConfigError("Expected a top-level dictionary.")
