@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 
+from src.models.board_config import BoardConfig
 from src.services.jira_issues import get_incomplete_stories
 from src.services.jira_sprint import (
     create_sprint,
@@ -12,12 +13,11 @@ from src.services.jira_sprint import (
 from src.services.jira_sprint_closure import close_sprint
 from src.services.jira_start_sprint import start_sprint
 from src.services.sprint_transfer import move_issues_to_new_sprint, parse_issue
-from src.utils.config_loader import load_config
 from src.utils.sprint_naming import generate_sprint_name
 from src.utils.sprint_parser import parse_dart_sprint
 
 
-def automate_sprint(session: requests.Session) -> None:
+def automate_sprint(session: requests.Session, config: BoardConfig) -> None:
     """
     Orchestrates the full Jira sprint lifecycle:
     • Creates or fetches the next sprint
@@ -29,7 +29,6 @@ def automate_sprint(session: requests.Session) -> None:
 
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
-    config = load_config()
     active_sprint = get_sprint_by_state(session, config, "active")
     future_sprints = get_all_future_sprints(session, config)
 
@@ -63,18 +62,14 @@ def automate_sprint(session: requests.Session) -> None:
         )
 
         if new_sprint:
+            new_sprint_id = new_sprint.get("id")
             logging.info(
                 "New sprint successfully generated with sprint name: "
                 f"{new_sprint_name}"
             )
-
-        if not new_sprint:
+        else:
             logging.error("Failed to create new sprint.")
             return
-
-        new_sprint_id = new_sprint.get("id")
-
-    # active_sprint = get_sprint_by_state(session, config, "active")
 
     if active_sprint:
         incomplete_stories = get_incomplete_stories(
