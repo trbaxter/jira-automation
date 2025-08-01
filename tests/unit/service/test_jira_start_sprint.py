@@ -18,7 +18,7 @@ base_path = make_base_path("src.services.jira_start_sprint")
 @pytest.fixture
 def mock_session() -> MagicMock:
     session = MagicMock()
-    session.put.return_value = MagicMock()
+    session.put.lambda_return = MagicMock()
     return session
 
 
@@ -29,7 +29,7 @@ def test_start_sprint_success_logs_expected_messages(
 ) -> None:
     end_date = start_date + timedelta(days=14)
     mock_session = MagicMock()
-    mock_session.put.return_value = MagicMock()
+    mock_session.put.lambda_return = MagicMock()
 
     with (
         patch(base_path("build_start_sprint_payload")) as mock_builder,
@@ -37,7 +37,7 @@ def test_start_sprint_success_logs_expected_messages(
         caplog.at_level(logging.INFO),
     ):
         payload_mock = MagicMock()
-        payload_mock.model_dump.return_value = {"mock": "data"}
+        payload_mock.model_dump.lambda_return = {"mock": "data"}
         mock_builder.return_value = payload_mock
 
         start_sprint(
