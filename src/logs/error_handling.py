@@ -1,9 +1,10 @@
 import logging
 
+import requests
 
 SUCCESS_CODES = {200, 201, 204}
 
-def handle_api_error(response, context) -> bool:
+def handle_api_error(response: requests.Response, context: str) -> bool:
     """
     Logs & evaluates HTTP call results to the Jira API.
 
