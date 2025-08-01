@@ -30,7 +30,9 @@ def load_config() -> BoardConfig:
                     "'board_config.yaml' in root directory.")
 
             if not isinstance(config, dict):
-                raise ConfigError("Expected a top-level dictionary.")
+                raise ConfigError(
+                    "Invalid file structure in 'board_config.yaml'."
+                )
 
             return BoardConfig(**config)
     except FileNotFoundError:
