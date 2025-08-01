@@ -3,6 +3,7 @@ import sys
 
 from src.auth.session import get_authenticated_session
 from src.exceptions.config_not_found_error import ConfigNotFoundError
+from src.exceptions.config_schema_error import ConfigSchemaError
 from src.logs.configure_logging import log_config
 from src.orchestration.sprint_orchestration import automate_sprint
 from src.utils.config_loader import load_config
@@ -12,9 +13,8 @@ if __name__ == "__main__":
 
     try:
         config = load_config()
-
-    except ConfigNotFoundError as error:
-        print(f"\nError: board_config.yaml missing in root directory\n")
+    except (ConfigNotFoundError, ConfigSchemaError) as e:
+        print(f"Error: {e}")
         sys.exit(1)
 
     try:
