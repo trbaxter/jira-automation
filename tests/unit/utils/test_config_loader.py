@@ -3,8 +3,7 @@ from unittest.mock import patch, mock_open
 import pytest
 from pydantic import HttpUrl
 
-from src.exceptions.config_not_found_error import ConfigNotFoundError
-from src.exceptions.config_schema_error import ConfigSchemaError
+from src.exceptions.config_error import ConfigError
 from src.models.board_config import BoardConfig
 from src.utils.config_loader import load_config
 
@@ -30,12 +29,12 @@ def test_load_config_success() -> None:
 # ConfigNotFoundError should be raised if config file absent
 def test_load_config_missing_yaml() -> None:
     with patch(PATH, side_effect=FileNotFoundError):
-        with pytest.raises(ConfigNotFoundError):
+        with pytest.raises(ConfigError):
             load_config()
 
 
 # Using a non-dictionary mapping yaml config should raise TypeError
 def test_load_config_malformed_yaml() -> None:
     with patch(PATH, mock_open(read_data="abc123")):
-        with pytest.raises(ConfigSchemaError):
+        with pytest.raises(ConfigError):
             load_config()

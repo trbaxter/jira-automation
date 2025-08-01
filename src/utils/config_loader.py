@@ -3,8 +3,7 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from src.exceptions.config_not_found_error import ConfigNotFoundError
-from src.exceptions.config_schema_error import ConfigSchemaError
+from src.exceptions.config_error import ConfigError
 from src.models.board_config import BoardConfig
 
 
@@ -18,16 +17,16 @@ def load_config() -> BoardConfig:
         A BoardConfig object containing configuration details.
 
     Raises:
-        TypeError: If the yaml doesn't use the proper dict format.
-        FileNotFoundError: If the yaml config file is missing.
+        ConfigError: If the config file is missing or invalid in
+                     structure or content.
     """
     try:
         with config_path.open(mode="r", encoding="utf-8") as file:
             config = yaml.safe_load(file)
             if not isinstance(config, dict):
-                raise ConfigSchemaError("Expected a top-level dictionary.")
+                raise ConfigError("Expected a top-level dictionary.")
             return BoardConfig(**config)
     except FileNotFoundError:
-        raise ConfigNotFoundError()
+        raise ConfigError.file_not_found()
     except ValidationError as e:
-        raise ConfigSchemaError.from_validation_error(e)
+        raise ConfigError.from_validation_error(e)
