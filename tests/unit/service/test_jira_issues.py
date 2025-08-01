@@ -102,7 +102,7 @@ def test_filter_ignores_malformed_issues(issues: list[dict]) -> None:
 def test_returns_empty_list_if_api_error_detected(
     mock_session: MagicMock, mock_config: BoardConfig
 ) -> None:
-    mock_session.get.return_value = MagicMock()
+    mock_session.get.lambda_return = MagicMock()
     with patch(base_path("handle_api_error"), return_value=False):
         result = get_incomplete_stories(42, mock_config, mock_session)
         assert result == []
