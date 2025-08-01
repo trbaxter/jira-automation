@@ -64,7 +64,7 @@ def test_parse_issue_handles_missing_fields(raw: dict[str, object]) -> None:
 
 def test_transfer_batch_success_first_try() -> None:
     session = MagicMock()
-    session.post.return_value = MagicMock()
+    session.post.lambda_return = MagicMock()
 
     with (
         patch(base_path("handle_api_error"), return_value=True),
@@ -78,7 +78,7 @@ def test_transfer_batch_success_first_try() -> None:
 
 def test_transfer_batch_fails_all_attempts(caplog: LogCaptureFixture) -> None:
     session = MagicMock()
-    session.post.return_value = MagicMock()
+    session.post.lambda_return = MagicMock()
 
     with patch(base_path("handle_api_error"), return_value=False):
         result = transfer_issue_batch_with_retry(

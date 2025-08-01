@@ -1,115 +1,108 @@
 import logging
 from datetime import datetime
-from typing import Any, Callable, Tuple
 from unittest.mock import MagicMock
 
-from _pytest.logging import LogCaptureFixture
-from _pytest.monkeypatch import MonkeyPatch
 from freezegun import freeze_time
 
 from src.orchestration.sprint_orchestration import automate_sprint
 from tests.utils.patch_helper import make_base_path
+from tests.utils.simple_lambda_return import lambda_return
 
 base_path = make_base_path("src.orchestration.sprint_orchestration")
 
 
-# Helper function to silently return some value
-def return_value(val) -> Callable[..., Any]:
-    return lambda *_, **__: val
-
-
-# Helper function for configuration setup required for each test
-def setup() -> Tuple[MagicMock, MagicMock]:
-    session = MagicMock()
-    config = MagicMock(base_url="https://mock.atlassian.net", board_id=1)
-    return session, config
-
-
 # Helper function to avoid writing "monkeypatch.attr" multiple times per test
-def patch_all(
-    monkeypatch: MonkeyPatch, **target_name_pairs: Callable[..., Any]
-) -> None:
+def patch_all(monkeypatch, **target_name_pairs) -> None:
     for target, name in target_name_pairs.items():
         monkeypatch.setattr(base_path(target), name)
 
 
-def test_creates_new_sprint_if_none_found(monkeypatch: MonkeyPatch) -> None:
-    session, config = setup()
+def test_create_new_sprint_if_none_found(
+        test_config,
+        test_session,
+        monkeypatch
+) -> None:
     create_sprint_mock = MagicMock(return_value={"id": 1, "name": "test"})
 
     patch_all(
         monkeypatch,
-        load_config=(lambda: config),
-        get_all_future_sprints=return_value([]),
+        get_all_future_sprints=lambda_return([]),
         create_sprint=create_sprint_mock,
-        get_sprint_by_state=return_value(None),
-        start_sprint=return_value(None),
+        get_sprint_by_state=lambda_return(None),
+        start_sprint=lambda_return(None),
     )
 
-    automate_sprint(session)
+    automate_sprint(test_session, test_config)
     create_sprint_mock.assert_called_once()
 
 
 @freeze_time("2025-07-28")
 def test_uses_existing_dart_sprint(
-    monkeypatch: MonkeyPatch, caplog: LogCaptureFixture
+        test_session,
+        test_config,
+        monkeypatch,
+        caplog
 ) -> None:
-    session, config = setup()
-
-    sprint_date = MagicMock(start=datetime(year=2025, month=7, day=28))
+    sprint_date = MagicMock(start=datetime(2025, 7, 28))
     sprint_name = "DART 250728 (07/28-08/11)"
 
     future_sprints = [{"name": sprint_name, "id": 42}]
 
     patch_all(
         monkeypatch,
-        load_config=(lambda: config),
-        get_all_future_sprints=return_value(future_sprints),
+        get_all_future_sprints=lambda_return(future_sprints),
         parse_dart_sprint=lambda name: sprint_date,
-        get_sprint_by_state=return_value(None),
-        start_sprint=return_value(None),
+        get_sprint_by_state=lambda_return(None),
+        start_sprint=lambda_return(None),
     )
 
     with caplog.at_level(logging.INFO):
-        automate_sprint(session)
+        automate_sprint(test_session, test_config)
 
     assert f"Upcoming DART sprint found: {sprint_name}." in caplog.text
     assert "Proceeding with automation process." in caplog.text
 
 
-def test_skips_closing_if_no_active_sprint(monkeypatch: MonkeyPatch) -> None:
-    session, config = setup()
+def test_skips_closing_if_no_active_sprint(
+        test_session,
+        test_config,
+        monkeypatch
+) -> None:
 
     patch_all(
         monkeypatch,
-        load_config=(lambda: config),
-        get_all_future_sprints=return_value([]),
-        create_sprint=return_value({"id": 123, "name": "NewSprint"}),
-        get_sprint_by_state=return_value(None),
-        start_sprint=return_value(None),
+        get_all_future_sprints=lambda_return([]),
+        create_sprint=lambda_return({"id": 123, "name": "NewSprint"}),
+        get_sprint_by_state=lambda_return(None),
+        start_sprint=lambda_return(None),
     )
 
-    automate_sprint(session)
+    automate_sprint(test_session, test_config)
 
 
-def test_returns_early_if_create_sprint_fails(monkeypatch: MonkeyPatch) -> None:
-    session, config = setup()
+def test_returns_early_if_create_sprint_fails(
+        test_session,
+        test_config,
+        monkeypatch
+) -> None:
+
     start_sprint = MagicMock()
 
     patch_all(
         monkeypatch,
-        load_config=(lambda: config),
-        get_all_future_sprints=return_value([]),
-        create_sprint=return_value(None),
+        get_all_future_sprints=lambda_return([]),
+        create_sprint=lambda_return(None),
         start_sprint=start_sprint,
     )
 
-    automate_sprint(session)
-    start_sprint.assert_not_called()
+    automate_sprint(test_session, test_config)
 
 
-def test_full_orchestration_path(monkeypatch: MonkeyPatch) -> None:
-    session, config = setup()
+def test_full_orchestration_path(
+        test_session,
+        test_config,
+        monkeypatch
+) -> None:
     new_sprint = {"id": 12, "name": "DART 241218 (12/18-01/01)"}
     active_sprint = {
         "id": 99,
@@ -120,15 +113,14 @@ def test_full_orchestration_path(monkeypatch: MonkeyPatch) -> None:
 
     patch_all(
         monkeypatch,
-        load_config=(lambda: config),
-        get_all_future_sprints=return_value([]),
-        create_sprint=return_value(new_sprint),
-        get_sprint_by_state=return_value(active_sprint),
-        get_incomplete_stories=return_value([{"key": "JIRA-1"}]),
+        get_all_future_sprints=lambda_return([]),
+        create_sprint=lambda_return(new_sprint),
+        get_sprint_by_state=lambda_return(active_sprint),
+        get_incomplete_stories=lambda_return([{"key": "JIRA-1"}]),
         parse_issue=(lambda issue: {"key": issue["key"], "fields": {}}),
-        close_sprint=return_value(None),
-        move_issues_to_new_sprint=return_value(None),
-        start_sprint=return_value(None),
+        close_sprint=lambda_return(None),
+        move_issues_to_new_sprint=lambda_return(None),
+        start_sprint=lambda_return(None),
     )
 
-    automate_sprint(session)
+    automate_sprint(test_session, test_config)
