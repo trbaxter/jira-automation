@@ -6,7 +6,7 @@ from src.exceptions.config_schema_error import ConfigSchemaError
 def test_config_schema_error_raises_with_message() -> None:
     details = "Missing required field: board_id"
     expected_msg = (
-        f"Invalid configuration in board_config.yaml schema. {details}"
+        f"Invalid configuration in board_config.yaml. {details}"
     )
 
     with pytest.raises(ConfigSchemaError) as error:

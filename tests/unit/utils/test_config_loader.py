@@ -4,6 +4,7 @@ import pytest
 from pydantic import HttpUrl
 
 from src.exceptions.config_not_found_error import ConfigNotFoundError
+from src.exceptions.config_schema_error import ConfigSchemaError
 from src.models.board_config import BoardConfig
 from src.utils.config_loader import load_config
 
@@ -36,5 +37,5 @@ def test_load_config_missing_yaml() -> None:
 # Using a non-dictionary mapping yaml config should raise TypeError
 def test_load_config_malformed_yaml() -> None:
     with patch(PATH, mock_open(read_data="abc123")):
-        with pytest.raises(TypeError):
+        with pytest.raises(ConfigSchemaError):
             load_config()
