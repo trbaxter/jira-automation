@@ -37,6 +37,7 @@ def load_config() -> BoardConfig:
                 )
 
             return BoardConfig(**config)
+
     except FileNotFoundError:
         raise ConfigError.file_not_found()
     except ValidationError as e:
