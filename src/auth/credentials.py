@@ -1,10 +1,9 @@
 import os
 
 from src.models.credentials import Credentials
-from src.models.env_reader import EnvReader
 
 
-def get_jira_credentials(getenv: EnvReader = os.getenv) -> Credentials:
+def get_jira_credentials(getenv = os.getenv) -> Credentials:
     """
     Retrieve Jira credentials (email and API token) from environment variables
     populated by repository secrets.
