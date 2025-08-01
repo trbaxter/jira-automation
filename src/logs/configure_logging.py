@@ -1,7 +1,9 @@
 import logging
 
+from src.constants.shared import INT_GEQ_0
 
-def log_config(level = logging.INFO, force = True) -> None:
+
+def log_config(level: INT_GEQ_0 = logging.INFO, force: bool = True) -> None:
     """
     Sets up the root logger using a message-only format.
 
