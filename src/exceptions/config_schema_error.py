@@ -4,6 +4,6 @@ class ConfigSchemaError(Exception):
     or required fields are missing.
     """
 
-    def __init__(self, details: str) -> None:
+    def __init__(self, details) -> None:
         msg = f"Invalid configuration in board_config.yaml schema. {details}"
         super().__init__(msg)
