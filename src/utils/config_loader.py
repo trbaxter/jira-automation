@@ -23,8 +23,8 @@ def load_config() -> BoardConfig:
     try:
         with config_path.open(mode="r", encoding="utf-8") as file:
             config = yaml.safe_load(file)
-            if not isinstance(config, dict):
-                raise ConfigError("Expected a top-level dictionary.")
+            # if not isinstance(config, dict):
+            #     raise ConfigError("Expected a top-level dictionary.")
             return BoardConfig(**config)
     except FileNotFoundError:
         raise ConfigError.file_not_found()
