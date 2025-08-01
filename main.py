@@ -14,7 +14,7 @@ if __name__ == "__main__":
         config = load_config()
 
     except ConfigNotFoundError as error:
-        print(f"Error: board_config.yaml missing in root directory")
+        print(f"\nError: board_config.yaml missing in root directory\n")
         sys.exit(1)
 
     try:
