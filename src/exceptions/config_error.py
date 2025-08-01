@@ -28,7 +28,7 @@ class ConfigError(Exception):
 
         if missing_fields:
             if len(missing_fields) == 1:
-                return ConfigError(f"Missing key: '{missing_fields[0]}")
+                return ConfigError(f"Missing key: '{missing_fields[0]}'")
             else:
                 keys = ", ".join(f"'{key}'" for key in missing_fields)
                 return ConfigError(f"Missing keys: {keys}")
