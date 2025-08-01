@@ -6,9 +6,11 @@ from pydantic import ValidationError
 from src.exceptions.config_error import ConfigError
 from src.models.board_config import BoardConfig
 
+filename = "board_config.yaml"
+
 
 def load_config() -> BoardConfig:
-    config_path = Path(__file__).resolve().parents[2] / "board_config.yaml"
+    config_path = Path(__file__).resolve().parents[2] / filename
 
     """
     Loads and validates JIRA board configurations.
@@ -27,11 +29,11 @@ def load_config() -> BoardConfig:
             if config is None:
                 raise ConfigError(
                     "Expected a non-empty configuration for "
-                    "'board_config.yaml'.")
+                    f"'{filename}'.")
 
             if not isinstance(config, dict):
                 raise ConfigError(
-                    "Invalid file structure in 'board_config.yaml'."
+                    f"Invalid file structure in '{filename}'."
                 )
 
             return BoardConfig(**config)
