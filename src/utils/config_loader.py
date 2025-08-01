@@ -3,8 +3,8 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from exceptions.config_schema_error import ConfigSchemaError
 from src.exceptions.config_not_found_error import ConfigNotFoundError
+from src.exceptions.config_schema_error import ConfigSchemaError
 from src.models.board_config import BoardConfig
 
 
