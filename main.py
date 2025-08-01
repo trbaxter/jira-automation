@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     try:
         session = get_authenticated_session()
-        automate_sprint(session)
+        automate_sprint(session, config)
 
     except Exception as e:
         logging.exception("An unexpected error occurred")
