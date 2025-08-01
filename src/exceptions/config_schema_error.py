@@ -10,7 +10,7 @@ class ConfigSchemaError(Exception):
     """
 
     def __init__(self, detail: str) -> None:
-        msg = f"Invalid configuration in board_config.yaml: {detail}"
+        msg = f"Invalid configuration in board_config.yaml. {detail}"
         super().__init__(msg)
 
     @staticmethod
