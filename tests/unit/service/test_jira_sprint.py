@@ -81,8 +81,8 @@ def test_parse_json_response_logs_and_returns_none_on_decode_error(caplog):
 def test_create_sprint_successfully_returns_parsed_response():
     session = MagicMock()
     fake_response = MagicMock()
-    fake_response.json.return_value = {"id": 1, "self": "...", "name": "Sprint"}
-    fake_response.json.return_value = {"id": 1, "self": "...", "name": "Sprint"}
+    fake_response.json.lambda_return = {"id": 1, "self": "...", "name": "Sprint"}
+    fake_response.json.lambda_return = {"id": 1, "self": "...", "name": "Sprint"}
 
     with (
         patch(base_path("load_config")) as mock_cfg,
@@ -178,8 +178,8 @@ def test_get_all_future_sprints_raises_on_non_200():
     config.board_id = 1
     config.base_url = "https://mock"
 
-    session.get.return_value.status_code = 500
-    session.get.return_value.text = "Internal Server Error"
+    session.get.lambda_return.status_code = 500
+    session.get.lambda_return.text = "Internal Server Error"
 
     with pytest.raises(
         expected_exception=RuntimeError,
