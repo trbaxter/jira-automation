@@ -9,22 +9,19 @@ EMAIL = "JIRA_EMAIL"
 TOKEN = "JIRA_API_TOKEN"
 
 
-@given(email=cleaned_string(), token=cleaned_string())
-def test_get_jira_credentials_success(email: str, token: str) -> None:
+@given(cleaned_string(), cleaned_string())
+def test_get_jira_credentials_success(email, token) -> None:
     env_vars = {EMAIL: email, TOKEN: token}
     getenv = lambda key: env_vars.get(key)
-
     creds = get_jira_credentials(getenv)
 
-    assert creds.email == email
-    assert creds.token == token
+    assert creds.email == email and creds.token == token
+
 
 
 @given(email=cleaned_string(), token=cleaned_string())
 @pytest.mark.parametrize("missing_key", [EMAIL, TOKEN])
-def test_get_jira_credentials_missing_key(
-    email: str, missing_key: str, token: str
-) -> None:
+def test_get_jira_credentials_missing_key(email, missing_key, token) -> None:
     def getenv(key):
         env = {
             EMAIL: email if key != EMAIL else None,
@@ -40,13 +37,13 @@ def test_get_jira_credentials_missing_key(
     assert env_key_to_field[missing_key] in str(error.value)
 
 
+
 def test_get_jira_credentials_missing_both_keys() -> None:
-    def getenv(_key: str) -> str | None:
+    def getenv(_key) -> str | None:
         return None
 
     with pytest.raises(ValidationError) as error:
         get_jira_credentials(getenv)
 
     message = str(error.value)
-    assert "email" in message
-    assert "token" in message
+    assert "email" and "token" in message
