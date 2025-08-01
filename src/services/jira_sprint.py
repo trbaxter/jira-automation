@@ -74,8 +74,9 @@ def parse_json_response(
     try:
         return response.json()
     except requests.exceptions.JSONDecodeError:
-        logging.error("Error: Failed to parse JSON response.")
-        logging.error("Response Content: %s", response.text)
+        logging.error("Error: Failed to parse JSON response. "
+                      f"Response Content: {response.text}"
+        )
         return None
 
 
@@ -144,7 +145,7 @@ def get_all_future_sprints(
         response = session.get(url, params=params)
         if response.status_code != 200:
             raise RuntimeError(
-                f"\nError while fetching future sprints: {response.text}"
+                f"Error while fetching future sprints: {response.text}"
             )
 
         data = response.json()
