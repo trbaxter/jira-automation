@@ -10,7 +10,10 @@ def build_close_sprint_payload(
     sprint_name: SAFE_STR, start_date: SAFE_STR, end_date: SAFE_STR
 ) -> CloseSprintPayload:
     return CloseSprintPayload(
-        state="closed", name=sprint_name, startDate=start_date, endDate=end_date
+        state="closed",
+        name=sprint_name,
+        startDate=start_date,
+        endDate=end_date
     )
 
 
