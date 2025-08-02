@@ -42,13 +42,11 @@ Click the copy button and save the API token in a safe place.
 
 <details>
   <summary>File Details</summary>
-  <ul style="list-style-type: none;">
-    <li>
+  <ul>
       <details>
         <summary>Credentials.py</summary>
         <p>Testing Testing 123</p>
       </details>
-    </li>
   </ul>
 </details>
 
