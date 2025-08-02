@@ -37,13 +37,25 @@ Click the copy button and save the API token in a safe place.
 
 
 
+<br/>
+<br/>
 
-<br/> <br/>
-Useful future hint: 
+<details>
+  <summary>File Details</summary>
 
-If creating a run configuration for Pytest, be sure to use the dropdown menu 
-and select "script" and set the target to the test folder. The working 
-directory should still be the root directory.
+  <details>
+    <summary>Credentials.py</summary>
+    <div>
+      <p>
+        Testing Testing 123
+      </p>
+    </div>
+  </details>
 
-If this is omitted (or forgotten), the conftest.py file in the test package 
-can be used as a fix.
+    
+
+
+</details>
+
+<br/>
+<br/>
