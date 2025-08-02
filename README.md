@@ -61,7 +61,7 @@ Click the copy button and save the API token in a safe place.
               </p>
               <p>
                 To avoid exposing internal validation details (such as
-                <code>pydantic.ValidationError)</code>, these errors are 
+                <code>pydantic.ValidationError</code>), these errors are 
                 wrapped in a generic <code>ValueError</code> with a domain-
                 specific message. This preserves encapsulation, makes failures
                 diagnosable without leaking intenrals, and supports better
