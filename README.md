@@ -41,11 +41,15 @@ Click the copy button and save the API token in a safe place.
 <br/>
 
 <details>
-  <summary>&thinsp; File Details</summary>
+  <summary>File Details</summary>
   <ul>
       <details>
         <summary>Credentials.py</summary>
-        <p>Testing Testing 123</p>
+          <ul>
+            <p>
+              Testing Testing 123
+            </p>
+          </ul>
       </details>
   </ul>
 </details>
