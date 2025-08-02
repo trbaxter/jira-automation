@@ -33,7 +33,7 @@ def build_authenticated_session(
     session.auth = auth or HTTPBasicAuth(credentials.email, credentials.token)
     session.verify = certifi.where()
     session.headers.update({"Content-Type": "application/json"})
-    enforce_request_timeout(session, timeout=DEFAULT_TIMEOUT)
+    enforce_request_timeout(session, DEFAULT_TIMEOUT)
     return session
 
 
