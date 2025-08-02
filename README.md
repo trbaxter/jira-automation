@@ -41,7 +41,7 @@ Click the copy button and save the API token in a safe place.
 <br/>
 
 <details>
-  <summary>&nbsp; File Details</summary>
+  <summary>&thinsp; File Details</summary>
   <ul>
       <details>
         <summary>Credentials.py</summary>
