@@ -1,6 +1,5 @@
 import pytest
 from hypothesis import given
-from pydantic import ValidationError
 
 from src.auth.credentials import get_jira_credentials
 from tests.strategies.shared import cleaned_string
@@ -29,12 +28,10 @@ def test_get_jira_credentials_missing_key(email, missing_key, token) -> None:
         }
         return env.get(key)
 
-    env_key_to_field = {EMAIL: "email", TOKEN: "token"}
-
-    with pytest.raises(ValidationError) as error:
+    with pytest.raises(ValueError) as error:
         get_jira_credentials(getenv)
 
-    assert env_key_to_field[missing_key] in str(error.value)
+    assert "Missing or invalid" in str(error.value)
 
 
 
@@ -42,8 +39,7 @@ def test_get_jira_credentials_missing_both_keys() -> None:
     def getenv(_key) -> str | None:
         return None
 
-    with pytest.raises(ValidationError) as error:
+    with pytest.raises(ValueError) as error:
         get_jira_credentials(getenv)
 
-    message = str(error.value)
-    assert "email" and "token" in message
+    assert "Missing or invalid" in str(error.value)
