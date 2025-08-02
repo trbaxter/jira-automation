@@ -42,19 +42,16 @@ Click the copy button and save the API token in a safe place.
 
 <details>
   <summary>File Details</summary>
-
-  <details>
-    <summary>Credentials.py</summary>
-    <div>
-      <p>
-        Testing Testing 123
-      </p>
+    <div style="margin-left: 20px;">
+      <details>
+        <summary>Credentials.py</summary>
+          <div style="margin-left: 20px;">
+            <p>
+              Testing Testing 123
+            </p>
+          </div>
+      </details>
     </div>
-  </details>
-
-    
-
-
 </details>
 
 <br/>
