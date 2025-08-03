@@ -15,19 +15,9 @@ def enforce_request_timeout(session: requests.Session, timeout: int) -> None:
 
 
 def build_authenticated_session(
-        credentials: Credentials, auth: AuthBase | None = None
+        credentials: Credentials,
+        auth: AuthBase | None = None
 ) -> requests.Session:
-    """
-    Build a requests.Session preconfigured for Jira API calls.
-
-    Args:
-        credentials: Credentials object containing email/token.
-        auth: Optional AuthBase instance.
-              Defaults to HTTPBasicAuth(email, token).
-
-    Returns:
-        Configured requests.Session with JSON headers and default timeout.
-    """
     session = requests.Session()
     session.auth = auth or HTTPBasicAuth(credentials.email, credentials.token)
     session.headers.update({"Content-Type": "application/json"})

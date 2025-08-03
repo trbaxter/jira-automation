@@ -4,11 +4,6 @@ from pydantic import ValidationError
 
 
 class ConfigError(Exception):
-    """
-    Raised when the board_config.yaml file is missing or contains
-    invalid structure or content.
-    """
-
     def __init__(self, detail: str) -> None:
         msg = f"Configuration error detected. {detail}"
         super().__init__(msg)

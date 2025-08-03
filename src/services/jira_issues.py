@@ -13,20 +13,6 @@ DONE_STATUSES = {"Done", "Cancelled", "Existing Solution", "Abandoned"}
 def get_incomplete_stories(
     sprint_id: INT_GT_0, config: BoardConfig, session: requests.Session
 ) -> List[dict] | None:
-    """
-    Retrieves all incomplete stories from the specified sprint.
-
-    Collects all stories from a sprint if the story status isn't found in
-    the DONE_STATUSES set, indicating the story is carrying-over.
-
-    Args:
-        sprint_id: The active sprint ID.
-        config: BoardConfig for the current Jira board.
-        session: An authenticated requests.Session instance.
-
-    Returns:
-        A list of incomplete issue dictionaries, or None if the API call fails.
-    """
     incomplete_stories: List[dict] = []
     start_at = 0
     max_results = 50

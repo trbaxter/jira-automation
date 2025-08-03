@@ -16,22 +16,12 @@ def close_sprint(
     session: requests.Session,
     base_url: HttpUrl,
 ) -> None:
-    """
-    Closes a sprint using the JIRA API.
-
-    Args:
-        sprint_id: The ID of the sprint to close.
-        sprint_name: The name of the sprint.
-        start_date: The sprint's start date.
-        end_date: The sprint's end date.
-        session: An authenticated requests session.
-        base_url: The base URL to the sprint board.
-
-    Returns:
-        None. Logs success or failure.
-    """
     url = f"{base_url}/rest/agile/1.0/sprint/{sprint_id}"
-    payload = build_close_sprint_payload(sprint_name, start_date, end_date)
+    payload = build_close_sprint_payload(
+        sprint_name,
+        start_date,
+        end_date
+    )
 
     response = session.put(url, json=payload.model_dump())
     context = f"closing sprint {sprint_id}"

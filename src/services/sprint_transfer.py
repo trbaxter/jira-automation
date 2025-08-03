@@ -15,24 +15,12 @@ def transfer_issue_batch_with_retry(
     sprint_id: INT_GT_0,
     issue_keys: list[str],
 ) -> bool:
-    """
-    Attempts to batch transfer issue keys to a given sprint with retry logic.
-
-    Args:
-        session: The active requests session.
-        base_url: The base URL of the JIRA API.
-        sprint_id: The ID of the target sprint.
-        issue_keys: A list of issue keys to transfer.
-
-    Returns:
-        True if the batch was successfully transferred, False otherwise.
-    """
     url = f"{base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
     payload = {"issues": issue_keys}
 
     for attempt in range(1, 4):
         logging.info(
-            f"\nMoving batch of {len(issue_keys)} issues to sprint {sprint_id}."
+            f"\nMoving batch of {len(issue_keys)} issues to new sprint."
             f" (Attempt {attempt} of 3)."
         )
 
@@ -58,18 +46,6 @@ def transfer_all_issue_batches(
     base_url: HttpUrl,
     new_sprint_id: INT_GT_0,
 ) -> None:
-    """
-    Iterates through issue keys in batches and transfers them to a new sprint.
-
-    Args:
-        issue_keys: List of issue key strings.
-        session: Authenticated requests session.
-        base_url: Base URL of the JIRA API.
-        new_sprint_id: ID of the target sprint.
-
-    Raises:
-        SystemExit: If any batch fails after all retry attempts.
-    """
     start_index = 0
     stop_index = len(issue_keys)
     batch_size = 50
@@ -98,18 +74,6 @@ def move_issues_to_new_sprint(
     base_url: HttpUrl,
     new_sprint_id: INT_GT_0,
 ) -> None:
-    """
-    Coordinates the transfer of JIRA issues to a new sprint in batches.
-
-    Args:
-        issues: List of JIRA issue dictionaries.
-        session: Authenticated requests session.
-        base_url: Base URL for JIRA API.
-        new_sprint_id: ID of the sprint to move issues to.
-
-    Returns:
-        None.
-    """
     if not issues:
         logging.info("No incomplete stories to transfer.")
         return

@@ -18,13 +18,6 @@ from src.utils.sprint_parser import parse_dart_sprint
 
 
 def automate_sprint(session: requests.Session, config: BoardConfig) -> None:
-    """
-    Orchestrates the full Jira sprint lifecycle:
-    • Creates or fetches the next sprint
-    • Closes the current one (if active)
-    • Transfers incomplete stories
-    • Activates the new sprint
-    """
     logging.info("\nBeginning sprint automation process...")
 
     start_date = datetime.now()
