@@ -18,7 +18,7 @@ from src.services.jira_sprint import (
 from tests.strategies.shared import cleaned_string
 from tests.utils.patch_helper import make_base_path
 
-base_path = make_base_path("src.services.jira_sprint")
+base_path = make_base_path('src.services.jira_sprint')
 
 
 @given(
@@ -47,18 +47,18 @@ def test_post_sprint_payload_sends_correct_request():
     session.post.return_value = MagicMock(status_code=200)
 
     payload = MagicMock()
-    payload.model_dump.return_value = {"mock": "data"}
+    payload.model_dump.return_value = {'mock': 'data'}
 
-    response = post_sprint_payload(session, "https://mock/api", payload)
+    response = post_sprint_payload(session, 'https://mock/api', payload)
     assert response.status_code == 200
 
 
 def test_parse_json_response_success():
     mock_response = MagicMock()
     mock_response.json.return_value = {
-        "id": 1,
-        "self": "...",
-        "name": "Sprint A",
+        'id': 1,
+        'self': '...',
+        'name': 'Sprint A',
     }
 
     result = parse_json_response(mock_response)
@@ -68,56 +68,56 @@ def test_parse_json_response_success():
 def test_parse_json_response_logs_and_returns_none_on_decode_error(caplog):
     mock_response = MagicMock()
     mock_response.json.side_effect = requests.exceptions.JSONDecodeError(
-        "bad", "", 0
+        'bad', '', 0
     )
-    mock_response.text = "not json"
+    mock_response.text = 'not json'
 
     result = parse_json_response(mock_response)
 
     assert result is None
-    assert "Failed to parse JSON" in caplog.text
+    assert 'Failed to parse JSON' in caplog.text
 
 
 def test_create_sprint_successfully_returns_parsed_response():
     session = MagicMock()
     fake_response = MagicMock()
-    fake_response.json.lambda_return = {"id": 1, "self": "...", "name": "Sprint"}
-    fake_response.json.lambda_return = {"id": 1, "self": "...", "name": "Sprint"}
+    fake_response.json.lambda_return = {'id': 1, 'self': '...', 'name': 'Sprint'}
+    fake_response.json.lambda_return = {'id': 1, 'self': '...', 'name': 'Sprint'}
 
     with (
-        patch(base_path("load_config")) as mock_cfg,
-        patch(base_path("handle_api_error"), return_value=True),
+        patch(base_path('load_config')) as mock_cfg,
+        patch(base_path('handle_api_error'), return_value=True),
         patch(
-            base_path("parse_json_response"), return_value="parsed"
+            base_path('parse_json_response'), return_value='parsed'
         ) as _mock_parse,
-        patch(base_path("post_sprint_payload"), return_value=fake_response),
+        patch(base_path('post_sprint_payload'), return_value=fake_response),
     ):
 
         mock_cfg.return_value.board_id = 1
-        mock_cfg.return_value.base_url = "https://mock"
+        mock_cfg.return_value.base_url = 'https://mock'
 
         result = create_sprint(
-            "Test Sprint",
+            'Test Sprint',
             datetime.now(),
             datetime.now() + timedelta(days=14),
             session,
         )
 
-        assert result == "parsed"
+        assert result == 'parsed'
 
 
 def test_create_sprint_aborts_on_api_failure():
     session = MagicMock()
     with (
-        patch(base_path("load_config")) as mock_cfg,
-        patch(base_path("handle_api_error"), return_value=False),
+        patch(base_path('load_config')) as mock_cfg,
+        patch(base_path('handle_api_error'), return_value=False),
     ):
 
         mock_cfg.return_value.board_id = 1
-        mock_cfg.return_value.base_url = "https://mock"
+        mock_cfg.return_value.base_url = 'https://mock'
 
         result = create_sprint(
-            "Sprint",
+            'Sprint',
             datetime.now(),
             datetime.now() + timedelta(days=14),
             session,
@@ -128,61 +128,61 @@ def test_create_sprint_aborts_on_api_failure():
 def test_get_sprint_by_state_returns_first_result():
     session = MagicMock()
     config = MagicMock()
-    config.base_url = "https://mock"
+    config.base_url = 'https://mock'
     config.board_id = 10
-    session.get.return_value.json.return_value = {"values": ["sprint_1"]}
+    session.get.return_value.json.return_value = {'values': ['sprint_1']}
 
-    with patch(base_path("handle_api_error"), return_value=True):
-        result = get_sprint_by_state(session, config, "active")
+    with patch(base_path('handle_api_error'), return_value=True):
+        result = get_sprint_by_state(session, config, 'active')
 
-        assert result == "sprint_1"
+        assert result == 'sprint_1'
 
 
 def test_get_sprint_by_state_returns_none_on_error_or_empty():
     session = MagicMock()
     config = MagicMock()
-    config.base_url = "https://mock"
+    config.base_url = 'https://mock'
     config.board_id = 10
 
-    with patch(base_path("handle_api_error"), return_value=False):
-        assert get_sprint_by_state(session, config, "future") is None
+    with patch(base_path('handle_api_error'), return_value=False):
+        assert get_sprint_by_state(session, config, 'future') is None
 
-    with patch(base_path("handle_api_error"), return_value=True):
-        session.get.return_value.json.return_value = {"values": []}
-        assert get_sprint_by_state(session, config, "closed") is None
+    with patch(base_path('handle_api_error'), return_value=True):
+        session.get.return_value.json.return_value = {'values': []}
+        assert get_sprint_by_state(session, config, 'closed') is None
 
 
 def test_get_all_future_sprints_handles_pagination():
     session = MagicMock()
     config = MagicMock()
     config.board_id = 1
-    config.base_url = "https://mock"
+    config.base_url = 'https://mock'
 
     session.get.side_effect = [
         MagicMock(
-            status_code=200, json=lambda: {"values": ["a"], "isLast": False}
+            status_code=200, json=lambda: {'values': ['a'], 'isLast': False}
         ),
         MagicMock(
-            status_code=200, json=lambda: {"values": ["b"], "isLast": True}
+            status_code=200, json=lambda: {'values': ['b'], 'isLast': True}
         ),
     ]
 
     result = get_all_future_sprints(session, config)
 
-    assert result == ["a", "b"]
+    assert result == ['a', 'b']
 
 
 def test_get_all_future_sprints_raises_on_non_200():
     session = MagicMock()
     config = MagicMock()
     config.board_id = 1
-    config.base_url = "https://mock"
+    config.base_url = 'https://mock'
 
     session.get.lambda_return.status_code = 500
-    session.get.lambda_return.text = "Internal Server Error"
+    session.get.lambda_return.text = 'Internal Server Error'
 
     with pytest.raises(
         expected_exception=RuntimeError,
-        match="Error while fetching future " "sprints",
+        match='Error while fetching future ' 'sprints',
     ):
         get_all_future_sprints(session, config)

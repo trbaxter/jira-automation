@@ -7,7 +7,7 @@ from src.constants.shared import INT_GT_0
 from src.logs.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
 
-DONE_STATUSES = {"Done", "Cancelled", "Existing Solution", "Abandoned"}
+DONE_STATUSES = {'Done', 'Cancelled', 'Existing Solution', 'Abandoned'}
 
 
 def get_incomplete_stories(
@@ -18,21 +18,21 @@ def get_incomplete_stories(
     max_results = 50
 
     while True:
-        url = f"{config.base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
-        params = {"startAt": start_at, "maxResults": max_results}
+        url = f'{config.base_url}/rest/agile/1.0/sprint/{sprint_id}/issue'
+        params = {'startAt': start_at, 'maxResults': max_results}
         response = session.get(url, params=params)
-        context = f"retrieving issues from sprint {sprint_id}"
+        context = f'retrieving issues from sprint {sprint_id}'
 
         if not handle_api_error(response, context):
             return []
 
         data = response.json()
-        issues = data.get("issues", [])
+        issues = data.get('issues', [])
 
         incomplete_stories.extend(
             issue
             for issue in issues
-            if issue["fields"]["status"]["name"] not in DONE_STATUSES
+            if issue['fields']['status']['name'] not in DONE_STATUSES
         )
 
         if len(issues) < max_results:
@@ -42,7 +42,7 @@ def get_incomplete_stories(
 
     num_inc_stories = len(incomplete_stories)
     logging.info(
-        f"\n{num_inc_stories} incomplete stories found in "
-        f"previous sprint: {config.board_name}"
+        f'\n{num_inc_stories} incomplete stories found in '
+        f'previous sprint: {config.board_name}'
     )
     return incomplete_stories

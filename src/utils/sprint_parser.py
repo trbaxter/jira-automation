@@ -12,7 +12,7 @@ class DartSprint(NamedTuple):
 
 
 _DART_RE = re.compile(
-    r"""
+    r'''
     ^DART\                           # 'DART '
     (?P<yymmdd>\d{6})\               # YYMMDD then exactly one space
     \(
@@ -20,7 +20,7 @@ _DART_RE = re.compile(
         -
         (?P<end_mmdd>\d{2}/\d{2})    # end date MM/DD
     \)$
-    """,
+    ''',
     re.VERBOSE,
 )
 
@@ -31,16 +31,16 @@ def parse_dart_sprint(name: SAFE_STR) -> DartSprint | None:
         return None
 
     try:
-        start = datetime.strptime(match["yymmdd"], "%y%m%d").date()
+        start = datetime.strptime(match['yymmdd'], '%y%m%d').date()
     except ValueError:
         return None
 
-    mmdd_from_payload = start.strftime("%m/%d")
-    if match["start_mmdd"] != mmdd_from_payload:
+    mmdd_from_payload = start.strftime('%m/%d')
+    if match['start_mmdd'] != mmdd_from_payload:
         return None
 
     expected_end = start + timedelta(days=14)
-    if match["end_mmdd"] != expected_end.strftime("%m/%d"):
+    if match['end_mmdd'] != expected_end.strftime('%m/%d'):
         return None
 
     return DartSprint(name, start, expected_end)

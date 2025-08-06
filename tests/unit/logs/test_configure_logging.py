@@ -16,6 +16,6 @@ def test_configure_logging_sets_format(caplog: LogCaptureFixture) -> None:
     logger = logging.getLogger()
 
     with caplog.at_level(logging.INFO):
-        logger.info("Hello world")
+        logger.info('Hello world')
 
-    assert "Hello world" in caplog.text
+    assert 'Hello world' in caplog.text

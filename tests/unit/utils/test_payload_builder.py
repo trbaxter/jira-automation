@@ -13,7 +13,7 @@ from src.utils.payload_builder import (
 )
 from tests.strategies.shared import cleaned_string, valid_datetime_range
 
-JIRA_DATE_REGEX = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}")
+JIRA_DATE_REGEX = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.000\+\d{4}')
 
 
 @given(cleaned_string(), valid_datetime_range())
@@ -29,7 +29,7 @@ def test_build_close_sprint_payload_success(
 
     assert isinstance(payload, CloseSprintPayload)
 
-    assert payload.state == "closed"
+    assert payload.state == 'closed'
     assert payload.name == sprint_name
     assert payload.startDate == start_str
     assert payload.endDate == end_str
@@ -46,7 +46,7 @@ def test_build_start_sprint_payload(
     payload = build_start_sprint_payload(sprint_name, start_date, end_date)
 
     assert isinstance(payload, StartSprintPayload)
-    assert payload.state == "active"
+    assert payload.state == 'active'
     assert payload.name == sprint_name
     assert payload.startDate == format_jira_date(start_date)
     assert payload.endDate == format_jira_date(end_date)

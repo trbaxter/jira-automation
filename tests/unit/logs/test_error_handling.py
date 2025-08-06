@@ -9,10 +9,10 @@ from requests import Response, Request
 from src.constants.shared import SAFE_STR
 from src.logs.error_handling import handle_api_error
 
-CONTEXT = "posting to Jira"
+CONTEXT = 'posting to Jira'
 INT_HTTP = conint(ge=100, le=599)
-POST = "POST"
-MOCK_BASE_URL = HttpUrl("https://fake.jira.com/")
+POST = 'POST'
+MOCK_BASE_URL = HttpUrl('https://fake.jira.com/')
 
 
 # Mock response object created to avoid type-related warnings
@@ -31,11 +31,11 @@ def make_mock_response(
     return mock_response
 
 
-@pytest.mark.parametrize("status_code", [200, 201, 204])
+@pytest.mark.parametrize('status_code', [200, 201, 204])
 def test_success_responses(
     caplog: LogCaptureFixture, status_code: INT_HTTP
 ) -> None:
-    response = make_mock_response(status_code, "", MOCK_BASE_URL, POST)
+    response = make_mock_response(status_code, '', MOCK_BASE_URL, POST)
 
     with caplog.at_level(logging.ERROR):
         result = handle_api_error(response, CONTEXT)
@@ -45,15 +45,15 @@ def test_success_responses(
 
 
 def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
-    response = make_mock_response(400, "Bad Request", MOCK_BASE_URL, POST)
+    response = make_mock_response(400, 'Bad Request', MOCK_BASE_URL, POST)
 
     with caplog.at_level(logging.ERROR):
         result = handle_api_error(response, CONTEXT)
 
     expected_messages = [
-        "Error during posting to Jira",
-        "Status Code: 400",
-        "Bad Request",
+        'Error during posting to Jira',
+        'Status Code: 400',
+        'Bad Request',
     ]
 
     assert result is False
@@ -61,17 +61,17 @@ def test_generic_error_logs(caplog: LogCaptureFixture) -> None:
 
 
 def test_gateway_timeout_logs(caplog: LogCaptureFixture) -> None:
-    response = make_mock_response(504, "Timeout", MOCK_BASE_URL, POST)
+    response = make_mock_response(504, 'Timeout', MOCK_BASE_URL, POST)
 
     with caplog.at_level(logging.ERROR):
         result = handle_api_error(response, CONTEXT)
 
     expected_messages = [
-        "Error during posting to Jira",
-        "Status Code: 504",
-        "Gateway timeout occurred",
+        'Error during posting to Jira',
+        'Status Code: 504',
+        'Gateway timeout occurred',
     ]
 
     assert result is False
-    assert "Response content" not in caplog.text
+    assert 'Response content' not in caplog.text
     assert all(msg in caplog.text for msg in expected_messages)

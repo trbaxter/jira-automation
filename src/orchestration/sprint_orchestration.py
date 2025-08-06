@@ -18,18 +18,18 @@ from src.utils.sprint_parser import parse_dart_sprint
 
 
 def automate_sprint(session: requests.Session, config: BoardConfig) -> None:
-    logging.info("\nBeginning sprint automation process...")
+    logging.info('\nBeginning sprint automation process...')
 
     start_date = datetime.now()
     end_date = start_date + timedelta(days=14)
-    active_sprint = get_sprint_by_state(session, config, "active")
+    active_sprint = get_sprint_by_state(session, config, 'active')
     future_sprints = get_all_future_sprints(session, config)
 
     dart_sprint = next(
         (
             sprint
             for sprint in future_sprints
-            if (parsed := parse_dart_sprint(sprint["name"]))
+            if (parsed := parse_dart_sprint(sprint['name']))
             and parsed.start == start_date
         ),
         None,
@@ -37,15 +37,15 @@ def automate_sprint(session: requests.Session, config: BoardConfig) -> None:
 
     if dart_sprint:
         logging.info(
-            msg=f"\nUpcoming DART sprint found: {dart_sprint['name']}."
-            "\nProceeding with automation process."
+            msg=f'\nUpcoming DART sprint found: {dart_sprint['name']}.'
+            '\nProceeding with automation process.'
         )
-        new_sprint_id = dart_sprint["id"]
-        new_sprint_name = dart_sprint["name"]
+        new_sprint_id = dart_sprint['id']
+        new_sprint_name = dart_sprint['name']
 
     else:
         logging.warning(
-            "\nNo future sprint found in the backlog starting with 'DART '."
+            '\nNo future sprint found in the backlog starting with DART.'
         )
 
         new_sprint_name = generate_sprint_name(start_date, end_date)
@@ -55,28 +55,28 @@ def automate_sprint(session: requests.Session, config: BoardConfig) -> None:
         )
 
         if new_sprint:
-            new_sprint_id = new_sprint.get("id")
+            new_sprint_id = new_sprint.get('id')
             logging.info(
-                "New sprint successfully generated with sprint name: "
-                f"{new_sprint_name}"
+                'New sprint successfully generated with sprint name: '
+                f'{new_sprint_name}'
             )
         else:
-            logging.error("Failed to create new sprint.")
+            logging.error('Failed to create new sprint.')
             return
 
     if active_sprint:
         incomplete_stories = get_incomplete_stories(
-            active_sprint["id"], config, session
+            active_sprint['id'], config, session
         )
         incomplete_stories = [
             parse_issue(issue) for issue in incomplete_stories
         ]
 
         close_sprint(
-            active_sprint["id"],
-            active_sprint["name"],
-            active_sprint["startDate"],
-            active_sprint["endDate"],
+            active_sprint['id'],
+            active_sprint['name'],
+            active_sprint['startDate'],
+            active_sprint['endDate'],
             session,
             config.base_url,
         )

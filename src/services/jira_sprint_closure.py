@@ -16,7 +16,7 @@ def close_sprint(
     session: requests.Session,
     base_url: HttpUrl,
 ) -> None:
-    url = f"{base_url}/rest/agile/1.0/sprint/{sprint_id}"
+    url = f'{base_url}/rest/agile/1.0/sprint/{sprint_id}'
     payload = build_close_sprint_payload(
         sprint_name,
         start_date,
@@ -24,9 +24,9 @@ def close_sprint(
     )
 
     response = session.put(url, json=payload.model_dump())
-    context = f"closing sprint {sprint_id}"
+    context = f'closing sprint {sprint_id}'
 
     if not handle_api_error(response, context):
         return
 
-    logging.info(f"Sprint {sprint_id} has been closed.")
+    logging.info(f'Sprint {sprint_id} has been closed.')

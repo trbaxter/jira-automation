@@ -4,8 +4,8 @@ from hypothesis import given
 from src.auth.credentials import get_jira_credentials
 from tests.strategies.shared import cleaned_string
 
-EMAIL = "JIRA_EMAIL"
-TOKEN = "JIRA_API_TOKEN"
+EMAIL = 'JIRA_EMAIL'
+TOKEN = 'JIRA_API_TOKEN'
 
 
 @given(cleaned_string(), cleaned_string())
@@ -19,7 +19,7 @@ def test_get_jira_credentials_success(email, token) -> None:
 
 
 @given(email=cleaned_string(), token=cleaned_string())
-@pytest.mark.parametrize("missing_key", [EMAIL, TOKEN])
+@pytest.mark.parametrize('missing_key', [EMAIL, TOKEN])
 def test_get_jira_credentials_missing_key(email, missing_key, token) -> None:
     def getenv(key):
         env = {
@@ -31,7 +31,7 @@ def test_get_jira_credentials_missing_key(email, missing_key, token) -> None:
     with pytest.raises(ValueError) as error:
         get_jira_credentials(getenv)
 
-    assert "Missing or invalid" in str(error.value)
+    assert 'Missing or invalid' in str(error.value)
 
 
 
@@ -42,4 +42,4 @@ def test_get_jira_credentials_missing_both_keys() -> None:
     with pytest.raises(ValueError) as error:
         get_jira_credentials(getenv)
 
-    assert "Missing or invalid" in str(error.value)
+    assert 'Missing or invalid' in str(error.value)

@@ -6,10 +6,10 @@ from src.constants.shared import SAFE_STR
 from src.models.jira_issue import JiraIssue
 from tests.strategies.shared import cleaned_string
 
-KEY = "key"
-TYPE = "type"
-STATUS = "status"
-SUMMARY = "summary"
+KEY = 'key'
+TYPE = 'type'
+STATUS = 'status'
+SUMMARY = 'summary'
 
 
 @given(cleaned_string())
@@ -22,19 +22,19 @@ def test_jira_issue_valid_input(value: SAFE_STR) -> None:
 
 
 @pytest.mark.parametrize(
-    "field, value",
+    'field, value',
     [
-        (KEY, ""),
-        (KEY, "   "),
+        (KEY, ''),
+        (KEY, '   '),
         (KEY, None),
-        (TYPE, ""),
-        (TYPE, "   "),
+        (TYPE, ''),
+        (TYPE, '   '),
         (TYPE, None),
-        (STATUS, ""),
-        (STATUS, "   "),
+        (STATUS, ''),
+        (STATUS, '   '),
         (STATUS, None),
-        (SUMMARY, ""),
-        (SUMMARY, "   "),
+        (SUMMARY, ''),
+        (SUMMARY, '   '),
         (SUMMARY, None),
     ],
 )
@@ -42,10 +42,10 @@ def test_jira_issue_rejects_blank_or_missing_fields(
     field: SAFE_STR, value: SAFE_STR | None
 ) -> None:
     valid_data = {
-        KEY: "ISSUE-1",
-        TYPE: "Bug",
-        STATUS: "Open",
-        SUMMARY: "Something broke",
+        KEY: 'ISSUE-1',
+        TYPE: 'Bug',
+        STATUS: 'Open',
+        SUMMARY: 'Something broke',
     }
     invalid_data = valid_data.copy()
     invalid_data[field] = value

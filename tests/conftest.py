@@ -25,9 +25,9 @@ def test_session() -> MagicMock:
 @pytest.fixture
 def test_config() -> BoardConfig:
     return BoardConfig(
-        base_url=cast(HttpUrl,"https://mock.net"),
+        base_url=cast(HttpUrl,'https://mock.net'),
         board_id=123,
-        board_name="Test"
+        board_name='Test'
     )
 
 

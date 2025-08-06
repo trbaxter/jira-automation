@@ -12,7 +12,7 @@ from src.utils.config_loader import load_config
 from src.utils.datetime_format import format_jira_date
 from src.utils.url_builder import build_sprint_state_query_url
 
-SPRINT_CREATE = "/rest/agile/1.0/sprint"
+SPRINT_CREATE = '/rest/agile/1.0/sprint'
 
 
 def build_sprint_payload(
@@ -44,8 +44,8 @@ def parse_json_response(
         return response.json()
     except requests.exceptions.JSONDecodeError:
         logging.error(
-            "Error: Failed to parse JSON response. "
-           f"Response Content: {response.text}"
+            'Error: Failed to parse JSON response. '
+           f'Response Content: {response.text}'
         )
         return None
 
@@ -63,10 +63,10 @@ def create_sprint(
         end_date,
         config.board_id
     )
-    url = f"{config.base_url}{SPRINT_CREATE}"
+    url = f'{config.base_url}{SPRINT_CREATE}'
 
     response = post_sprint_payload(session, url, payload)
-    context = "creating sprint"
+    context = 'creating sprint'
 
     if not handle_api_error(response, context):
         return None
@@ -85,12 +85,12 @@ def get_sprint_by_state(
         state
     )
     response = session.get(url)
-    context = f"retrieving {state} sprint"
+    context = f'retrieving {state} sprint'
 
     if not handle_api_error(response, context):
         return None
 
-    sprints = response.json().get("values", [])
+    sprints = response.json().get('values', [])
     return sprints[0] if sprints else None
 
 
@@ -102,25 +102,25 @@ def get_all_future_sprints(
     start_at = 0
     max_results = 50
     all_sprints = []
-    url = f"{config.base_url}/rest/agile/1.0/board/{board_id}/sprint"
+    url = f'{config.base_url}/rest/agile/1.0/board/{board_id}/sprint'
 
     while True:
         params = {
-            "state": "future",
-            "startAt": start_at,
-            "maxResults": max_results,
+            'state': 'future',
+            'startAt': start_at,
+            'maxResults': max_results,
         }
         response = session.get(url, params=params)
         if response.status_code != 200:
             raise RuntimeError(
-                f"Error while fetching future sprints: {response.text}"
+                f'Error while fetching future sprints: {response.text}'
             )
 
         data = response.json()
-        sprints = data.get("values", [])
+        sprints = data.get('values', [])
         all_sprints.extend(sprints)
 
-        if data.get("isLast", True):
+        if data.get('isLast', True):
             break
 
         start_at += max_results

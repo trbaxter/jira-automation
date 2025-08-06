@@ -9,7 +9,7 @@ DEFAULT_TIMEOUT = 10
 def enforce_request_timeout(session: requests.Session, timeout: int) -> None:
     original = session.request
     def with_timeout(*args, **kwargs):
-        kwargs.setdefault("timeout", timeout)
+        kwargs.setdefault('timeout', timeout)
         return original(*args, **kwargs)
     session.request = with_timeout
 
@@ -20,7 +20,7 @@ def build_authenticated_session(
 ) -> requests.Session:
     session = requests.Session()
     session.auth = auth or HTTPBasicAuth(credentials.email, credentials.token)
-    session.headers.update({"Content-Type": "application/json"})
+    session.headers.update({'Content-Type': 'application/json'})
     enforce_request_timeout(session, DEFAULT_TIMEOUT)
     return session
 

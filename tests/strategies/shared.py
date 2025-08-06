@@ -13,5 +13,5 @@ def cleaned_string() -> SearchStrategy[str]:
     return (
         text(min_size=1)
         .map(str.strip)
-        .filter(lambda string: string != "" and string.isprintable())
+        .filter(lambda string: string != '' and string.isprintable())
     )

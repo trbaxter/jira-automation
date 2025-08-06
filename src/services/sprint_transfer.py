@@ -15,27 +15,27 @@ def transfer_issue_batch_with_retry(
     sprint_id: INT_GT_0,
     issue_keys: list[str],
 ) -> bool:
-    url = f"{base_url}/rest/agile/1.0/sprint/{sprint_id}/issue"
-    payload = {"issues": issue_keys}
+    url = f'{base_url}/rest/agile/1.0/sprint/{sprint_id}/issue'
+    payload = {'issues': issue_keys}
 
     for attempt in range(1, 4):
         logging.info(
-            f"\nMoving batch of {len(issue_keys)} issues to new sprint."
-            f" (Attempt {attempt} of 3)."
+            f'\nMoving batch of {len(issue_keys)} issues to new sprint.'
+            f' (Attempt {attempt} of 3).'
         )
 
         response = session.post(url, json=payload)
-        context = f"moving issues batch"
+        context = f'moving issues batch'
 
         if handle_api_error(response, context):
-            logging.info("Transfer process successful.")
+            logging.info('Transfer process successful.')
             time.sleep(5)
             return True
 
         if attempt < 3:
-            logging.info("\nTransfer failed. Retrying...")
+            logging.info('\nTransfer failed. Retrying...')
         else:
-            logging.error("Transfer failed. Max attempts exceeded.")
+            logging.error('Transfer failed. Max attempts exceeded.')
 
     return False
 
@@ -58,14 +58,14 @@ def transfer_all_issue_batches(
 
         if not success:
             message = (
-                "Transfer process aborted. "
-                f"\nFailed to move issues from index {i}"
-                f" to {(i, i + len(batch) - 1)}."
+                'Transfer process aborted. '
+                f'\nFailed to move issues from index {i}'
+                f' to {(i, i + len(batch) - 1)}.'
             )
 
             raise SystemExit(message)
 
-    logging.info("Migration of unfinished stories complete.")
+    logging.info('Migration of unfinished stories complete.')
 
 
 def move_issues_to_new_sprint(
@@ -75,35 +75,35 @@ def move_issues_to_new_sprint(
     new_sprint_id: INT_GT_0,
 ) -> None:
     if not issues:
-        logging.info("No incomplete stories to transfer.")
+        logging.info('No incomplete stories to transfer.')
         return
 
     logging.info(
-        f"\n::group::"
-        f"Moving {len(issues)} stories to the new sprint. "
-        f"Click the dropdown arrow for more information."
+        f'\n::group::'
+        f'Moving {len(issues)} stories to the new sprint. '
+        f'Click the dropdown arrow for more information.'
     )
 
     for issue in issues:
         logging.info(
-            f"\nIssue ID: {issue.key}"
-            f"\nType: {issue.type}"
-            f"\nStatus: {issue.status}"
-            f"\nDescription: {issue.summary}"
+            f'\nIssue ID: {issue.key}'
+            f'\nType: {issue.type}'
+            f'\nStatus: {issue.status}'
+            f'\nDescription: {issue.summary}'
         )
 
-    logging.info("::endgroup::")
+    logging.info('::endgroup::')
 
     issue_keys = [issue.key for issue in issues]
     transfer_all_issue_batches(issue_keys, session, base_url, new_sprint_id)
 
 
 def parse_issue(raw: dict) -> JiraIssue:
-    fields = raw["fields"]
+    fields = raw['fields']
 
     return JiraIssue(
-        key=raw["key"],
-        type=fields["issuetype"]["name"],
-        status=fields["status"]["name"],
-        summary=fields["summary"],
+        key=raw['key'],
+        type=fields['issuetype']['name'],
+        status=fields['status']['name'],
+        summary=fields['summary'],
     )

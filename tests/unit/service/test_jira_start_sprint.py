@@ -12,7 +12,7 @@ from src.services.jira_start_sprint import start_sprint
 from tests.strategies.shared import cleaned_string, valid_datetime_range
 from tests.utils.patch_helper import make_base_path
 
-base_path = make_base_path("src.services.jira_start_sprint")
+base_path = make_base_path('src.services.jira_start_sprint')
 
 
 @pytest.fixture
@@ -32,12 +32,12 @@ def test_start_sprint_success_logs_expected_messages(
     mock_session.put.lambda_return = MagicMock()
 
     with (
-        patch(base_path("build_start_sprint_payload")) as mock_builder,
-        patch(base_path("handle_api_error"), return_value=True),
+        patch(base_path('build_start_sprint_payload')) as mock_builder,
+        patch(base_path('handle_api_error'), return_value=True),
         caplog.at_level(logging.INFO),
     ):
         payload_mock = MagicMock()
-        payload_mock.model_dump.lambda_return = {"mock": "data"}
+        payload_mock.model_dump.lambda_return = {'mock': 'data'}
         mock_builder.return_value = payload_mock
 
         start_sprint(
@@ -46,24 +46,24 @@ def test_start_sprint_success_logs_expected_messages(
             start_date,
             end_date,
             mock_session,
-            HttpUrl("https://mock.atlassian.net"),
+            HttpUrl('https://mock.atlassian.net'),
         )
 
-        assert f"Activating sprint: {sprint_name}" in caplog.text
-        assert "Sprint automation process complete." in caplog.text
+        assert f'Activating sprint: {sprint_name}' in caplog.text
+        assert 'Sprint automation process complete.' in caplog.text
 
 
 def test_start_sprint_handles_api_failure(
     caplog: LogCaptureFixture, mock_session: MagicMock
 ) -> None:
-    with patch(base_path("handle_api_error"), return_value=False):
+    with patch(base_path('handle_api_error'), return_value=False):
         start_sprint(
             999,
-            "Z",
+            'Z',
             datetime(2025, 1, 1),
             datetime(2025, 1, 14),
             mock_session,
-            HttpUrl("https://mock.atlassian.net"),
+            HttpUrl('https://mock.atlassian.net'),
         )
 
-        assert "Sprint 999 is now active." not in caplog.text
+        assert 'Sprint 999 is now active.' not in caplog.text
