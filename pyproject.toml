@@ -1,15 +1,15 @@
 [project]
-name = "jira-automation"
-version = "1.0.0"
-description = "Modular Python tool for automating sprint tasks in JIRA."
-requires-python = ">=3.13"
-authors = [{ name = "Tyler Baxter", email = "trb7074@gmail.com" }]
+name = 'jira-automation'
+version = '1.0.0'
+description = 'Modular Python tool for automating sprint tasks in JIRA.'
+requires-python = '>=3.13'
+authors = [{ name = 'Tyler Baxter', email = 'trb7074@gmail.com' }]
 
 [tool.black]
 line-length = 80
 
 [tool.coverage.html]
-directory = "htmlcov"
+directory = 'htmlcov'
 
 [tool.coverage.report]
 show_missing = true
@@ -17,12 +17,12 @@ skip_covered = true
 exclude_lines = ['if __name__ == "__main__":']
 
 [tool.coverage.run]
-source = ["src"]
-omit = ["*/__init__.py"]
+source = ['src']
+omit = ['*/__init__.py']
 
 [tool.hypothesis]
 max_examples = 500
 
 [tool.pytest.ini_options]
-addopts = "--no-header --no-summary -qq"
-testpaths = ["tests"]
+addopts = '--no-header --no-summary -qq'
+testpaths = ['tests']
