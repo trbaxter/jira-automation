@@ -4,32 +4,31 @@ from pydantic import ValidationError
 
 
 class ConfigError(Exception):
-    def __init__(self, detail: str) -> None:
-        msg = f'Configuration error detected. {detail}'
-        super().__init__(msg)
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
 
-    @staticmethod
-    def file_not_found() -> ConfigError:
-        return ConfigError(
+    @classmethod
+    def file_not_found(cls) -> ConfigError:
+        return cls(
+            'Configuration error: '
             'Missing board_config.yaml configuration file in project root.'
         )
 
-    @staticmethod
-    def from_validation_error(e: ValidationError) -> ConfigError:
+    @classmethod
+    def from_validation_error(cls, e: ValidationError) -> ConfigError:
         missing_fields = [
-            err['loc'][0] for err in e.errors()
-            if err['type'] == 'missing'
+            '.'.join(str(loc) for loc in err['loc'])
+            for err in e.errors()
+            if err['type'] in {'missing', 'value_error.missing'}
         ]
 
-        if missing_fields:
-            if len(missing_fields) == 1:
-                return ConfigError(
-                    f'Missing key in board_config.yaml: {missing_fields[0]}'
-                )
-            else:
-                keys = ', '.join(f'{key}' for key in missing_fields)
-                return ConfigError(
-                    f'Missing keys in board_config.yaml: {keys}'
-                )
+        if not missing_fields:
+            return cls(f'Configuration error: {str(e)}')
 
-        return ConfigError(str(e))
+        if len(missing_fields) == 1:
+            return cls(
+                f'Missing key in board_config.yaml: {missing_fields[0]}'
+            )
+
+        keys = ', '.join(missing_fields)
+        return cls(f'Missing keys in board_config.yaml: {keys}')
