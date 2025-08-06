@@ -1,6 +1,16 @@
 from datetime import datetime, timedelta
 
+from hypothesis.strategies import composite
 from hypothesis.strategies import text, datetimes, SearchStrategy
+
+from src.models.credentials import Credentials
+
+
+@composite
+def valid_credentials(draw):
+    email = draw(cleaned_string())
+    token = draw(cleaned_string())
+    return Credentials(email=email, token=token)
 
 
 def valid_datetime_range() -> SearchStrategy[datetime]:
