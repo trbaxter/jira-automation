@@ -7,13 +7,13 @@ from src.logs.configure_logging import log_config
 from src.orchestration.sprint_orchestration import automate_sprint
 from src.utils.config_loader import load_config
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     log_config()
 
     try:
         config = load_config()
     except ConfigError as e:
-        print(f"Error: {e}")
+        print(f'Error: {e}')
         sys.exit(1)
 
     try:
@@ -21,5 +21,5 @@ if __name__ == "__main__":
         automate_sprint(session, config)
 
     except Exception as e:
-        logging.exception("An unexpected error occurred")
+        logging.exception('An unexpected error occurred')
         raise
