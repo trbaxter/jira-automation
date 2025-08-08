@@ -3,7 +3,7 @@ from typing import List
 
 import requests
 
-from src.constants.shared import INT_GT_0
+from src.customtypes.shared import INT_GT_0
 from src.logs.error_handling import handle_api_error
 from src.models.board_config import BoardConfig
 

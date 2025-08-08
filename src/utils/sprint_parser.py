@@ -2,7 +2,7 @@ import re
 from datetime import date, datetime, timedelta
 from typing import NamedTuple
 
-from src.constants.shared import SAFE_STR
+from src.customtypes.shared import SAFE_STR
 
 
 class DartSprint(NamedTuple):

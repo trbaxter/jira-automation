@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 from pydantic import HttpUrl
 
-from src.constants.shared import SAFE_STR, INT_GT_0
+from src.customtypes.shared import SAFE_STR, INT_GT_0
 from src.logs.error_handling import handle_api_error
 from src.utils.payload_builder import build_start_sprint_payload
 

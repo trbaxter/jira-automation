@@ -4,7 +4,7 @@ import time
 import requests
 from pydantic import HttpUrl
 
-from src.constants.shared import INT_GT_0
+from src.customtypes.shared import INT_GT_0
 from src.logs.error_handling import handle_api_error
 from src.models.jira_issue import JiraIssue
 

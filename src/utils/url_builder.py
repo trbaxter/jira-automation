@@ -1,6 +1,6 @@
 from pydantic import HttpUrl
 
-from src.constants.shared import INT_GT_0, SAFE_STR
+from src.customtypes.shared import INT_GT_0, SAFE_STR
 
 
 def build_sprint_state_query_url(
