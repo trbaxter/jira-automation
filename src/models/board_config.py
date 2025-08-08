@@ -1,9 +1,9 @@
 from pydantic import BaseModel, HttpUrl
 
-from src.constants.shared import SAFE_STR, INT_GT_0
+from src.customtypes.shared import SAFE_STR, PositiveInt
 
 
 class BoardConfig(BaseModel):
-    board_id: INT_GT_0
+    board_id: PositiveInt
     base_url: HttpUrl
     board_name: SAFE_STR

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.constants.shared import SAFE_STR
+from src.customtypes.shared import SAFE_STR
 
 
 class Credentials(BaseModel):
