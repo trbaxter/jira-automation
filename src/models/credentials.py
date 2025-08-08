@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from src.customtypes.shared import SAFE_STR
+from src.customtypes.shared import NonEmptyStr
 
 
 class Credentials(BaseModel):
-    email: SAFE_STR
-    token: SAFE_STR
+    email: NonEmptyStr
+    token: NonEmptyStr = Field(repr=False)
